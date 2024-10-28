@@ -1,5 +1,4 @@
 import React from 'react';
-import useQueue from '../hooks/useQueue.js';
 import '../styles/Queue.css';
 
 const Queue = ({ }) => {

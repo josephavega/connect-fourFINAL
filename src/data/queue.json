@@ -1,0 +1,13 @@
+[
+    {
+      "username": "Player1",
+      "mode": "single",
+      "gameType": "classic"
+    },
+    
+    {
+      "username": "Player2",
+      "mode": "multi",
+      "gameType": "arcade"
+    }
+  ]

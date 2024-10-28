@@ -1,0 +1,46 @@
+/* Leaderboard.css */
+
+.leaderboard-container {
+    width: 100%;
+    max-width: 300px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .leaderboard-container h2 {
+    text-align: center;
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+  }
+  
+  .leaderboard-table {
+    max-height: 200px; /* Limit the height to make it scrollable */
+    overflow-y: auto;
+  }
+  
+  .leaderboard-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .leaderboard-table th {
+    background-color: #f2f2f2;
+    position: sticky; /* Makes header stick when scrolling */
+    top: 0;
+  }
+  
+  .leaderboard-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  

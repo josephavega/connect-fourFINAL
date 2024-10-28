@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Queue from '../components/Queue';
 import Leaderboard from '../components/Leaderboard';
 import ConnectPopup from './ConnectPopup';
 import HelpPopup from '../components/HelpPopup'; 

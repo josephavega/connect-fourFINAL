@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useQueue from '../hooks/useQueue';
 import "../styles/connectPopup.css";
 
 const ConnectPopup = ({ onClose }) => {

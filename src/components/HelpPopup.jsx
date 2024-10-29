@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Help1 from '../assets/Help_PlacingChip.gif';
-import Help2 from '../assets/Help_WinDiag.gif';
-import Help3 from '../assets/Help_Lightning.gif';
-import Help4 from '../assets/Help_WinHoz.gif';
+import Help1 from '../assets/help/Help_PlacingChip.gif';
+import Help2 from '../assets/help/Help_WinDiag.gif';
+import Help3 from '../assets/help/Help_Lightning.gif';
+import Help4 from '../assets/help/Help_WinHoz.gif';
 import '../styles/helpPopup.css';
 
 const HelpPopup = ({ onClose }) => {

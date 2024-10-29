@@ -166,6 +166,10 @@ app.post('/startAIVsAI', (req, res) => {
 });
 
 /* Queue API Handler */
+app.get('/queue', (req, res) => {
+    console.log(`queue Request : ${queue.queue}`);
+    res.json(queue.queue);
+});
 
 // POST to join the queue
 app.post('/joinQueue', (req, res) => {

@@ -4,6 +4,7 @@ import Homepage from './pages/Home';
 import Spectate from './pages/Spectate';
 import Game from './pages/Game';
 import Lobby from './pages/Lobby'; 
+import Queue from './components/Queue';
 //import '../styles/global.css';
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/game" element={<Game />} /> 
         <Route path="/lobby" element={<Lobby />} />
         <Route path="/spectate" element={<Spectate />} />
+        <Route path="/queue" element={<Queue />} />
       </Routes>
     </Router>
   );

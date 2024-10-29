@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Leaderboard from '../components/Leaderboard';
-import ConnectPopup from './ConnectPopup';
+import ConnectPopup from '../components/ConnectPopup';
+import QueueComponent from '../components/Queue';
 import HelpPopup from '../components/HelpPopup'; 
 import '../styles/homepage.css';
 
@@ -41,7 +42,8 @@ const Homepage = () => {
       <div className="main-content">
         {/* Queue List */}
         <aside className="queue">
-        <p>Queue Placeholder</p>
+        <div><QueueComponent/></div>
+        
         </aside>
 
         {/* Center Section with Buttons */}

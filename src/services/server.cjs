@@ -25,7 +25,7 @@ app.use(express.json());
 
 const game = GameLogic();
 
-//const queue = Queue;
+const queue = Queue;
 
 const {rows, columns} = config.gameSettings;
 
@@ -166,54 +166,14 @@ app.post('/startAIVsAI', (req, res) => {
 });
 
 /* Queue API Handler */
-// GET methods for retrieiving Queue Data
-app.get('/queue', (req, res) => {
-
-    console.log('API Request: GET /queue');
-    console.log(`Current Queue: ${queue}`);
-    res.json({ users: queue});
-
-});
-
-// app.get('/firstqueue', (req, res) => {
-//     console.log('API Request: GET /firstqueue');
-//     console.log(`First in Queue: ${queue}`);
-//     res.json({ user: queue[0] });
-    
-// });
-
-// // POST methods for updating Queue Data
-// app.post('/joinQueue', (req, res) => {
-//     const { username } = req.body;
-//     console.log('API Request: POST /joinQueue, username: ', username);
-
-//     if (!queue.includes(username)) {
-//         queue.addPlayer(username);
-//         io.emit('queueUpdated', queue);
-//         return res.json({ message: `${username} added to the queue.`, queue})
-//     }
-//     return res.status(400).json({ error: 'Player is already in the queue' });
-// });
-
-// app.post('/leaveQueue', (req, res) => {
-//     const { username } = req.body;
-//     console.log(`API Reqeust: /POST leaveQueue, username:`, username);
-
-//     // filter username from queue
-
-//     io.emit('queueUpdated:', queue);
-//     res.json({ message: `${username} left the queue`});
-// });
-
-const queue = [];
 
 // POST to join the queue
 app.post('/joinQueue', (req, res) => {
     const { username } = req.body;
     console.log('API Request: POST /joinQueue, username: ', username);
 
-    if (!queue.includes(username)) {
-        queue.push(username); // Add player to the queue
+    if (!queue.containsPlayer(username)) {
+        queue.addPlayer(username); // Add player to the queue
         io.emit('queueUpdated', queue); // Emit updated queue to clients
         return res.json({ message: `${username} added to the queue.`, queue });
     } else {
@@ -226,9 +186,10 @@ app.post('/leaveQueue', (req, res) => {
     const { username } = req.body;
     console.log(`API Request: POST /leaveQueue, username:`, username);
 
+    
     const index = queue.indexOf(username);
     if (index > -1) {
-        queue.splice(index, 1); // Remove player from the queue
+        queue.removePlayer(username);
         io.emit('queueUpdated', queue); // Emit updated queue to clients
         return res.json({ message: `${username} left the queue.`, queue });
     } else {
@@ -254,7 +215,16 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log('Server started successfully.');
+    console.log('Starting processes...');
+    
 
+    /*
+    1. When Server starts, begin AiVsAi Attract Mode. Loop until player connects to Queue
+    2. If player connects to an empty Queue, they are prompted to join a Player vs. AI match, that player remains in the Queue
+    3. Once two players are in the Queue, the current Ai vs. Player game can be interupted. Player 1 will determine the gamemode.
+    (Perhaps we can implement a voting system for gamemode, might be feature creep)
+    4. Once gamemode is selected, initialize gamemode until game end condition is met. Return players to end of Queue
+    */
 
-    game.startAIVsAI(handleGameUpdate);
+    //game.startAIVsAI(handleGameUpdate);
 });

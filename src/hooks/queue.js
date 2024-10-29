@@ -8,13 +8,13 @@ class Queue {
         console.log(`${player} has joined the queue.`);
     }
 
-    removePlayer() {
-        if (this.queue.length > 0) {
-            return this.queue.shift();  
-        } else {
-            console.log('Queue is empty.');
-            return null;
-        }
+    removePlayer(player) {
+        this.queue = this.queue.filter((p) => p.username !== player.username);
+
+    }
+
+    containsPlayer(username) {
+        return this.queue.includes(username);
     }
 
     getFirstPlayer() {

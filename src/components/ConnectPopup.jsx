@@ -4,26 +4,37 @@ import "../styles/connectPopup.css";
 
 const ConnectPopup = ({ onClose }) => {
   const [username, setUsername] = useState('');
-  const [mode, setMode] = useState('single');
-  const [gameType, setGameType] = useState('classic');
 
   const navigate = useNavigate(); // Initialize navigate
 
-  const joinQueue = ( username ) => {
-    if (username != null) {
-      addPlayer({ username, mode, gameType });
-      onClose(); // Close the popup after adding the player
-      alert('added!');
+  const joinQueue = () => {
+    if (username) {
+      // Make API request to join the queue
+      fetch('http://localhost:3000/joinQueue', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Join Queue Response:', data);
+          alert(`${username} has joined the queue.`);
+          onClose(); // Close the popup after adding the player
+          navigate('/lobby'); // Navigate to the lobby page only after successful join
+        })
+        .catch(error => {
+          console.error('Error joining queue:', error);
+        });
     } else {
       alert('Please enter a username.');
     }
-
-    /*
-    To do:
-    if(no game is runnning && user is next 2 in queue) {
-      navigate('/game'); // Navigate to the game page
-    };
-    */
   };
 
   return (
@@ -43,29 +54,6 @@ const ConnectPopup = ({ onClose }) => {
               placeholder="Enter your username"
             />
           </label>
-
-          <div className="game-type-selection">
-            <p>Game Type:</p>
-            <label>
-              <input
-                type="radio"
-                value="classic"
-                checked={gameType === 'classic'}
-                onChange={() => setGameType('classic')}
-              />
-              Classic
-            </label>
-            <label>
-              <input
-                type="radio"
-                value="arcade"
-                checked={gameType === 'arcade'}
-                onChange={() => setGameType('arcade')}
-              />
-              Arcade
-            </label>
-          </div>
-
           <button onClick={joinQueue} className="start-btn">
             Join Queue
           </button>
@@ -73,6 +61,6 @@ const ConnectPopup = ({ onClose }) => {
       </div>
     </div>
   );
-};
+}
 
 export default ConnectPopup;

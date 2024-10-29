@@ -42,7 +42,7 @@ const Homepage = () => {
       <div className="main-content">
         {/* Queue List */}
         <aside className="queue">
-        <div><QueueComponent/></div>
+        {/* <div><QueueComponent/></div> */}
         
         </aside>
 

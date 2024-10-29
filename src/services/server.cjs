@@ -23,13 +23,10 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-const game = GameLogic();
-
-const queue = Queue;
-
-const {rows, columns} = config.gameSettings;
-
 // Data that is being stored in the server
+const game = GameLogic(); // initialize GameLogic instance
+const queue = Queue; // use Queue logic
+const {rows, columns} = config.gameSettings;
 
 
 /* Gamestate API Handler */
@@ -166,9 +163,12 @@ app.post('/startAIVsAI', (req, res) => {
 });
 
 /* Queue API Handler */
+
+let userHashMap = new Map();
+
 app.get('/queue', (req, res) => {
-    console.log(`queue Request : ${queue.queue}`);
-    res.json(queue.queue);
+    console.log(`Queue Requested : ${queue.queue}`);
+    res.json({ users: queue.queue || []});
 });
 
 // POST to join the queue
@@ -204,13 +204,33 @@ app.post('/leaveQueue', (req, res) => {
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`); // Log when a user connects
 
+    socket.on('joinQueue', (username) => {
+        if (!queue.containsPlayer(username)) {
+            queue.addPlayer(username);
+            userHashMap.set(socket.id, username);
+            io.emit('queueUpdated', queue);
+            console.log(`${username} has joined the queue.`);
+        }
+    })
+
+    socket.on('leaveQueue', (username) => {
+        if (queue.containsPlayer(username)) {
+            queue.removePlayer(username);
+            userHashMap.delete(socket.id);
+            console.log(`Removed ${username} from the queue, user left the queue.`)
+        }
+    })
+
     // Handle disconnect event
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`); // Log when a user disconnects
-        // if (!queue.isEmpty) {
-        //     queue = queue.removePlayer(username);
-        //     }
-        // io.emit('queueUpdated:', queue);
+        let username = userHashMap.get(socket.id)
+        console.log(`${username} disconnected.`)
+        if (queue.containsPlayer(username)) {
+            queue.removePlayer(username);
+            userHashMap.delete(socket.id);
+            console.log(`Removed ${username} from the queue to disconnection}`)
+        }
     });
 });
 

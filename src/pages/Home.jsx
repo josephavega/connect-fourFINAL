@@ -35,7 +35,7 @@ const Homepage = () => {
     <div className="homepage">
       {/* Title Section */}
       <header className="title-section">
-        <h1>Connect Four</h1> 
+      <img src="./src/assets/Menu/Logo/Logo_Together.png" alt="Logo Together" />
       </header>
 
       {/* Main Content */}
@@ -48,8 +48,8 @@ const Homepage = () => {
 
         {/* Center Section with Buttons */}
         <section className="center-section">
-          <button onClick={openConnectPopup}>Connect</button>
-          <button onClick={openHelpPopup}>Help</button> {/* Help Button */}
+        <button><img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join Button" onClick={openConnectPopup} /></button>
+          <button><img src="./src/assets/Menu/Buttons/Button_Help.png" alt="Help Button" onClick={openHelpPopup} /></button>
         </section>
 
         {/* Leaderboard List */}

@@ -13,6 +13,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 })
 
+return (
+    <div>
+      <GameBoard board={board} onClick={makeMove} />
+      {/* <div id="turn-indicator"> */}
+        {/* {currentPlayer === 1 ? "Player 1's Turn (Red)" : "Player 2's Turn (Yellow)"} */}
+      {/* </div> */}
+      {/* <div id="timer">Time left: {timer}s</div> */}
+    </div>
+  );
+
 // Construct the initial gameboard
 function constructGameBoard() {
     for (let row = 5; row >= 0; row--) {

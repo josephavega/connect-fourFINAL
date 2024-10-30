@@ -1,13 +1,23 @@
 import React from 'react'
 
-const Gameboard = () => {
-
-
-    return <>
-    <div>
-        <h1>Gameboard here</h1>
-    </div>
-    </>
-}
-
-export default Gameboard;
+function GameBoard({board, onClick }) {
+    return (
+      <div className="game-board">
+        {board.map((row, rowIndex) => (
+          <div className="row" key={rowIndex}>
+            {row.map((cell, colIndex) => (
+              <div
+                className="cell"
+                key={colIndex}
+                onClick={() => onClick(rowIndex, colIndex)}
+              >
+                {cell}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  }
+  
+  export default GameBoard;

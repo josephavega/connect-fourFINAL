@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('http');
+const session = require('express-session');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const req = require('express/lib/request');
@@ -10,6 +11,8 @@ const axios = require('axios');
 const GameLogic = require('../hooks/gameLogic.js');
 //const AI = require('./AI.js');
 const Queue = require('../hooks/queue.js');
+
+  let userHashMap = new Map();
 
 const app = express();
 const server = http.createServer(app);
@@ -22,6 +25,119 @@ const io = new Server(server, {
 
 app.use(cors());
 app.use(express.json());
+
+
+// Set up session middleware
+const sessionMiddleware = session({
+    secret: 'your-secret-key', 
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+
+  });
+
+app.use(sessionMiddleware);
+
+let activeUsers = new Map();
+
+// Handle Connections and Disconnects
+io.on('connection', (socket) => {
+    const { sessionID } = socket.handshake.query; // Extract sessionID from the query parameters
+
+    let username = null;
+
+    if (sessionID) {
+
+        socket.sessionID = sessionID;
+
+        if (!userHashMap.has(sessionID)) {
+
+            userHashMap.get(sessionID);
+            console.log(`Updated Session: ${sessionID} Username: ${username} id ${socket.id}`);
+        } else {
+            socket.id = userHashMap.get(socket.id);
+            console.log(`New Session: ${sessionID}`);
+        }
+
+        activeUsers.set(sessionID, true);
+    }
+
+    socket.on('heartbeat', (sessionID) => {
+        // Update the user's active status
+        activeUsers.set(sessionID, true);
+    });
+
+
+
+    // Handle disconnect event
+    socket.on('disconnect', () => {
+        console.log(`User disconnected: ${socket.id}`); // Log when a user disconnects
+
+        activeUsers.set(socket.sessionID, false);
+        
+        let username = userHashMap.get(socket.sessionID);
+        setTimeout(() => {
+            if (!activeUsers.get(sessionID)) {
+                // Perform disconnect logic only if not reconnected
+                const username = userHashMap.get(sessionID);
+                if (queue.containsPlayer(username)) {
+                    queue.removePlayer(username);
+                    userHashMap.delete(sessionID);
+                    console.log(`Removed ${username} from the queue due to disconnection.`);
+                    io.emit('queueUpdated', queue);
+                }
+            }
+        }, 10000); // 10-second delay to allow for reconnections
+    });
+});
+
+
+
+
+io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+})
+
+  /* Queue API Handler */
+app.get('/queue', (req, res) => {
+    console.log(`Queue Requested : ${queue.queue}`);
+    res.json({ users: queue.queue || []});
+});
+
+// POST to join the queue
+app.post('/joinQueue', (req, res) => {
+    const { username, sessionID } = req.body;
+    console.log(`API Request: POST /joinQueue, username:  ${username}, sessionID: ${sessionID}`);
+    if (!username) {
+        return res.status(400).json({ error: 'Username is required.'});
+    } else if (!queue.containsPlayer(username)) {
+        queue.addPlayer(username); // Add player to the queue
+        userHashMap.set(sessionID, username);
+        io.emit('queueUpdated', queue); // Emit updated queue to clients
+        return res.json({ message: `${username} added to the queue.`, queue });
+    } else {
+        return res.status(400).json({ error: 'Player is already in the queue' });
+    }
+});
+
+// POST to leave the queue
+app.post('/leaveQueue', (req, res) => {
+    const { sessionID } = req.body;
+    const username = userHashMap.get(sessionID);
+    console.log(`API Request: POST /leaveQueue, username:`, username );
+
+    
+    const index = queue.indexOf(username);
+    if (index > -1) {
+        queue.removePlayer(username);
+        userHashMap.delete(sessionID);
+        io.emit('queueUpdated', queue); // Emit updated queue to clients
+        return res.json({ message: `${username} left the queue.`, queue });
+    } else {
+        return res.status(400).json({ error: 'Player is not in the queue' });
+    }
+});
+
 
 // Data that is being stored in the server
 const game = GameLogic(); // initialize GameLogic instance
@@ -162,77 +278,23 @@ app.post('/startAIVsAI', (req, res) => {
     res.json({ message: 'AI vs AI game started' });
 });
 
-/* Queue API Handler */
 
-let userHashMap = new Map();
+// DEBUG
+app.get('/getUsername/:sessionID', (req, res) => {
+    const sessionID = req.params.sessionID;
+    console.log(`API Request: GET /getUsername/${sessionID}`); // Log to see request
 
-app.get('/queue', (req, res) => {
-    console.log(`Queue Requested : ${queue.queue}`);
-    res.json({ users: queue.queue || []});
-});
-
-// POST to join the queue
-app.post('/joinQueue', (req, res) => {
-    const { username } = req.body;
-    console.log('API Request: POST /joinQueue, username: ', username);
-
-    if (!queue.containsPlayer(username)) {
-        queue.addPlayer(username); // Add player to the queue
-        io.emit('queueUpdated', queue); // Emit updated queue to clients
-        return res.json({ message: `${username} added to the queue.`, queue });
+    if (userHashMap.has(sessionID)) {
+        const username = userHashMap.get(sessionID);
+        console.log(`Username found for sessionID ${sessionID}: ${username}`); // Log to confirm username found
+        res.json({ username });
     } else {
-        return res.status(400).json({ error: 'Player is already in the queue' });
+        console.log(`SessionID not found in userHashMap: ${sessionID}`); // Log if sessionID is not found
+        res.status(404).json({ error: 'User not found' });
     }
 });
 
-// POST to leave the queue
-app.post('/leaveQueue', (req, res) => {
-    const { username } = req.body;
-    console.log(`API Request: POST /leaveQueue, username:`, username);
 
-    
-    const index = queue.indexOf(username);
-    if (index > -1) {
-        queue.removePlayer(username);
-        io.emit('queueUpdated', queue); // Emit updated queue to clients
-        return res.json({ message: `${username} left the queue.`, queue });
-    } else {
-        return res.status(400).json({ error: 'Player is not in the queue' });
-    }
-});
-
-io.on('connection', (socket) => {
-    console.log(`User connected: ${socket.id}`); // Log when a user connects
-
-    socket.on('joinQueue', (username) => {
-        if (!queue.containsPlayer(username)) {
-            queue.addPlayer(username);
-            userHashMap.set(socket.id, username);
-            io.emit('queueUpdated', queue);
-            console.log(`${username} has joined the queue.`);
-        }
-    })
-
-    socket.on('leaveQueue', (username) => {
-        if (queue.containsPlayer(username)) {
-            queue.removePlayer(username);
-            userHashMap.delete(socket.id);
-            console.log(`Removed ${username} from the queue, user left the queue.`)
-        }
-    })
-
-    // Handle disconnect event
-    socket.on('disconnect', () => {
-        console.log(`User disconnected: ${socket.id}`); // Log when a user disconnects
-        let username = userHashMap.get(socket.id)
-        console.log(`${username} disconnected.`)
-        if (queue.containsPlayer(username)) {
-            queue.removePlayer(username);
-            userHashMap.delete(socket.id);
-            console.log(`Removed ${username} from the queue to disconnection}`)
-        }
-    });
-});
 
 // Start the server
 const PORT = process.env.PORT || 3000;
@@ -241,6 +303,7 @@ server.listen(PORT, () => {
     console.log('Server started successfully.');
     console.log('Starting processes...');
     
+
 
     /*
     1. When Server starts, begin AiVsAi Attract Mode. Loop until player connects to Queue

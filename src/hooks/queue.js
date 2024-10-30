@@ -3,13 +3,28 @@ class Queue {
         this.queue = [];  
     }
 
-    addPlayer(player) {
-        this.queue.push(player);
-        console.log(`${player} has joined the queue.`);
+    getQueue() {
+        return this.queue;
     }
 
-    removePlayer(player) {
-        this.queue = this.queue.filter((p) => p.username !== player.username);
+    addPlayer(username) {
+        
+        if (!this.containsPlayer(username)) {
+            this.queue.push(username);
+            return true;
+        }
+        return false;
+        
+    }
+
+    removePlayer(username) {
+        
+        const index = this.queue.indexOf(username)
+        if (index > -1) {
+            this.queue.splice(index, 1);
+            return true;
+        }
+        return false;
 
     }
 

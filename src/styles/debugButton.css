@@ -1,0 +1,42 @@
+/* Debug Button Styles */
+.dev-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .dev-button button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .dev-button button:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
+    transform: scale(1.05);    /* Slightly enlarge on hover */
+  }
+  
+  .dev-button button:active {
+    background-color: #004085; /* Even darker shade when active */
+    transform: scale(0.98);    /* Slightly shrink when clicked */
+  }
+  
+  .dev-data {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa; /* Light gray background for readability */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  .dev-data p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333; /* Darker text for better contrast */
+  }
+  

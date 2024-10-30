@@ -3,7 +3,12 @@ class Player {
         this.gl = gl
         this.color = color
         this.name = name
+        this.sessionId = sessionId
         this.powerups = new Powerups
+    }
+
+    setColor(playerNum){
+        this.playerNum = playerNum
     }
 
     Lightning(column, row){

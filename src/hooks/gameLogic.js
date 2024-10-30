@@ -3,7 +3,6 @@ const AI = require('./AI.js');
 class GameLogic {
     constructor() {
         this.board = this.createBoard();
-        this.player = [new Player('R', 1), new Player('Y', 2)];
         this.currentPlayerIndex = 0;
         this.ai = [new AI(1), new AI(1)]; // AI difficulty Medium
         this.isAIvsAI = true;

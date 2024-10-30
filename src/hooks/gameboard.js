@@ -4,10 +4,12 @@ const turnIndicator = document.getElementById('turn-indicator');
 const timerDisplay = document.getElementById('timer');
 let currentPlayer = 1; // 1 = Red, 2 = Yellow
 let timerInterval;
-
+const BoardManager = require('./boardManager.js');
+const bm = new BoardManager();
 
 document.addEventListener('DOMContentLoaded', () => {
     constructGameboard();
+    
     fetchInitialBoard();
     startTimer(120);
 
@@ -15,11 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 return (
     <div>
+       if(PowerupButton) 
       <GameBoard board={board} onClick={makeMove} />
-      {/* <div id="turn-indicator"> */}
-        {/* {currentPlayer === 1 ? "Player 1's Turn (Red)" : "Player 2's Turn (Yellow)"} */}
-      {/* </div> */}
-      {/* <div id="timer">Time left: {timer}s</div> */}
+
     </div>
   );
 
@@ -39,7 +39,7 @@ function constructGameBoard() {
 
 
 // Handle move when player clicks a column button
-async function makeMove(column) {
+async function makeMove(row, column) {
     try {
         const response = await fetch('http://localhost:3000/move', {
             method: 'POST',
@@ -49,7 +49,9 @@ async function makeMove(column) {
 
         if (response.ok) {
             const data = await response.json();
+            bm.placePiece(row, column)
             updateBoard(data.board);
+            
             if (data.message && data.message.includes("wins")) {
                 clearInterval(timerInterval);
                 alert(data.message);

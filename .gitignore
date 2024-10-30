@@ -14,3 +14,4 @@ yarn-error.log*
 # IDE or system files
 .DS_Store
 .env
+node_modules/.vite/deps/_metadata.json

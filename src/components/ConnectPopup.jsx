@@ -60,11 +60,18 @@ const ConnectPopup = ({ onClose }) => {
         return response.json();
       })
       .then(data => {
+        const { message, redirect } = data;
+
+        if (redirect === '/lobby') {
+        onClose();
+        navigate('/lobby');
+        } else {
         console.log('Join Queue Response:', data);
         localStorage.setItem('username', username);
         alert(`${username} has joined the queue.`);
         onClose(); // Close the popup after adding the player
         navigate('/lobby'); // Navigate to the lobby page only after successful join
+        }
       })
       .catch(error => {
         console.error('Error joining queue:', error);

@@ -17,11 +17,13 @@ const App = () => {
 
   useEffect(() => {
     // Retrieve sessionID or create a new one if not exists
+
     let sessionID = localStorage.getItem('sessionID');
     if (!sessionID) {
       sessionID = `session_${Math.random().toString(36).substr(2, 9)}`; // Simple unique ID generation
       localStorage.setItem('sessionID', sessionID);
     }
+
 
     // Set up the socket connection using sessionID
     const newSocket = io('http://localhost:3000', {

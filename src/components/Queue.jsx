@@ -24,24 +24,8 @@ const Queue = () => {
 
     fetchQueueData();
 
-    // Set up socket connection for real-time queue updates
-    const socket = io('http://localhost:3000'); // Replace with your server's URL if necessary
+  });
 
-    // Event listener for real-time queue updates
-    socket.on('queueUpdated', (updatedQueue) => {
-      console.log('Queue updated via WebSocket:', updatedQueue); // Log updated queue
-      setQueue(updatedQueue || []); // Update queue state, log the state
-    });
-
-    // Clean up the socket connection when the component unmounts
-    return () => {
-      socket.disconnect();
-    };
-  }, []); // Empty dependency array means this runs only once when component mounts
-
-  useEffect(() => {
-    console.log('Queue state updated:', queue); // Log whenever queue state updates
-  }, [queue]);
 
   // Create the list of players dynamically using map
   const queueList = queue.length > 0 ? (

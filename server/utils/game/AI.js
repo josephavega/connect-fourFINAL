@@ -39,4 +39,4 @@ class AI {
     }
 }
 
-module.exports = AI;
+export default AI;

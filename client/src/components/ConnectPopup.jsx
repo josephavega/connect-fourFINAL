@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../styles/connectPopup.css";
-import { io } from 'socket.io-client';
+import queueSocket from '../sockets/queueSocket';
+import gameSocket from '../sockets/gameSocket';
 import { v4 as uuidv4 } from 'uuid'; // Use a library like uuid to generate unique IDs
 
 const ConnectPopup = ({ onClose }) => {
@@ -20,37 +21,23 @@ const ConnectPopup = ({ onClose }) => {
     const sessionID = localStorage.getItem('sessionID');
 
     // Emit join queue event through socket
-    if (socket) {
-      socket.emit('joinQueue', username, sessionID);
-    }
+    
+      queueSocket.emit('joinQueue', { username, sessionID });
 
-    // Make API request to join the queue
-    fetch('http://localhost:3000/joinQueue', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, sessionID }), // Include sessionID in the payload
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.statusText}`);
+      // Listen for the server's response
+      queueSocket.on('joinQueueResponse', (data) => {
+        if (data.success) {
+          console.log('Join Queue Response:', data);
+          localStorage.setItem('username', username);
+          alert(`${username} has joined the queue.`);
+          onClose(); // Close the popup after adding the player
+          navigate('/lobby'); // Navigate to the lobby page only after successful join
+        } else {
+          alert(`Failed to join queue: ${data.message}`);
         }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Join Queue Response:', data);
-        localStorage.setItem('username', username);
-        alert(`${username} has joined the queue.`);
-        onClose(); // Close the popup after adding the player
-        navigate('/lobby'); // Navigate to the lobby page only after successful join
-      })
-      .catch(error => {
-        console.error('Error joining queue:', error);
-        alert(`Failed to join queue: ${error.message}`);
       });
+    
   };
-
   return (
     <div className="connect-popup-overlay">
       <div className="connect-popup">

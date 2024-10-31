@@ -5,7 +5,7 @@ const cors = require('cors');
 const { Server } = require('socket.io');
 const req = require('express/lib/request');
 const { start } = require('repl');
-const config = require('../server/config/config.json');
+const config = require('./config/config.json');
 
 
 const GameLogic = require('../hooks/gameLogic.js');

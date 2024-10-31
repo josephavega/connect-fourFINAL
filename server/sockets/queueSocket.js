@@ -1,27 +1,38 @@
 // server/sockets/queueSocket.js
-const Queue = require('../utils/queue/Queue');
+import users from '../utils/users.js';  // Assuming users is a utility file you created for managing user data
 
-let userHashMap = new Map();
+// server/sockets/queueSocket.js
+export default function queueSocketHandler(io) {
+  const queueNamespace = io.of('/queue');
 
-module.exports = (socket, io) => {
-  const { sessionID } = socket.handshake.query;
-  let username = null;
+  queueNamespace.on('connection', (socket) => {
+    console.log('A user connected to the queue namespace');
 
-  if (sessionID) {
-    if (!userHashMap.has(sessionID)) {
-      userHashMap.set(sessionID, username);
-      console.log(`New Session: ${sessionID}`);
-    } else {
-      username = userHashMap.get(sessionID);
-      console.log(`Updated Session: ${sessionID}, Username: ${username}`);
+    const { sessionID } = socket.handshake.query;
+    let username = null;
+
+    if (sessionID) {
+      // Assuming you have a userHashMap to track users
+      if (!users.has(sessionID)) {
+        users.set(sessionID, username);
+        console.log(`New Session: ${sessionID}`);
+      } else {
+        username = users.get(sessionID);
+        console.log(`Updated Session: ${sessionID}, Username: ${username}`);
+      }
     }
-  }
 
-  socket.on('heartbeat', (sessionID) => {
-    console.log(`Heartbeat from ${sessionID}`);
-  });
+    socket.on('joinQueue', (sessionID) => {
+      console.log(`User with sessionID ${sessionID} joined the queue`);
+    });
 
-  socket.on('disconnect', () => {
-    console.log(`User disconnected: ${sessionID}`);
+    socket.on('message', (data) => {
+      console.log(`Message from client: ${data}`);
+      socket.emit('message', { message: 'Hello from the server!' });
+    });
+
+    socket.on('disconnect', () => {
+      console.log('User disconnected from the queue namespace');
+    });
   });
-};
+}

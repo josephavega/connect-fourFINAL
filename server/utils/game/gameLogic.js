@@ -1,4 +1,4 @@
-const AI = require('./AI.js');
+import AI from './AI.js'
 
 class GameLogic {
     constructor() {
@@ -280,7 +280,5 @@ class Player {
     }
 }
 
-// Export GameLogic as a function that takes an io instance
-module.exports = function(io) {
-    return new GameLogic(io);
-};
+
+export default GameLogic;

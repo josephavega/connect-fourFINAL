@@ -1,8 +1,8 @@
-const gameLogic = require("./gameLogic");
+import GameLogic from './GameLogic.js'
 
 class Manager{
     constructor(gl){
-        this.gl = new gameLogic()
+        this.gl = new GameLogic()
     }
 
     setGameType(gameType){
@@ -38,4 +38,4 @@ class Manager{
 
 }
 
-module.exports = Manager;
+export default new Manager();

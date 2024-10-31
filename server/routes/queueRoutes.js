@@ -1,8 +1,7 @@
 // server/routes/queueRoutes.js
-const express = require('express');
-const Queue = require('../utils/queue/Queue'); // Import Queue logic
+import express from 'express';
+import users from '../utils/users.js'; // Import users utility
 
-const userHashMap = new Map();
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -17,8 +16,8 @@ router.post('/joinQueue', (req, res) => {
   if (!username) {
     return res.status(400).json({ error: 'Username is required.' });
   } else if (!Queue.containsPlayer(username)) {
-    Queue.addPlayer(username);
-    userHashMap.set(sessionID, username);
+    users.addToQueue(sessionID);
+    users.set(sessionID, username);
     return res.json({ message: `${username} added to the queue.`, queue: Queue.queue });
   } else {
     return res.status(400).json({ error: 'Player is already in the queue' });
@@ -32,11 +31,12 @@ router.post('/leaveQueue', (req, res) => {
 
   if (Queue.containsPlayer(username)) {
     Queue.removePlayer(username);
-    userHashMap.delete(sessionID);
+    users.delete(sessionID);
     return res.json({ message: `${username} left the queue.`, queue: Queue.queue });
   } else {
     return res.status(400).json({ error: 'Player is not in the queue' });
   }
 });
 
-module.exports = router;
+export default router;
+

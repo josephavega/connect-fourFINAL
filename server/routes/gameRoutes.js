@@ -1,10 +1,12 @@
 // server/routes/gameRoutes.js
-const express = require('express');
-const GameLogic = require('../utils/game/Manager');
-const game = GameLogic(); // initialize GameLogic instance
-const queue = Queue; // use Queue logic
-const {rows, columns} = config.gameSettings;
 
+import express from 'express';
+import Manager from '../utils/game/Manager.js';
+import users from '../utils/users.js'; 
+
+const game = Manager; // initialize GameLogic instance
+
+const router = express.Router();
 
 /* Gamestate API Handler */
 // GET methods for retreiving Gamestate Data
@@ -140,4 +142,4 @@ router.post('/startAIVsAI', (req, res) => {
 });
 
 
-module.exports = router;
+export default router;

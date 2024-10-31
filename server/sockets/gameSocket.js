@@ -1,9 +1,10 @@
 // server/sockets/gameSocket.js
-const GameLogic = require('../utils/game/Manager');
+const Manager = require('../utils/game/Manager');
 const Queue = require('../utils/queue/Queue');
-const userHashMap = require('../utils/userHashMap');
+//const userHashMap = require('../utils/userHashMap');
 
-const game = GameLogic(); // Create an instance of the GameLogic class
+let userHashMap = new Map();
+const game = new Manager(); // Create an instance of the GameLogic class
 
 module.exports = (socket, io) => {
   const { sessionID } = socket.handshake.query;

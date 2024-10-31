@@ -1,6 +1,7 @@
 // server/sockets/queueSocket.js
 const Queue = require('../utils/queue/Queue');
-const userHashMap = require('../utils/userHashMap');
+
+let userHashMap = new Map();
 
 module.exports = (socket, io) => {
   const { sessionID } = socket.handshake.query;

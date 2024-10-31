@@ -19,6 +19,7 @@
     width: 300px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .popup-header {
@@ -42,6 +43,7 @@
 .popup-content label {
     display: block;
     margin: 10px 0;
+    padding: 5px;
 }
 
 .game-type-selection {
@@ -51,13 +53,14 @@
 .start-btn {
     background-color: #4CAF50;
     color: white;
-    padding: 10px 20px;
+    padding: .5em 1.5em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1.5em;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }
 
 .start-btn:hover {
-    background-color: #45a049;
+    background-color: #84c888;
 }

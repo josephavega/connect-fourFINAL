@@ -20,18 +20,20 @@ const App = () => {
 
   useEffect(() => {
 
+
+    
       let sessionID = localStorage.getItem('sessionID');
+  
       if (!sessionID) {
         sessionID = uuidv4(); // Generate unique session ID
         localStorage.setItem('sessionID', sessionID);
       }
-  
       // Log the session ID for debugging purposes
       console.log("Generated Session ID: ", sessionID);
   
 
-    queueSocket.emit("message", "Sending on the queue!");
-    gameSocket.emit("message", "Sending on the game!");
+    queueSocket.emit("message", `sent from ${sessionID}`);
+    gameSocket.emit("message", `sent from ${sessionID}`);
     
     return () => {
       queueSocket.off('message');

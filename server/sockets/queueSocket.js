@@ -22,8 +22,11 @@ export default function queueSocketHandler(io) {
       }
     }
 
-    socket.on('joinQueue', (sessionID) => {
-      console.log(`User with sessionID ${sessionID} joined the queue`);
+    socket.on('joinQueue', (sessionID, username) => {
+      console.log(`User ${username} with sessionID ${sessionID} joined the queue`);
+      const data = {sessionID, username};
+      users.addToQueue(data);
+
     });
 
     socket.on('message', (data) => {

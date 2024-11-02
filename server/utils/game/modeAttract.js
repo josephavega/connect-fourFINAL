@@ -1,4 +1,4 @@
-const socket = io('http://localhost:3000'); // Connect to the server
+
 const gameBoardDiv = document.getElementById('gameboard');
 
 // Set up event listener to construct the gameboard after the DOM loads

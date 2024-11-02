@@ -1,3 +1,5 @@
+
+
 class Users {
     constructor() {
       // Map to store sessionID -> user information (e.g., username, queue status, game status)
@@ -38,10 +40,13 @@ class Users {
     }
   
     // Add user to queue
-    addToQueue(sessionID) {
+    addToQueue(data) {
+      const {sessionID, username} = data;
       if (this.usersMap.has(sessionID)) {
         this.queue.add(sessionID);
-        this.usersMap.get(sessionID).inQueue = true;
+        this.usersMap.set(sessionID, { username, inQueue: true, inGame: false});
+        console.log(`${username} added to Queue`);
+        this.printStatus;
       }
     }
   

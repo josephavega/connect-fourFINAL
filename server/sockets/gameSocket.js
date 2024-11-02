@@ -40,17 +40,17 @@ export default function gameSocketHandler(io) {
     socket.on('disconnect', () => {
       console.log(`${socket.id} disconnected`);
   
-      const username = users.get(sessionID);
+      // const username = users.get(sessionID);
       
-      if (username) {
-        // If the player was in the game, remove them from the queue and handle game state
-        if (Queue.containsPlayer(username)) {
-          users.removeFromGame(sessionID);
-          users.delete(sessionID);
-          gameNamespace.emit('queueUpdated', Queue.queue);
-          console.log(`Removed ${username} from the queue due to disconnection.`);
-        }
-      }
+      // if (username) {
+      //   // If the player was in the game, remove them from the queue and handle game state
+      //   if (Queue.containsPlayer(username)) {
+      //     users.removeFromGame(sessionID);
+      //     users.delete(sessionID);
+      //     gameNamespace.emit('queueUpdated', Queue.queue);
+      //     console.log(`Removed ${username} from the queue due to disconnection.`);
+      //   }
+      // }
     });
   
     // Handle restart or reset game request

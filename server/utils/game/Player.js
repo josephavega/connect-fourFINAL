@@ -18,3 +18,5 @@ class Player {
         this.powerups.Brick(column)
     }
 }
+
+module.exports = new Player();

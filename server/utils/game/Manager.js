@@ -2,11 +2,16 @@ import GameLogic from './GameLogic.js'
 
 class Manager{
     constructor(gl){
-        this.gl = new GameLogic()
+        this.GameLogic = GameLogic;
     }
 
     setGameType(gameType){
         this.gameType = gameType
+    }
+
+    startAIvsAI() {
+        this.GameLogic.startAIvsAI();
+        console.log("Starting AI vs. AI game....")
     }
 
     setPlayer(name, color){

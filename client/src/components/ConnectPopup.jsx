@@ -10,7 +10,8 @@ const ConnectPopup = ({ onClose }) => {
   const [socket, setSocket] = useState(null); // State for socket instance
   const navigate = useNavigate(); // Initialize navigate
 
-
+  // Need to add functionality such that if the player sessionID is already in the queue, 
+  // it skips the popup and sends them straight to the queue
 
   const joinQueue = () => {
     if (username.trim() === '') {
@@ -21,19 +22,27 @@ const ConnectPopup = ({ onClose }) => {
     const sessionID = localStorage.getItem('sessionID');
 
     // Emit join queue event through socket
-    
-      queueSocket.emit('joinQueue', { username, sessionID });
+      const data = {username, sessionID}
+      queueSocket.emit('joinQueue', data);
 
       // Listen for the server's response
       queueSocket.on('joinQueueResponse', (data) => {
         if (data.success) {
           console.log('Join Queue Response:', data);
           localStorage.setItem('username', username);
-          alert(`${username} has joined the queue.`);
-          onClose(); // Close the popup after adding the player
-          navigate('/lobby'); // Navigate to the lobby page only after successful join
+          console.log(data.message);
+  
+          // Check if the user should be redirected to the lobby
+          if (data.redirectToLobby) {
+            navigate('/lobby'); // Navigate to the lobby page
+            onClose();
+          } else {
+            onClose(); // Close the popup after adding the player
+            navigate('/lobby'); // Navigate to the lobby page after successful join
+          }
         } else {
-          alert(`Failed to join queue: ${data.message}`);
+          //alert(`Failed to join queue: ${data.message}`);
+          console.log('Failed to join Queue')
         }
       });
     

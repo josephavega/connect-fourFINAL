@@ -7,7 +7,6 @@ import '../styles/debugButton.css'
 const DebugButton = () => {
 
 
-
   const [username, setUsername] = useState('');
   const [sessionID, setSessionID] = useState(null);
   const [serverUsername, setServerUsername] = useState('');
@@ -20,24 +19,25 @@ const DebugButton = () => {
     setUsername(localUsername);
     setSessionID(localSessionID);
 
+    console.log("Attempting to Fetch SessionID from server...")
     // Fetch user data from the server using the session ID
-    if (localSessionID) {
-        fetch(`http://localhost:3000/getUsername/${localSessionID}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Server error: ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          setServerUsername(data.username || 'Unknown');
-        })
-        .catch(error => {
-          console.error('Error retrieving server data:', error);
-          setServerUsername('Error retrieving username');
-        });
-    }
+    if (sessionID) {
+      fetch(`http://localhost:3000/queue/getUsername/${localSessionID}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.statusText}`);
+        }
+        return response.json(); // This line will fail if the response is not valid JSON
+      })
+      .then(data => {
+        setServerUsername(data.username || 'Unknown');
+      })
+      .catch(error => {
+        console.error('Error fetching username:', error);
+        setServerUsername('Error retrieving username');
+      });
   }
+}
     return <>
     
     <div className="dev-button">
@@ -54,4 +54,4 @@ const DebugButton = () => {
 
 }
 
-export default DebugButton
+export default DebugButton;

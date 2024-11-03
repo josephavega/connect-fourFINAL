@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { io } from 'socket.io-client'; 
+import queueSocket from 'socket.io-client'; 
 import { v4 as uuidv4 } from 'uuid'; 
 
 let sessionID = localStorage.getItem('sessionID');
@@ -8,62 +8,62 @@ if (!sessionID) {
   localStorage.setItem('sessionID', sessionID);
 }
 
-let socket = null;
-
 const QueueButton = () => {
-  const [inQueue, setInQueue] = useState(false);
+  const [inQueue, setInQueue] = useState(false); // State to track if the user is in the queue
+  const [loading, setLoading] = useState(true);  // State to track loading status during initial fetch
+
+  useEffect(() => {
+    // Check initial queue status from server
+    fetch('http://localhost:3000/isInQueue', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sessionID }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Initial Queue Status:', data);
+        setInQueue(data.inQueue);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error checking queue status:', error);
+        setLoading(false);
+      });
+  }, []); // Empty dependency array to run only on component mount
 
   const toggleQueueStatus = () => {
-    const sessionID = localStorage.getItem('sessionID');
-  
-    if (inQueue) {
-      // Leave the queue using API request
-      fetch('http://localhost:3000/leaveQueue', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sessionID }),
+    const endpoint = inQueue ? 'leaveQueue' : 'joinQueue';
+
+    fetch(`http://localhost:3000/${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sessionID }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.statusText}`);
+        }
+        return response.json();
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Server error: ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Leave Queue Response:', data);
-          setInQueue(false);
-        })
-        .catch(error => {
-          console.error('Error leaving queue:', error);
-          alert('Failed to leave the queue.');
-        });
-    } else {
-      // Join the queue using API request
-      fetch('http://localhost:3000/joinQueue', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sessionID }),
+      .then(data => {
+        console.log(`${inQueue ? 'Leave' : 'Join'} Queue Response:`, data);
+        setInQueue(!inQueue); // Toggle inQueue status after success
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Server error: ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Join Queue Response:', data);
-          setInQueue(true);
-        })
-        .catch(error => {
-          console.error('Error joining queue:', error);
-          alert('Failed to join the queue.');
-        });
-    }
+      .catch(error => {
+        console.error(`Error ${inQueue ? 'leaving' : 'joining'} queue:`, error);
+        alert(`Failed to ${inQueue ? 'leave' : 'join'} the queue.`);
+      });
   };
+
 
   return (
     <>

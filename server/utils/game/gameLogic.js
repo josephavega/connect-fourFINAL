@@ -15,6 +15,7 @@ class GameLogic {
     startAIVsAI(callback) {
         this.isAIvsAI = true;
         this.runAIGame(callback);
+        
     }
 
     startPlayerVsAI() {
@@ -23,6 +24,7 @@ class GameLogic {
     }
 
     runAIGame(callback) {
+        console.log('Setting up game...')
         const interval = setInterval(() => {
             if (this.gameOver) {
                 clearInterval(interval);
@@ -50,7 +52,7 @@ class GameLogic {
         const move = ai.makeMove(this.board);
         if (move !== null) {
             this.placePiece(move);
-
+            this.printBoard();
                 callback({ board: this.board, winner: this.getCurrentPlayer() });
 
         } else {

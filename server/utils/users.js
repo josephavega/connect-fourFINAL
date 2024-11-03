@@ -13,11 +13,15 @@ class Users {
     }
   
     // Add a new user
-    addUser(sessionID, username) {
+    addUser(data) {
+      const {username, sessionID} = data;
       if (!sessionID || !username) {
         throw new Error("SessionID and username are required to add a user.");
-      }
+      } else if (!this.userExists(sessionID)) {
       this.usersMap.set(sessionID, { username, inQueue: false, inGame: false });
+      } else {
+        console.log(`${username} is already in Queue with sessionID ${sessionID}`);
+      }
     }
   
     // Remove a user
@@ -38,15 +42,21 @@ class Users {
     userExists(sessionID) {
       return this.usersMap.has(sessionID);
     }
+
+    userInQueue(sessionID) {
+      return this.queue.has(sessionID);
+    }
   
     // Add user to queue
     addToQueue(data) {
       const {sessionID, username} = data;
-      if (this.usersMap.has(sessionID)) {
+      if (this.usersMap.has(sessionID) & !this.userInQueue(sessionID)) {
         this.queue.add(sessionID);
         this.usersMap.set(sessionID, { username, inQueue: true, inGame: false});
         console.log(`${username} added to Queue`);
         this.printStatus;
+      } else {
+        console.log('User already in queue');
       }
     }
   

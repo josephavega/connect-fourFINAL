@@ -22,17 +22,43 @@ export default function queueSocketHandler(io) {
       }
     }
 
-    socket.on('joinQueue', (sessionID, username) => {
-      console.log(`User ${username} with sessionID ${sessionID} joined the queue`);
-      const data = {sessionID, username};
-      users.addToQueue(data);
-
+    socket.on('joinQueue', data => {
+      const {username, sessionID} = data;
+      console.log(`User ${username} with sessionID ${sessionID} attempting to join queue`);
+      if (users.userInQueue(sessionID)) {
+        console.log("User already in QUeue.");
+        socket.emit('joinQueueResponse', {
+          success: false,
+          message: 'User already in the queue. Redirecting to lobby',
+          redirectToLobby: true
+        })
+      } else {
+        users.addUser(data);
+        users.addToQueue(data);
+        console.log(users.getQueue());
+        const updatedQueue = users.getQueue();
+        queueNamespace.emit('queueUpdated', updatedQueue);
+        socket.emit('joinQueueResponse', {
+          success: true,
+          message: `Successfully joined the queue.`,
+          redirectToLobby: true
+        });
+      }
+  
     });
+
+
 
     socket.on('message', (data) => {
       console.log(`Message from client: ${data}`);
       socket.emit('message', { message: 'Hello from the server!' });
     });
+
+    socket.on('getQueue', () => {
+      console.log('Initial Queue requested');
+      const currentQueue = users.getQueue();
+      socket.emit('queueUpdated', currentQueue);
+    })
 
     socket.on('disconnect', () => {
       console.log('User disconnected from the queue namespace');

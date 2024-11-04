@@ -41,7 +41,7 @@ const DebugButton = () => {
     return <>
     
     <div className="dev-button">
-    <button onClick ={updateData}></button>
+    <button onClick ={updateData}>Update Server Data Debug</button>
     </div>
     <div className="dev-data">
     <p>Local Username: {username}</p>

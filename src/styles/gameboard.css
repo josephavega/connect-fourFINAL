@@ -1,0 +1,53 @@
+.gameboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+}
+
+.top-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 64px); /* Same width as the main grid */
+  gap: 0;
+  height: 64px; /* Same height as the cells in the main grid */
+}
+
+.top-cell {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  background-color: transparent; /* Makes the top grid transparent */
+}
+
+.hover-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(7, 64px);
+  gap: 0;
+}
+
+.tile-container {
+  width: 64px;
+  height: 64px;
+}
+
+.tile {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.tile-back,
+.tile-front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

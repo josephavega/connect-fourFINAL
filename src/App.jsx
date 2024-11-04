@@ -5,9 +5,9 @@ import { io } from 'socket.io-client';
 
 // Page Imports
 import Homepage from './pages/Home';
-import Spectate from './pages/Spectate';
-import Game from './pages/Game';
-import Lobby from './pages/Lobby'; 
+import Spectate from './pages/spectate';
+import Game from './pages/game';
+import Lobby from './pages/lobby'; 
 
 // Optional Global Styles
 // import '../styles/global.css';

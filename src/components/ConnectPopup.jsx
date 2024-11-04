@@ -19,9 +19,7 @@ const ConnectPopup = ({ onClose }) => {
 
     // Set up the socket connection using sessionID
     const newSocket = io('http://localhost:3000', {
-      query: {
-        sessionID: sessionID,
-      },
+      query: { sessionID: sessionID },
     });
 
     setSocket(newSocket);
@@ -33,8 +31,8 @@ const ConnectPopup = ({ onClose }) => {
   }, []); // Run only once when component mounts
 
   const joinQueue = () => {
-    if (username.trim() === '') {
-      alert('Please enter a username.');
+    if (username.trim() === '' || username.length !== 3) {
+      alert('Username must be exactly 3 characters long.');
       return;
     }
 
@@ -48,9 +46,7 @@ const ConnectPopup = ({ onClose }) => {
     // Make API request to join the queue
     fetch('http://localhost:3000/joinQueue', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, sessionID }), // Include sessionID in the payload
     })
       .then(response => {
@@ -85,8 +81,9 @@ const ConnectPopup = ({ onClose }) => {
             <input
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value.toUpperCase())}
               placeholder="Enter your username"
+              maxLength="3" //Restricts Username to 3 characters max
             />
           </label>
           <button onClick={joinQueue} className="start-btn">

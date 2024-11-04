@@ -13,11 +13,11 @@ export default function queueSocketHandler(io) {
 
     if (sessionID) {
       // Assuming you have a userHashMap to track users
-      if (!users.has(sessionID)) {
-        users.set(sessionID, username);
+      if (!users.userExists(sessionID)) {
+        users.addToQueue(sessionID, username);
         console.log(`New Session: ${sessionID}`);
       } else {
-        username = users.get(sessionID);
+        username = users.getUser(sessionID);
         console.log(`Updated Session: ${sessionID}, Username: ${username}`);
       }
     }

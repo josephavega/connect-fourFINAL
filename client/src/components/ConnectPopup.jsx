@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../styles/connectPopup.css";
-import { io } from 'socket.io-client';
+import queueSocket from '../sockets/queueSocket';
+import gameSocket from '../sockets/gameSocket';
 import { v4 as uuidv4 } from 'uuid'; // Use a library like uuid to generate unique IDs
 
 const ConnectPopup = ({ onClose }) => {
@@ -9,28 +10,8 @@ const ConnectPopup = ({ onClose }) => {
   const [socket, setSocket] = useState(null); // State for socket instance
   const navigate = useNavigate(); // Initialize navigate
 
-  useEffect(() => {
-    // Retrieve or generate sessionID
-    let sessionID = localStorage.getItem('sessionID');
-    if (!sessionID) {
-      sessionID = uuidv4(); // Generate a unique ID for the user
-      localStorage.setItem('sessionID', sessionID);
-    }
-
-    // Set up the socket connection using sessionID
-    const newSocket = io('http://localhost:3000', {
-      query: {
-        sessionID: sessionID,
-      },
-    });
-
-    setSocket(newSocket);
-
-    // Clean up the socket connection when the component unmounts
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []); // Run only once when component mounts
+  // Need to add functionality such that if the player sessionID is already in the queue, 
+  // it skips the popup and sends them straight to the queue
 
   const joinQueue = () => {
     if (username.trim() === '') {
@@ -41,37 +22,31 @@ const ConnectPopup = ({ onClose }) => {
     const sessionID = localStorage.getItem('sessionID');
 
     // Emit join queue event through socket
-    if (socket) {
-      socket.emit('joinQueue', username, sessionID);
-    }
+      const data = {username, sessionID}
+      queueSocket.emit('joinQueue', data);
 
-    // Make API request to join the queue
-    fetch('http://localhost:3000/joinQueue', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, sessionID }), // Include sessionID in the payload
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.statusText}`);
+      // Listen for the server's response
+      queueSocket.on('joinQueueResponse', (data) => {
+        if (data.success) {
+          console.log('Join Queue Response:', data);
+          localStorage.setItem('username', username);
+          console.log(data.message);
+  
+          // Check if the user should be redirected to the lobby
+          if (data.redirectToLobby) {
+            navigate('/lobby'); // Navigate to the lobby page
+            onClose();
+          } else {
+            onClose(); // Close the popup after adding the player
+            navigate('/lobby'); // Navigate to the lobby page after successful join
+          }
+        } else {
+          //alert(`Failed to join queue: ${data.message}`);
+          console.log('Failed to join Queue')
         }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Join Queue Response:', data);
-        localStorage.setItem('username', username);
-        alert(`${username} has joined the queue.`);
-        onClose(); // Close the popup after adding the player
-        navigate('/lobby'); // Navigate to the lobby page only after successful join
-      })
-      .catch(error => {
-        console.error('Error joining queue:', error);
-        alert(`Failed to join queue: ${error.message}`);
       });
+    
   };
-
   return (
     <div className="connect-popup-overlay">
       <div className="connect-popup">

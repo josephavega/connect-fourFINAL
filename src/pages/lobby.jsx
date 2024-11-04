@@ -1,20 +1,25 @@
 import React from 'react';
 import QueueComponent from '../components/Queue';
-import QueueButton from '../components/QueueButton'
-import DebugButton from '../components/DebugButton'
+import QueueButton from '../components/QueueButton';
+import DebugButton from '../components/DebugButton';
+import '../styles/lobby.css';
 
 const Lobby = () => {
-
-
-
   return (
-    <div>
-      <div>
+    <div className="lobby-container">
+      <h1 className="waiting-text">Waiting for next game...</h1>
+      <div className="queue">
         <QueueComponent />
-        <QueueButton />
       </div>
-      <h1>Welcome to the Lobby</h1>
-      <div>
+      <div className="queue-button-container">
+        <QueueButton />
+        <img 
+          src="../src/assets/Menu/Buttons/Button_Join.png" 
+          alt="Join Queue" 
+          className="join-button-overlay" 
+        />
+      </div>
+      <div className="debugButton">
         <DebugButton />
       </div>
     </div>

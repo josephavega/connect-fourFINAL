@@ -1,0 +1,26 @@
+.nav-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .nav-button button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .nav-button button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);    
+  }
+
+  .nav-button button:active {
+    background-color: #004085;
+    transform: scale(0.98);   
+  }

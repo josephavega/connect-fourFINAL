@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
+import queueSocket from '../sockets/queueSocket';
 import '../styles/queue.css';
 
 const Queue = () => {

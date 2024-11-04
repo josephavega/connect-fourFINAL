@@ -3,9 +3,8 @@ import http from 'http';
 import cors from 'cors';
 import session from 'express-session';
 import { Server } from 'socket.io';
-import config from './config/config.json' assert { type: 'json' };
 import Manager from './utils/game/Manager.js';
-import Users from './utils/Users.js';
+import Users from './utils/users.js';
 
 
 // Import routes and socket handlers

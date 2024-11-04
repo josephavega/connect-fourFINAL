@@ -2,6 +2,8 @@ import React from 'react';
 import QueueComponent from '../components/Queue';
 import QueueButton from '../components/QueueButton';
 import DebugButton from '../components/DebugButton';
+import Game from './Game';
+import GameButton from '../components/GameButton';
 import '../styles/lobby.css';
 
 const Lobby = () => {
@@ -21,6 +23,9 @@ const Lobby = () => {
       </div>
       <div className="debugButton">
         <DebugButton />
+      </div>
+      <div>
+        <GameButton />
       </div>
     </div>
   );

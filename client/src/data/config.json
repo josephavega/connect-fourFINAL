@@ -1,0 +1,9 @@
+{
+    "gameSettings": {
+        "rows": 6,
+        "columns": 7
+    },
+    "serverSettings": {
+        "port": 3000
+    }
+}

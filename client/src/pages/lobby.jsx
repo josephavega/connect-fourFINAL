@@ -9,11 +9,11 @@ const Lobby = () => {
 
   return (
     <div>
+      <h1>Welcome to the Lobby</h1>
       <div>
         <QueueComponent />
         <QueueButton />
       </div>
-      <h1>Welcome to the Lobby</h1>
       <div>
         <DebugButton />
       </div>

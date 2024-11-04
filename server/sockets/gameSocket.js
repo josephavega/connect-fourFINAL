@@ -1,6 +1,6 @@
 // server/sockets/gameSocket.js
 import { io } from 'socket.io-client';
-import users from '../utils/users.js'
+import users from '../utils/Users.js'
 import Manager from '../utils/game/Manager.js'
 
 const game = Manager; // Create an instance of the GameLogic class

@@ -5,8 +5,7 @@ import session from 'express-session';
 import { Server } from 'socket.io';
 import config from './config/config.json' assert { type: 'json' };
 import Manager from './utils/game/Manager.js';
-import Queue from '../client/src/server/queue/Queue.js';
-import users from './utils/users.js';
+import Users from './utils/Users.js';
 
 
 // Import routes and socket handlers
@@ -59,5 +58,5 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 
-  Manager.startAIvsAI();
+  Manager.startAIvsAI;
 });

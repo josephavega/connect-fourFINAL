@@ -1,5 +1,5 @@
 // server/sockets/queueSocket.js
-import users from '../utils/users.js';  // Assuming users is a utility file you created for managing user data
+import users from '../utils/Users.js';  // Assuming users is a utility file you created for managing user data
 
 // server/sockets/queueSocket.js
 export default function queueSocketHandler(io) {

@@ -20,8 +20,6 @@ const App = () => {
 
   useEffect(() => {
 
-
-    
       let sessionID = localStorage.getItem('sessionID');
   
       if (!sessionID) {
@@ -32,8 +30,8 @@ const App = () => {
       console.log("Generated Session ID: ", sessionID);
   
 
-    queueSocket.emit("message", `sent from ${sessionID}`);
-    gameSocket.emit("message", `sent from ${sessionID}`);
+    queueSocket.emit("message", `Queue Socket: sent from ${sessionID}`);
+    gameSocket.emit("message", `Game Socket: sent from ${sessionID}`);
     
     return () => {
       queueSocket.off('message');

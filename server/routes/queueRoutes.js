@@ -1,6 +1,6 @@
 // server/routes/queueRoutes.js
 import express from 'express';
-import users from '../utils/users.js'; // Import users utility
+import users from '../utils/Users.js'; // Import users utility
 
 const router = express.Router();
 

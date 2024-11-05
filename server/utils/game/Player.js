@@ -1,6 +1,9 @@
+import Powerups from './gamePowerups.js'
+import GameLogic from './GameLogic.js'
+
 class Player {
     constructor(name, color, gl) {
-        this.gl = gl
+        this.gl = GameLogic
         this.color = color
         this.name = name
         this.powerups = new Powerups
@@ -19,4 +22,4 @@ class Player {
     }
 }
 
-module.exports = new Player();
+export default new Player();

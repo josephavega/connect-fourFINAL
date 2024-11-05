@@ -50,15 +50,16 @@ class GameLogic {
     aiMove(callback) {
         const ai = this.ai[this.currentPlayerIndex];
         const move = ai.makeMove(this.board);
+        console.log(`AI (${this.getCurrentPlayer()}) is making move: ${move}`);
         if (move !== null) {
             this.placePiece(move);
-            this.printBoard();
-                callback({ board: this.board, winner: this.getCurrentPlayer() });
-
+            this.printBoard(); // Log the board after placing the piece
+            callback({ board: this.board, winner: this.getCurrentPlayer() });
         } else {
             console.log("No valid moves available.");
         }
     }
+    
 
     createBoard() {
         const rows = 6;

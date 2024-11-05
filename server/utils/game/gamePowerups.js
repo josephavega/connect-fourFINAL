@@ -82,3 +82,5 @@ class Powerups{
         }
     }
 
+}
+export default Powerups;

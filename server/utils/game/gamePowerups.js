@@ -81,6 +81,5 @@ class Powerups{
             }
         }
     }
+    export default Powerups;
 
-}
-export default Powerups;

@@ -1,3 +1,5 @@
+import Powerups from './gamePowerups.js'
+
 class Player {
     constructor(name, color, gl) {
         this.gl = gl
@@ -18,5 +20,4 @@ class Player {
         this.powerups.Brick(column)
     }
 }
-
-module.exports = new Player();
+export default new Player();

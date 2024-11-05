@@ -1,5 +1,6 @@
 import GameLogic from './GameLogic.js'
-import Player from './Player.js'; 
+import player from './Player.js'
+
 
 class Manager{
     constructor(){

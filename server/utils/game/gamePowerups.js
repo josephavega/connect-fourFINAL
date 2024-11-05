@@ -91,6 +91,7 @@ class Powerup_Brick {
     }
 }
 
+<<<<<<< HEAD
 // Main Powerups class that uses the other classes
 class Powerups {
     constructor(player) {
@@ -115,3 +116,7 @@ class Powerups {
 
 // Export all classes as named exports
 export default Powerups;
+=======
+}
+export default Powerups;
+>>>>>>> a2911d37c980e7f913eaeb3c12fd94a0956f6f31

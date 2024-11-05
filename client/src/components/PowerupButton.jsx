@@ -2,16 +2,55 @@ import React, { useState } from 'react';
 import { io } from 'socket.io-client';
 
 
-const PowerupButton = ({ name, onActivate, isActive }) => {
+const PowerupButton = ({ name, onActivate, isActive, image }) => {
     return (
         <button
             onClick={() => onActivate(name)}
-            style={{ backgroundColor: isActive ? 'green' : 'gray' }}
-        >   
-            {name}
+            style={{
+                position: 'relative',
+                backgroundColor: isActive ? 'transparent' : 'gray',
+                width: '72px',
+                height: '72px',
+                border: 'none',
+                outline: 'none',
+                cursor: 'pointer',
+            }}
+        >
+            {isActive && (
+                <img
+                    src={image}
+                    alt={`${name} unused`}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        zIndex: 1,
+                    }}
+                />
+            )}
+
+    {!isActive && (
+                <img
+                    src={image}
+                    alt={`${name} used`}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        zIndex: 1,
+                    }}
+                />
+            )}
+
+
         </button>
     );
 };
+
 
 const PowerupButtonPanel = () => {
     const [activePowerups, setActivePowerups] = useState({
@@ -58,6 +97,12 @@ return (
         ))}
     </div>
 );
+
+const powerupAnimations = {
+    Anvil: anvilGif,
+    Lightning: lightningGif,
+    Brick: brickGif,
+};
 
 
 export default PowerupButton;

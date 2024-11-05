@@ -7,7 +7,8 @@ import HoverIndicator from '../assets/Board/BoardTileBack.png';
 
 const Gameboard = ({ onClick }) => {
   const [hoveredColumn, setHoveredColumn] = useState(-1);
-
+  const sessionID = localStorage.getItem('sessionID');
+  
   const handleMouseEnter = (colIndex) => {
     setHoveredColumn(colIndex);
   };

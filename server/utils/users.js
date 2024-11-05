@@ -4,6 +4,7 @@ class Users {
     constructor() {
       // Map to store sessionID -> user information (e.g., username, queue status, game status)
       this.usersMap = new Map();
+      this.socketMap = new Map();
   
       // Set to keep track of users in the queue
       this.queue = new Set();
@@ -22,6 +23,22 @@ class Users {
       } else {
         console.log(`${username} is already in Queue with sessionID ${sessionID}`);
       }
+    }
+
+    setSocketID(data) {
+      const {sessionID, socketID} = data;
+      this.socketMap.set(sessionID, socketID);
+    }
+
+    getSessionIDFromSocket(socketID) {
+      const sessionID = this.socketMap.get(socketID);
+      console.log(`${sessionID} on ${socketID}`);
+      return sessionID;
+    }
+
+    setUser(sessionID, username, inQueue, inGame) {
+      this.usersMap.set(sessionID, {username, inQueue: inQueue, inGame: inGame});
+      console.log(`Updated User: ${username} with ID ${sessionID} | inQueue: ${inQueue} , inGame: ${inGame}`);
     }
   
     // Remove a user
@@ -43,21 +60,25 @@ class Users {
       return this.usersMap.has(sessionID);
     }
 
-    userInQueue(sessionID) {
+    InQueue(sessionID) {
       return this.queue.has(sessionID);
     }
   
     // Add user to queue
     addToQueue(data) {
-      const {sessionID, username} = data;
-      if (this.usersMap.has(sessionID) & !this.userInQueue(sessionID)) {
-        this.queue.add(sessionID);
-        this.usersMap.set(sessionID, { username, inQueue: true, inGame: false});
-        console.log(`${username} added to Queue`);
-        this.printStatus;
+      const { sessionID, username } = data;
+      if (this.userExists(sessionID)) {
+        if (!this.InQueue(sessionID)) {
+          this.queue.add(sessionID);
+          this.usersMap.set(sessionID, { username, inQueue: true, inGame: false });
+          console.log(`${username} added to Queue`);
+        } else {
+          console.log('User already in queue');
+        }
       } else {
-        console.log('User already in queue');
+        console.error(`User with sessionID ${sessionID} does not exist`);
       }
+      this.printStatus();
     }
   
     // Remove user from queue
@@ -65,6 +86,7 @@ class Users {
       if (this.usersMap.has(sessionID) && this.queue.has(sessionID)) {
         this.queue.delete(sessionID);
         this.usersMap.get(sessionID).inQueue = false;
+        console.log(`${sessionID} removed from Queue.`)
       }
     }
   

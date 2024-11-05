@@ -4,11 +4,15 @@ import users from '../utils/users.js';  // Assuming users is a utility file you 
 // server/sockets/queueSocket.js
 export default function queueSocketHandler(io) {
   const queueNamespace = io.of('/queue');
+  const HEARTBEAT_TIMEOUT = 10000; // 15 seconds timeout
 
   queueNamespace.on('connection', (socket) => {
     console.log('A user connected to the queue namespace');
 
     const { sessionID } = socket.handshake.query;
+
+    socket.sessionID = sessionID;
+
     let username = null;
 
     if (sessionID) {
@@ -25,7 +29,7 @@ export default function queueSocketHandler(io) {
     socket.on('joinQueue', data => {
       const {username, sessionID} = data;
       console.log(`User ${username} with sessionID ${sessionID} attempting to join queue`);
-      if (users.userInQueue(sessionID)) {
+      if (users.InQueue(sessionID)) {
         console.log("User already in QUeue.");
         socket.emit('joinQueueResponse', {
           success: false,
@@ -48,7 +52,6 @@ export default function queueSocketHandler(io) {
     });
 
 
-
     socket.on('message', (data) => {
       console.log(`Message from client: ${data}`);
       socket.emit('message', { message: 'Hello from the server!' });
@@ -60,8 +63,52 @@ export default function queueSocketHandler(io) {
       socket.emit('queueUpdated', currentQueue);
     })
 
+    socket.on('inQueue', sessionID => {
+      const inQueue = users.InQueue(sessionID);
+      socket.emit('inQueueResponse', inQueue);
+    })
+
+    let heartbeatTimeout;
+    socket.sessionID = sessionID;
+
+  function resetHeartbeatTimeout() {
+    clearTimeout(heartbeatTimeout);
+    heartbeatTimeout = setTimeout(() => {
+      console.log(`${socket.sessionID} did not respond. Removing from queue.`);
+      
+      // Remove user from queue
+      users.removeFromQueue(socket.sessionID);
+
+      // Emit updated queue information
+      queueNamespace.emit('queueUpdated', users.getQueue());
+
+      // Disconnect the socket as it has timed out
+      socket.disconnect(true);
+    }, HEARTBEAT_TIMEOUT);
+  }
+
+    socket.on('heartbeat', (data) => {
+      const {sessionID, username} = data;
+      console.log(`Received heartbeat from ${sessionID}`);
+      users.setUser(sessionID, username, true, false);
+        // Update user state as active
+      resetHeartbeatTimeout();  // Reset timeout when heartbeat is received
+    });
+
     socket.on('disconnect', () => {
-      console.log('User disconnected from the queue namespace');
+      console.log(`${socket.id} disconnected from the queue namespace`);
+
+      // Retrieve the sessionID from the socket object
+      const sessionID = socket.sessionID;
+  
+      // Remove from the queue if necessary
+      if (sessionID) {
+        users.removeFromQueue(sessionID);
+        queueNamespace.emit('queueUpdated', users.getQueue());
+      } else {
+        console.error('No sessionID found for disconnected socket');
+      }
+      
     });
   });
 }

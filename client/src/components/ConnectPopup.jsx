@@ -14,12 +14,23 @@ const ConnectPopup = ({ onClose }) => {
   // it skips the popup and sends them straight to the queue
 
   const joinQueue = () => {
+
+    const sessionID = localStorage.getItem('sessionID');
+    queueSocket.emit('inQueue', sessionID);
+    queueSocket.on('inQueueResponse', inQueue => {
+      if (inQueue) {
+        navigate('/lobby');
+      }
+    });
+
+    
+
     if (username.trim() === '' || username.length !== 3) {
       alert('Username must be exactly 3 characters long.');
       return;
     }
 
-    const sessionID = localStorage.getItem('sessionID');
+ 
 
     // Emit join queue event through socket
       const data = {username, sessionID}

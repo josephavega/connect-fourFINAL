@@ -58,5 +58,5 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 
   Manager.startAIvsAI();
-  console.log('Starting AI vs AI');
+  
 });

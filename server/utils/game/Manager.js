@@ -14,11 +14,11 @@ class Manager{
     startAIvsAI() {
         console.log("Starting AI vs. AI game...");
         this.GameLogic.startAIVsAI((gameState) => {
-            console.log('Game state updated:', gameState);
+            //console.log('Game state updated:', gameState);
+        
         });
     }
     
-
     setPlayer(name, color){
         player = new Player(name, color, this.GameLogic)
         color === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);

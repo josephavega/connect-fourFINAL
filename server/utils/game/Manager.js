@@ -27,15 +27,15 @@ class Manager{
     }
 
     useLightning(player, column, row){
-        player.Lighting(column,row);
+        player.powerups.Lighting(column,row);
     }
 
     useAnvil(player, column){
-        player.Anvil(column);
+        player.powerups.Anvil(column);
     }
 
     useBrick(player, column){
-        player.Brick(column);
+        player.powerups.Brick(column);
     }
 
 

@@ -9,6 +9,10 @@ class Player {
         this.powerups = new Powerups
     }
 
+    placeChip(column){
+        this.gl.placePiece(colIndex)
+    }
+
     Lightning(column, row){
         this.powerups.Lightning(column, row)
     }

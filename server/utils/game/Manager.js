@@ -1,42 +1,45 @@
 import GameLogic from './GameLogic.js'
+import Player from './Player.js'; 
 
 class Manager{
-    constructor(gl){
-        this.GameLogic = GameLogic;
+    constructor(){
+        this.GameLogic = new GameLogic();
     }
 
     setGameType(gameType){
-        this.gameType = gameType
+        this.gameType = gameType;
     }
 
     startAIvsAI() {
-        this.GameLogic.startAIvsAI();
-        console.log("Starting AI vs. AI game....")
+        console.log("Starting AI vs. AI game...");
+        this.gameLogic.startAIVsAI((gameState) => {
+            console.log('Game state updated:', gameState);
+        });
     }
 
     setPlayer(name, color){
-        player = new Player(name, color, gl)
-        color == 0 ? gl.setPlayer(player, 0) : gl.setPlayer(player, 1)
+        player = new Player(name, color, this.GameLogic)
+        color === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);
     }
 
     placeChip(player, column){
-        player.placeChip(column)
+        player.placeChip(column);
     }
 
     useLightning(player, column, row){
-        player.Lighting(column,row)
+        player.Lighting(column,row);
     }
 
     useAnvil(player, column){
-        player.Anvil(column)
+        player.Anvil(column);
     }
 
     useBrick(player, column){
-        player.Brick(column)
+        player.Brick(column);
     }
 
 
-    swapPage(currentPage, newPage){
+    swapPage(currentPage, newPage) {
 
     }
 

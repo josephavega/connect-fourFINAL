@@ -1,8 +1,5 @@
 import Powerups from './gamePowerups.js'
-<<<<<<< HEAD
 import GameLogic from './GameLogic.js'
-=======
->>>>>>> a2911d37c980e7f913eaeb3c12fd94a0956f6f31
 
 class Player {
     constructor(name, color, gl) {
@@ -24,8 +21,5 @@ class Player {
         this.powerups.Brick(column)
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> a2911d37c980e7f913eaeb3c12fd94a0956f6f31
 export default new Player();

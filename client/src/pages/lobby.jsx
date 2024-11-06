@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+zimport React, { useState } from 'react';
 import QueueComponent from '../components/Queue';
 import Leaderboard from '../components/Leaderboard'; 
 import QueueButton from '../components/QueueButton';
@@ -6,9 +6,36 @@ import DebugButton from '../components/DebugButton';
 import GameButton from '../components/GameButton';
 import Gameboard from '../components/Gameboard';
 import '../styles/lobby.css';
+import queueSocket from '../sockets/queueSocket';
+
 
 const Lobby = () => {
-  const [view, setView] = useState('queue'); 
+
+  useEffect(() => {
+    // Retrieve sessionID or create a new one if not exists
+    let sessionID = localStorage.getItem('sessionID');
+    let username = localStorage.getItem('username');
+    if (!sessionID) {
+      sessionID = `session_${Math.random().toString(36).substr(2, 9)}`; // Simple unique ID generation
+      localStorage.setItem('sessionID', sessionID);
+    }
+
+    console.log(`Joined Queue: ${username} with session ${sessionID}`);
+
+    const heartbeatInterval = setInterval(() => {
+      if (queueSocket && queueSocket.connected) {
+        queueSocket.emit('heartbeat', { sessionID, username });
+        console.log(`Heartbeat`);
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(heartbeatInterval);
+      queueSocket.disconnect;
+    }
+
+  })
+
   return (
     <div className="lobby-wrapper">
       {/* Left Side Container */}

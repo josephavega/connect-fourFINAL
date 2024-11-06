@@ -1,6 +1,6 @@
 // server/sockets/gameSocket.js
 import { io } from 'socket.io-client';
-import users from '../utils/Users.js'
+import users from '../utils/users.js'
 import Manager from '../utils/game/Manager.js'
 
 const game = Manager; // Create an instance of the GameLogic class
@@ -14,12 +14,19 @@ export default function gameSocketHandler(io) {
       console.log(`Message from client: ${data}`);
       socket.emit('message', { message: 'Hello from the server!' });
     });
+
+    socket.on('/updateGameboard', data => {
+      socket.emit('/updatedGameboard')
+    })
+
     // Listen for a player move
-    socket.on('playerMove', ({ column }) => {
-      console.log(`Player ${username} made a move in column: ${column}`);
+    socket.on('playerMove', data => {
+      const {rowIndex, colIndex, sessionID} = data;
+      const username = users.getUser(sessionID);
+      console.log(`Player ${username} made a move in column: ${colIndex}`);
   
       try {
-        game.placePiece(column); // Place the piece in the game logic
+        game.placeChip(colIndex); // Place the piece in the game logic
         gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all connected clients
         const currentPlayer = game.getCurrentPlayer();
         gameNamespace.emit('playerTurn', currentPlayer); // Notify whose turn it is

@@ -22,39 +22,7 @@ const App = () => {
       sessionID = `session_${Math.random().toString(36).substr(2, 9)}`; // Simple unique ID generation
       localStorage.setItem('sessionID', sessionID);
     }
-
-    // Set up the socket connection using sessionID
-    const newSocket = io('http://localhost:3000', {
-      query: { sessionID },
-    });
-
-    setSocket(newSocket);
-
-    // Heartbeat to ensure client is connected
-    const heartbeatInterval = setInterval(() => {
-      if (newSocket && newSocket.connected) {
-        newSocket.emit('heartbeat', sessionID);
-        console.log('Heartbeat emitted');
-      }
-    }, 5000);
-
-    // Handle tab/browser close to clean up gracefully
-    const handleBeforeUnload = () => {
-      if (newSocket) {
-        newSocket.emit('beforeDisconnect', sessionID);
-      }
-    };
-
-    // Add event listener for tab/browser close
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    // Cleanup function for component unmount
-    return () => {
-      clearInterval(heartbeatInterval);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      newSocket.disconnect();
-    };
-  }, []); // Empty dependency array means this runs only once when the app mounts
+  })
 
   return (
     <Router>

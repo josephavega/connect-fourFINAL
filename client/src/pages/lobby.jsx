@@ -1,4 +1,4 @@
-zimport React, { useState } from 'react';
+import React, { useState } from 'react';
 import QueueComponent from '../components/Queue';
 import Leaderboard from '../components/Leaderboard'; 
 import QueueButton from '../components/QueueButton';

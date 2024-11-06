@@ -1,74 +1,76 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../styles/connectPopup.css";
-import queueSocket from '../sockets/queueSocket';
-import gameSocket from '../sockets/gameSocket';
 import { v4 as uuidv4 } from 'uuid'; // Use a library like uuid to generate unique IDs
 
 const ConnectPopup = ({ onClose }) => {
   const [username, setUsername] = useState('');
-  const [socket, setSocket] = useState(null); // State for socket instance
-  const navigate = useNavigate(); // Initialize navigate
-
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Retrieve sessionID or create a new one if not exists
+    // Retrieve sessionID or create a new one if it doesn't exist
     let sessionID = localStorage.getItem('sessionID');
     if (!sessionID) {
-      sessionID = uuidv4(); // Generate a unique ID
+      sessionID = uuidv4;
       localStorage.setItem('sessionID', sessionID);
     }
 
-    // Check if user is already in queue
-    queueSocket.emit('inQueue', sessionID);
-    
-    // Add a listener for the inQueue response
-    queueSocket.once('inQueueResponse', (inQueue) => {
-      if (inQueue) {
-        navigate('/lobby'); // Navigate directly to the lobby if user is already in the queue
-        onClose();
-      }
-    });
-
-    // Cleanup listener when component unmounts
-    return () => {
-      queueSocket.off('inQueueResponse');
-    };
+    // Check if user is already in the queue using a GET request with fetch
+    fetch(`http://localhost:3000/queue/isInQueue?sessionID=${sessionID}`)
+      .then((response) => {
+        if (!response.ok) {
+          // Throw an error if response is not successful
+          throw new Error('Failed to check queue status: ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.inQueue) {
+          navigate('/lobby'); // Navigate directly to the lobby if user is already in the queue
+          onClose();
+        }
+      })
+      .catch((error) => {
+        console.error('Error checking queue status:', error);
+      });
   }, [navigate, onClose]);
-  // Need to add functionality such that if the player sessionID is already in the queue, 
-  // it skips the popup and sends them straight to the queue
 
   const joinQueue = () => {
     const sessionID = localStorage.getItem('sessionID');
-    
+
     if (username.trim() === '' || username.length !== 3) {
       alert('Username must be exactly 3 characters long.');
       return;
     }
 
-    // Emit join queue event through socket
-    const data = { username, sessionID };
-    queueSocket.emit('joinQueue', data);
-
-    // Listen for the server's response (use `once` to avoid redundant listeners)
-    queueSocket.once('joinQueueResponse', (data) => {
-      if (data.success) {
-        console.log('Join Queue Response:', data);
-        localStorage.setItem('username', username);
-        console.log(data.message);
-
-        // Redirect to the lobby if necessary
-        if (data.redirectToLobby) {
-          navigate('/lobby'); // Navigate to the lobby page
+    // Send API request to join the queue using fetch
+    fetch('http://localhost:3000/queue/joinQueue', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sessionID, username }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to join queue: ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          localStorage.setItem('username', username);
+          navigate('/lobby'); // Navigate to the lobby page after successful join
           onClose();
         } else {
-          onClose(); // Close the popup after adding the player
-          navigate('/lobby'); // Navigate to the lobby page after successful join
+          console.error(data.message);
+          alert(`Failed to join queue: ${data.message}`);
         }
-      } else {
-        console.log('Failed to join Queue');
-      }
-    });
+      })
+      .catch((error) => {
+        console.error('Error joining queue:', error);
+        alert('An error occurred while attempting to join the queue.');
+      });
   };
 
   return (
@@ -96,6 +98,6 @@ const ConnectPopup = ({ onClose }) => {
       </div>
     </div>
   );
-}
+};
 
 export default ConnectPopup;

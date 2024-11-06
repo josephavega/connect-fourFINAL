@@ -22,7 +22,7 @@ const DebugButton = () => {
 
     // Fetch user data from the server using the session ID
     if (localSessionID) {
-        fetch(`http://localhost:3000/getUsername/${localSessionID}`)
+        fetch(`http://localhost:3000/queue/getUsername/${localSessionID}`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`Server error: ${response.statusText}`);

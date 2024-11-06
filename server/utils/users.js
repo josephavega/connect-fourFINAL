@@ -25,16 +25,7 @@ class Users {
       }
     }
 
-    setSocketID(data) {
-      const {sessionID, socketID} = data;
-      this.socketMap.set(sessionID, socketID);
-    }
 
-    getSessionIDFromSocket(socketID) {
-      const sessionID = this.socketMap.get(socketID);
-      console.log(`${sessionID} on ${socketID}`);
-      return sessionID;
-    }
 
     setUser(sessionID, username, inQueue, inGame) {
       this.usersMap.set(sessionID, {username, inQueue: inQueue, inGame: inGame});
@@ -60,7 +51,7 @@ class Users {
       return this.usersMap.has(sessionID);
     }
 
-    InQueue(sessionID) {
+    userInQueue(sessionID) {
       return this.queue.has(sessionID);
     }
   
@@ -68,7 +59,7 @@ class Users {
     addToQueue(data) {
       const { sessionID, username } = data;
       if (this.userExists(sessionID)) {
-        if (!this.InQueue(sessionID)) {
+        if (!this.userInQueue(sessionID)) {
           this.queue.add(sessionID);
           this.usersMap.set(sessionID, { username, inQueue: true, inGame: false });
           console.log(`${username} added to Queue`);

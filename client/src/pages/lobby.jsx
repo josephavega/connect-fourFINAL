@@ -11,30 +11,6 @@ import queueSocket from '../sockets/queueSocket';
 const Lobby = () => {
   const [view, setView] = useState('queue');
 
-  useEffect(() => {
-    let sessionID = localStorage.getItem('sessionID');
-    let username = localStorage.getItem('username');
-    if (!sessionID) {
-      sessionID = `session_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem('sessionID', sessionID);
-    }
-  
-    console.log(`Joined Queue: ${username} with session ${sessionID}`);
-  
-    const heartbeatInterval = setInterval(() => {
-      if (queueSocket && queueSocket.connected) {
-        queueSocket.emit('heartbeat', { sessionID, username });
-        console.log(`Heartbeat`);
-      }
-    }, 5000);
-  
-    return () => {
-      clearInterval(heartbeatInterval);
-      queueSocket.disconnect();
-    };
-  }, []); 
-  
-
   return (
     <div className="lobby-wrapper">
       {/* Left Side Container */}
@@ -77,7 +53,7 @@ const Lobby = () => {
         </div>
       </div>
 
-      {/* Right Side  */}
+      {/* Right Side */}
       <div className="right-container">
         <div className="gameboardBox">
           <Gameboard />

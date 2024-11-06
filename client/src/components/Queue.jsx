@@ -6,24 +6,40 @@ const Queue = () => {
   const [queue, setQueue] = useState([]); // Initialize as an empty array to avoid undefined
 
   useEffect(() => {
-    // Connect to the queue socket and fetch the initial queue data
-    queueSocket.emit('getQueue');
-
-    // Listen for an updated queue from the server
-    queueSocket.on('queueUpdated', (updatedQueue) => {
+    // Emit the request for the initial queue
+ 
+    let sessionID = localStorage.getItem('sessionID');
+  
+    // Event listener function
+    const handleQueueUpdate = (updatedQueue) => {
       console.log('Queue updated:', updatedQueue);
       setQueue(updatedQueue); // Update the queue state with the new list
-    });
-
-    // Cleanup to remove listeners on component unmount
-    return () => {
-      queueSocket.off('queueUpdated');
     };
-  }, []); // Run only once on component mount
+  
+    // Attach the event listener
+    queueSocket.on('queueUpdated', handleQueueUpdate);
+  
+ 
+    const startHeartbeat = () => {
+      console.log('Socket connected, starting heartbeat...');
+      return setInterval(() => {
+        if (queueSocket && queueSocket.connected) {
+          queueSocket.emit('heartbeat', sessionID);
+          console.log('Heartbeat');
+        }
+      }, 5000);
+    };
 
-  useEffect(() => {
-    console.log('Queue state updated:', queue); // Log whenever queue state updates
-  }, [queue]);
+    let heartbeatInterval = startHeartbeat();
+
+    queueSocket.emit('getQueue');
+   // Cleanup function to remove the event listener
+   return () => {
+    clearInterval(heartbeatInterval);
+    queueSocket.off('queueUpdated', handleQueueUpdate);
+    
+  };
+  }, []);
 
   // Create the list of players dynamically using map
   const queueList = queue.length > 0 ? (

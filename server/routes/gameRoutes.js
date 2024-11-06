@@ -2,7 +2,7 @@
 
 import express from 'express';
 import Manager from '../utils/game/Manager.js';
-import users from '../utils/Users.js'; 
+import users from '../utils/users.js'; 
 
 const game = Manager; // initialize GameLogic instance
 

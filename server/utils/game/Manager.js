@@ -7,6 +7,8 @@ class Manager{
         this.GameLogic = new GameLogic();
     }
 
+    
+
     setGameType(gameType){
         this.gameType = gameType;
     }
@@ -19,9 +21,15 @@ class Manager{
         });
     }
     
-    setPlayer(name, color){
+    playerCount = 0
+    setPlayer(name){
         player = new Player(name, color, this.GameLogic)
-        color === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);
+        playerCount === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);
+        this.playerCount++
+    }
+
+    getCurrentPlayer(){
+        return this.GameLogic.player[this.GameLogic.currentPlayerIndex];
     }
 
     placeChip(player, column){
@@ -39,6 +47,8 @@ class Manager{
     useBrick(player, column){
         player.powerups.Brick(column);
     }
+
+
 
 
     swapPage(currentPage, newPage) {

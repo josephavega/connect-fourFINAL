@@ -7,11 +7,10 @@ export default function queueSocketHandler(io) {
   const HEARTBEAT_TIMEOUT = 10000; // 15 seconds timeout
 
   queueNamespace.on('connection', (socket) => {
-    console.log('A user connected to the queue namespace');
-
+  
     const { sessionID } = socket.handshake.query;
-
     socket.sessionID = sessionID;
+    console.log(`A user connected to the queue: ${sessionID}`);
 
     let username = null;
 
@@ -26,7 +25,7 @@ export default function queueSocketHandler(io) {
       }
     }
 
-    socket.on('joinQueue', data => {
+    socket.on('joinQueue', (data) => {
       const {username, sessionID} = data;
       console.log(`User ${username} with sessionID ${sessionID} attempting to join queue`);
       if (users.InQueue(sessionID)) {
@@ -91,17 +90,17 @@ export default function queueSocketHandler(io) {
       const {sessionID, username} = data;
       console.log(`Received heartbeat from ${sessionID}`);
       users.setUser(sessionID, username, true, false);
+      socket.sessionID = sessionID;
         // Update user state as active
       resetHeartbeatTimeout();  // Reset timeout when heartbeat is received
     });
 
     socket.on('disconnect', () => {
       console.log(`${socket.id} disconnected from the queue namespace`);
-
-      // Retrieve the sessionID from the socket object
-      const sessionID = socket.sessionID;
   
       // Remove from the queue if necessary
+      const sessionID = socket.sessionID;
+
       if (sessionID) {
         users.removeFromQueue(sessionID);
         queueNamespace.emit('queueUpdated', users.getQueue());

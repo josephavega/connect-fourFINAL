@@ -1,78 +1,134 @@
 .lobby-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .waiting-text {
-    font-size: 2.2rem;
-    color: #c5ccc2;
-    font-style: italic;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-bottom: 30px;
-    font-weight: bold;
-  }
-  
-  .queue {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    max-height: 600px;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align:left;
-    width: 30%; 
-    padding: 20px;
-    border-radius: 12px;
-    background-color: #ffffff;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .queue-button-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-    padding: 10px;
-  }
-  
-  .queueButton {
-    opacity: 0; 
-  }
-  
-  .join-button-overlay {
-    position: absolute;
-    top: 0;
-    left: -77px; 
-    width: 250px;
-    cursor: pointer;
-    transition: transform 0.2s ease; 
-  }
-  
-  .join-button-overlay:hover {
-    transform: scale(1.05); 
-  }
-  
-  .info-box {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #ffffff;
-    color: #333;
-    width: 60%; 
-    font-size: 1rem;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-    text-align: left;
-  }
-  
-  .debugButton {
-    display: none;
-  }
-  
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.waiting-text {
+  font-size: 2.2rem;
+  color: #c5ccc2;
+  font-style: italic;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.queue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-height: 600px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align:left;
+  width: 50%; 
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.queue-button-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.queueButton {
+  opacity: 0; 
+}
+
+.join-button-overlay {
+  position: absolute;
+  top: 0;
+  left: -77px; 
+  width: 250px;
+  cursor: pointer;
+  transition: transform 0.2s ease; 
+}
+
+.join-button-overlay:hover {
+  transform: scale(1.05); 
+}
+
+.info-box {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #333;
+  width: 60%; 
+  font-size: 1rem;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+
+.debugButton {
+  display: none;
+}
+
+.lobby-wrapper {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+
+.lobby-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+
+.right-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.toggle-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.toggle-button {
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.toggle-button:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
+}
+
+.toggle-button.active {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+  font-weight: bold;
+}
+

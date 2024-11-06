@@ -40,11 +40,6 @@ const Homepage = () => {
 
       {/* Main Content */}
       <div className="main-content">
-        {/* Queue List */}
-        <aside className="queue">
-        {/* <div><QueueComponent/></div> */}
-        
-        </aside>
 
         {/* Center Section with Buttons */}
         <section className="center-section">
@@ -53,9 +48,9 @@ const Homepage = () => {
         </section>
 
         {/* Leaderboard List */}
-        <aside className="leaderboard">
+        {/* <aside className="leaderboard">
         <Leaderboard players={player} />
-        </aside>
+        </aside> */}
       </div>
 
       {/* Connect Popup */}

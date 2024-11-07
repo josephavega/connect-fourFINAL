@@ -14,7 +14,6 @@ const Game = () => {
     setLastClicked(`Row ${rowIndex + 1}, Column ${colIndex + 1}`); 
     const data = {rowIndex, colIndex, sessionID};
     gameSocket.emit('playerMove', data);
-
   };
   return (
     <div className="game-wrapper">

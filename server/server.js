@@ -10,6 +10,7 @@ import Users from './utils/users.js';
 // Import routes and socket handlers
 import queueRoutes from './routes/queueRoutes.js';
 import gameRoutes from './routes/gameRoutes.js';
+import leaderboardRoutes from './routes/leaderboardRoutes.js';
 import queueSocketHandler from './sockets/queueSocket.js';
 import gameSocketHandler from './sockets/gameSocket.js';
 
@@ -41,6 +42,7 @@ app.use(sessionMiddleware);
 
 // Apply routes
 app.use('/queue', queueRoutes);
+app.use('/leaderboard', leaderboardRoutes);
 app.use('/game', gameRoutes);
 
 // Socket connection handler

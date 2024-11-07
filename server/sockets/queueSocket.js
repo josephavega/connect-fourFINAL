@@ -96,7 +96,7 @@ export default function queueSocketHandler(io) {
 
     // Handle heartbeats from the client
       socket.on('heartbeat', () => {
-        console.log(`Received heartbeat from sessionID: ${sessionID}`);
+        //console.log(`Received heartbeat from sessionID: ${sessionID}`);
         // Reset the heartbeat timeout whenever a heartbeat is received
         startHeartbeatTracker();
       });

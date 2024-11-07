@@ -1,4 +1,4 @@
-import Powerups from "./gamePowerups";
+import Powerups from "./gamePowerups.js";
 
 class AI {
     constructor(difficulty, color, io) {

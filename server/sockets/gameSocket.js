@@ -13,6 +13,7 @@ export default function gameSocketHandler(io) {
     socket.on('message', (data) => {
       console.log(`Message from client: ${data}`);
       socket.emit('message', { message: 'Hello from the server!' });
+      game.setPlayer(data.sessionID)
     });
 
     socket.on('/updateGameboard', data => {
@@ -21,14 +22,24 @@ export default function gameSocketHandler(io) {
 
     // Listen for a player move
     socket.on('playerMove', data => {
-      const {rowIndex, colIndex, sessionID} = data;
+      const {rowIndex, colIndex, sessionID, powerupType} = data;
       const username = users.getUser(sessionID);
       console.log(`Player ${username} made a move in column: ${colIndex}`);
   
       try {
-        game.placeChip(colIndex); // Place the piece in the game logic
-        gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all connected clients
         const currentPlayer = game.getCurrentPlayer();
+        switch(data.powerupType){
+          case 'Brick':
+            game.useBrick(currentPlayer, data.colIndex)
+          case 'Anvil':
+            game.useAnvil(currentPlayer, data.colIndex)
+          case 'Lightning':
+            game.useLightning(currentPlayer, data.colIndex, data.rowIndex)
+        default:
+          game.placeChip(currentPlayer,colIndex); // Place the piece in the game logic
+        }
+        gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all connected clients
+        currentPlayer = game.getCurrentPlayer();
         gameNamespace.emit('playerTurn', currentPlayer); // Notify whose turn it is
         console.log('Gameboard Updated:', game.board);
   
@@ -63,7 +74,7 @@ export default function gameSocketHandler(io) {
     // Handle restart or reset game request
     socket.on('resetGame', () => {
       console.log(`Game reset requested by ${username}`);
-      game.reset(); // Assuming a reset method exists in the game logic
+      game = new Manager
       gameNamespace.emit('gameReset', { message: 'The game has been reset.' });
     });
   
@@ -92,6 +103,8 @@ export default function gameSocketHandler(io) {
   
 
   })
+
+  
   
 }
 

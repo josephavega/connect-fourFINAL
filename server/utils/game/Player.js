@@ -2,12 +2,13 @@ import Powerups from './gamePowerups.js'
 import GameLogic from './GameLogic.js'
 
 class Player {
-    constructor(name, color, gl) {
-        this.gl = GameLogic
+    constructor(name,color, gl) {
+        this.gl = gl
         this.color = color
         this.name = name
         this.powerups = new Powerups
     }
+
 
     placeChip(column){
         this.gl.placePiece(colIndex)

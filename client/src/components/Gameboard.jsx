@@ -3,18 +3,45 @@ import { Grid2 } from '@mui/material';
 import '../styles/gameboard.css';
 import BoardTileBack from '../assets/Board/BoardTileBack.png';
 import BoardTileFront from '../assets/Board/BoardTileFront.png';
-import HoverIndicator from '../assets/Board/BoardTileBack.png'; 
+import HoverIndicator from '../assets/Board/BoardTileBack.png';
+import { io } from 'socket.io-client';
+
+const socket = io('/game'); // Initialize the socket connection
 
 const Gameboard = ({ onClick }) => {
   const [hoveredColumn, setHoveredColumn] = useState(-1);
+  const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
   const sessionID = localStorage.getItem('sessionID');
   
+  useEffect(() => {
+    // Listen for active power-up signals from the server
+    socket.on('powerupUsed', ({ powerupType }) => {
+      setActivePowerup(powerupType);
+    });
+
+    return () => {
+      socket.off('powerupUsed');
+    };
+  }, []);
+
   const handleMouseEnter = (colIndex) => {
     setHoveredColumn(colIndex);
   };
 
   const handleMouseLeave = () => {
     setHoveredColumn(-1);
+  };
+
+  const handleClick = (rowIndex, colIndex) => {
+    // Send the click data along with the active power-up to the server
+    socket.emit('playerMove', {
+      rowIndex,
+      colIndex,
+      sessionID,
+      powerupType: activePowerup, // Include active power-up if any
+    });
+    // Clear the power-up after use (if needed)
+    setActivePowerup(null);
   };
 
   const createTopGrid = () => {

@@ -22,13 +22,22 @@ export default function gameSocketHandler(io) {
 
     // Listen for a player move
     socket.on('playerMove', data => {
-      const {rowIndex, colIndex, sessionID} = data;
+      const {rowIndex, colIndex, sessionID, powerupType} = data;
       const username = users.getUser(sessionID);
       console.log(`Player ${username} made a move in column: ${colIndex}`);
   
       try {
         const currentPlayer = game.getCurrentPlayer();
-        game.placeChip(currentPlayer,colIndex); // Place the piece in the game logic
+        switch(data.powerupType){
+          case 'Brick':
+            game.useBrick(currentPlayer, data.colIndex)
+          case 'Anvil':
+            game.useAnvil(currentPlayer, data.colIndex)
+          case 'Lightning':
+            game.useLightning(currentPlayer, data.colIndex, data.rowIndex)
+        default:
+          game.placeChip(currentPlayer,colIndex); // Place the piece in the game logic
+        }
         gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all connected clients
         currentPlayer = game.getCurrentPlayer();
         gameNamespace.emit('playerTurn', currentPlayer); // Notify whose turn it is
@@ -94,6 +103,8 @@ export default function gameSocketHandler(io) {
   
 
   })
+
+  
   
 }
 

@@ -7,7 +7,7 @@ class Manager{
         this.GameLogic = new GameLogic();
     }
 
-    
+
 
     setGameType(gameType){
         this.gameType = gameType;
@@ -23,8 +23,9 @@ class Manager{
     
     playerCount = 0
     setPlayer(name){
-        player = new Player(name, color, this.GameLogic)
-        playerCount === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);
+        playerColor = this.playerCount === 0 ? 'R' : 'Y' 
+        player = new Player(name, playerColor, this.GameLogic)
+        this.GameLogic.setPlayer(player)
         this.playerCount++
     }
 

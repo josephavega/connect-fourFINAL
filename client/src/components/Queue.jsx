@@ -7,8 +7,28 @@ const Queue = () => {
 
   useEffect(() => {
     // Emit the request for the initial queue
- 
     let sessionID = localStorage.getItem('sessionID');
+
+    fetch('http://localhost:3000/queue/getQueue', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to get queue: ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setQueue(data.users); // Assuming data has a 'queue' property
+        console.log('Queue updated:', data.users);
+      })
+      .catch((error) => {
+        console.error('Error fetching queue:', error);
+      });
+    
   
     // Event listener function
     const handleQueueUpdate = (updatedQueue) => {
@@ -18,7 +38,7 @@ const Queue = () => {
   
     // Attach the event listener
     queueSocket.on('queueUpdated', handleQueueUpdate);
-  
+    queueSocket.emit('heartbeat', sessionID);
  
     const startHeartbeat = () => {
       console.log('Socket connected, starting heartbeat...');

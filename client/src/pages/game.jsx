@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import GameBoard from '../components/Gameboard';
+import GameBoard from '../components/newGameboard';
 import '../styles/game.css';
 import gameSocket from '../sockets/gameSocket';
 

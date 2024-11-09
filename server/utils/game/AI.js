@@ -147,10 +147,13 @@ class AI {
                 }
             }
         }
+    }
     
         
         return tile;
     }
+
+    validBrick
 
 
 }

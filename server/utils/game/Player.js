@@ -1,5 +1,5 @@
 import Powerups from './gamePowerups.js'
-import GameLogic from './GameLogic.js'
+import GameLogic from './gameLogic.js'
 
 class Player {
     constructor(name,color, gl) {

@@ -1,4 +1,4 @@
-import GameLogic from './GameLogic.js'
+import GameLogic from './gameLogic.js'
 import player from './Player.js'
 
 

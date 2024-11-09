@@ -1,3 +1,4 @@
+import { MAX } from "uuid";
 import Powerups from "./gamePowerups";
 
 class AI {
@@ -51,35 +52,44 @@ class AI {
         oppositeColor = this.color === 'R' ? 'Y' : 'R'
         for (let col = 0; col < board.length; col++) {
             oppositeColorCount = 0
-            for (let row = 0; row < rows; rows++) {
-                if (board[col][row] === oppositeColor) {
-                    oppositeColorCount++ //Check how many of opposite color in column
+            checked = 0
+            for (let row = rows; row > 0; row--) {
+                
+                if(checked == 3 && oppositeColorCount > 1){//If top 3 valid chips are checked and theres atleast 2 enemy chips, save col
+                        validMoves.push([col,oppositeColor])
+                        break
+                }else if(oppositeColor < 2){
+                    break
                 }
-                if(row == row-1 && oppositeColor > 1){//If theres atleast two its a valid column to anvil
-                    validMoves.push(col)
-                }
+                if(board[col][row] == 'B'){break}//See a brick within first 3 ignore col
+                if(board[col][row] == 0){//Move onto next row if empty
+                    continue
+                }else{
+                    checked++
+                    if (board[col][row] === oppositeColor) {
+                        oppositeColorCount++ //Track opponents chips
+                    }
+            }
+                
+            }
+
+        }
+        let bestCol = -1
+        let maxCount = -1
+        if(validMoves.length>0){
+        for(let i = 0; i < validMoves.length;i++){
+            let tempCount = maxCount
+            maxCount = Math.max(validMoves[i][1], maxCount)
+            if(maxCount!=tempCount){
+                bestCol = validMoves[i][0]
             }
         }
     }
+        return bestCol
+    }
 
-    validBrick(board){
-        const rows = 6;
-        const columns = 7;
-        let validMoves = [];
-        oppositeColor = this.color === 'R' ? 'Y' : 'R'
-        for (let col = 0; col < board.length; col++) {
-            oppositeColorCount = 0
-            for (let row = 0; row < rows; rows++) {
-                if (board[col][row] === oppositeColor) {
-                    oppositeColorCount++ //Check how many of opposite color in column
-                }
-                if(row == row-1 && oppositeColor == 3){//If theres three
-                    validMoves.push(col)
-                }
-            }
-        }
-
-        //want to implement a horizontal check and diagnol
+    validLightning(board){
+        
     }
 
 

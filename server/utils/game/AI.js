@@ -53,7 +53,7 @@ class AI {
         for (let col = 0; col < board.length; col++) {
             oppositeColorCount = 0
             checked = 0
-            for (let row = rows; row > 0; row--) {
+            for (let row = rows-1; row >= 0; row--) {
                 
                 if(checked == 3 && oppositeColorCount > 1){//If top 3 valid chips are checked and theres atleast 2 enemy chips, save col
                         validMoves.push([col,oppositeColor])
@@ -88,8 +88,68 @@ class AI {
         return bestCol
     }
 
-    validLightning(board){
+    validLightning(board) {
+        const rows = board.length;
+        const cols = board[0].length;
+        let validMoves = []
+        const oppositeColor = this.color === 'R' ? 'Y' : 'R';
+    
+        for (let col = 0; col < cols; col++) {
+            for (let row = 0; row <= rows - 4; row++) {
+                // Check if we have 3 consecutive chips of AI color
+                if (
+                    board[col][row] === this.color &&
+                    board[col][row + 1] === this.color &&
+                    board[col][row + 2] === this.color
+                ) {
+                    if (row > 0 && board[col][row - 1] === oppositeColor) {
+                        validMoves.push([col,row-1])
+                        break
+                    }
+                    if (row + 3 < rows && board[col][row + 3] === oppositeColor) {
+                        validMoves.push([col][row+3])
+                        break
+                    }
+                }
+                if (
+                    board[col][row] === this.color &&
+                    board[col][row + 1] === oppositeColor &&
+                    board[col][row + 2] === this.color &&
+                    board[col][row+3] === this.color
+                ) {validMoves.push([col,row+1]) }
+                if (
+                    board[col][row] === this.color &&
+                    board[col][row + 1] === this.color &&
+                    board[col][row + 2] === oppositeColor &&
+                    board[col][row+3] === this.color
+                ) {validMoves.push([col,row+2]) }
+            }
+        }
+        let tile = -1
+        if(validMoves>0){
+            for(let i = 0; i < validMoves.length;i++){
+                for(let row = rows-1; row > validMoves[i][1]; row--){
+                    if(board[validMoves[i][0],row] =='B'){
+                        for (let col = 0; col < cols; col++) {
+                            
+                            for(let rowD = rows-1; rowD > validMoves[i][1]-1; rowD--){
+                                if(board[col,row] =='B'){
+                                    break
+                                }
+                                if(rowD == validMoves[i][1]){
+                                    return [col,rowD]
+                                }
+                            }
+                    }
+                }
+                if(row == validMoves[i][1]+1){
+                    return [col,row]
+                }
+            }
+        }
+    
         
+        return tile;
     }
 
 

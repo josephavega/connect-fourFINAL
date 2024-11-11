@@ -20,6 +20,12 @@ export default function gameSocketHandler(io) {
       socket.emit('/updatedGameboard')
     })
 
+    socket.on('/joinGame', data => {
+      const {username, sessionID} = data;
+      Manager.setPlayer(username);
+      console.log(`${username} joined Game with ID: ${sessionID}`);
+    })
+
     // Listen for a player move
     socket.on('playerMove', data => {
       const {rowIndex, colIndex, sessionID, powerupType} = data;

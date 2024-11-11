@@ -3,6 +3,7 @@
 import express from 'express';
 import Manager from '../utils/game/Manager.js';
 import users from '../utils/users.js'; 
+import io from '../sockets/gameSocket.js';
 
 const game = Manager; // initialize GameLogic instance
 
@@ -115,6 +116,20 @@ router.post('/move', (req, res) => {
         return res.status(400).json({ error: error.message });
     }
 });
+
+
+router.post('/joinGame', (req, res) => {
+    const { sessionID, username } = req.body;
+    console.log(`API Request: POST /joinGame, username:${username} | SessionID:${sessionID} `);
+    
+    try {
+        game.setPlayer(username); // Place a piece using GameLogic
+        console.log(`Set player ${username}`);
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+});
+
 
 // Handle Gameboard Updates will callback functionality to retrieve info
 // from players vs. player and player vs. ai games

@@ -27,7 +27,7 @@ router.post('/joinQueue', (req, res) => {
 });
 
 // GET /queue/current: Get current queue status
-router.get('/current', (req, res) => {
+router.get('/getQueue', (req, res) => {
   console.log(`Queue Requested: ${JSON.stringify(users.getQueue())}`);
   res.json({ users: users.getQueue() || [] });
 });

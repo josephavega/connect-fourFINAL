@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid2 } from '@mui/material';
 import '../styles/gameboard.css';
-import BoardTileBack from '../assets/Board/BoardTileBack.png';
+import EmptyChip from '../assets/Board/BoardTileBack.png';
+import RedChip from '../assets/Board/Gamepieces/Chip_Red.png';
+import YellowChip from '../assets/Board/Gamepieces/Chip_Yellow.png';
 import BoardTileFront from '../assets/Board/BoardTileFront.png';
 import HoverIndicator from '../assets/Board/BoardTileBack.png';
 import { io } from 'socket.io-client';
+import BoardBorder from "../assets/Board/Board_Boarder.png";
+import RedSidebarBackground from '../assets/Board/Construction/Sidebar_Red.png';
+import RedAnvilButton from '../assets/Board/Construction/Button_Anvil_Red.png';
+import RedBrickButton from '../assets/Board/Construction/Button_Brick_Red.png';
+import RedLightningButton from '../assets/Board/Construction/Button_Lightning_Red.png';
 
 const socket = io('/game'); // Initialize the socket connection
 
-const Gameboard = ({ onClick }) => {
+const Gameboard = ({ board, onClick }) => {
   const [hoveredColumn, setHoveredColumn] = useState(-1);
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
   const sessionID = localStorage.getItem('sessionID');
-  
+
   useEffect(() => {
-    // Listen for active power-up signals from the server
     socket.on('powerupUsed', ({ powerupType }) => {
       setActivePowerup(powerupType);
     });
@@ -30,18 +36,6 @@ const Gameboard = ({ onClick }) => {
 
   const handleMouseLeave = () => {
     setHoveredColumn(-1);
-  };
-
-  const handleClick = (rowIndex, colIndex) => {
-    // Send the click data along with the active power-up to the server
-    socket.emit('playerMove', {
-      rowIndex,
-      colIndex,
-      sessionID,
-      powerupType: activePowerup, // Include active power-up if any
-    });
-    // Clear the power-up after use (if needed)
-    setActivePowerup(null);
   };
 
   const createTopGrid = () => {
@@ -67,6 +61,15 @@ const Gameboard = ({ onClick }) => {
     for (let i = 0; i < rows; i++) {
       const rowTiles = [];
       for (let j = 0; j < cols; j++) {
+        let chipType;
+        if (board[i][j] === 'RedChip') {
+          chipType = RedChip;
+        } else if (board[i][j] === 'YellowChip') {
+          chipType = YellowChip;
+        } else {
+          chipType = EmptyChip;
+        }
+
         rowTiles.push(
           <Grid2
             item
@@ -76,7 +79,7 @@ const Gameboard = ({ onClick }) => {
             onMouseLeave={handleMouseLeave}
           >
             <div className="tile" onClick={() => onClick(i, j)}>
-              <img src={BoardTileBack} alt="Tile Back" className="tile-back" />
+              <img src={chipType} alt="Tile Chip" className="tile-back" />
               <img src={BoardTileFront} alt="Tile Front" className="tile-front" />
             </div>
           </Grid2>
@@ -92,9 +95,25 @@ const Gameboard = ({ onClick }) => {
   };
 
   return (
-    <div className="gameboard">
+    <div className="gameboard-container">
+      <div className="sidebar">
+        <img src={RedSidebarBackground} alt="Sidebar Background" className="sidebar-background" />
+        <div className="sidebar-content">
+          <div className="sidebar-text">AAA</div>
+          <button className="sidebar-button"><img src={RedAnvilButton} alt="Anvil Button" /></button>
+          <button className="sidebar-button"><img src={RedLightningButton} alt="Lightning Button" /></button>
+          <button className="sidebar-button"><img src={RedBrickButton} alt="Brick Button" /></button>
+        </div>
+      </div>
+    <div>
       {createTopGrid()}
-      {createMainGrid()}
+      <div className="gameboard-wrapper">
+          <img src={BoardBorder} alt="Board Border" className="board-border" />
+        <div className="gameboard">
+        {createMainGrid()}
+        </div>
+      </div>
+    </div>
     </div>
   );
 };

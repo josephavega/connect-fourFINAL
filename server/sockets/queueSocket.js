@@ -96,7 +96,7 @@ export default function queueSocketHandler(io) {
 
     // Handle heartbeats from the client
       socket.on('heartbeat', () => {
-        console.log(`Received heartbeat from sessionID: ${sessionID}`);
+        //console.log(`Received heartbeat from sessionID: ${sessionID}`);
         // Reset the heartbeat timeout whenever a heartbeat is received
         startHeartbeatTracker();
       });
@@ -110,12 +110,12 @@ export default function queueSocketHandler(io) {
         heartbeatTrackers.delete(sessionID);
       }
 
-      if (users.userInQueue(sessionID)) {
-        users.removeFromQueue(sessionID);
-        queueNamespace.emit('queueUpdated', users.getQueue());
-      } else {
-        console.error('No sessionID found for disconnected socket');
-      }
+      // if (users.userInQueue(sessionID)) {
+      //   users.removeFromQueue(sessionID);
+      //   queueNamespace.emit('queueUpdated', users.getQueue());
+      // } else {
+      //   console.error('No sessionID found for disconnected socket');
+      // }
       
     });
   });

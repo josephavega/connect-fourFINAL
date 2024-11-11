@@ -1,4 +1,3 @@
-
 import { MAX } from "uuid";
 import Powerups from "./gamePowerups.js";
 
@@ -155,7 +154,7 @@ class AI {
     }
 
     validBrick(board){
-        
+
     }
 
 

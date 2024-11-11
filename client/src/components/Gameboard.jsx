@@ -7,6 +7,7 @@ import YellowChip from '../assets/Board/Gamepieces/Chip_Yellow.png';
 import BoardTileFront from '../assets/Board/BoardTileFront.png';
 import HoverIndicator from '../assets/Board/BoardTileBack.png';
 import { io } from 'socket.io-client';
+import BoardBorder from "../assets/Board/Board_Boarder.png";
 
 const socket = io('/game'); // Initialize the socket connection
 
@@ -90,9 +91,14 @@ const Gameboard = ({ board, onClick }) => {
   };
 
   return (
-    <div className="gameboard">
+    <div>
       {createTopGrid()}
-      {createMainGrid()}
+      <div className="gameboard-wrapper">
+          <img src={BoardBorder} alt="Board Border" className="board-border" />
+        <div className="gameboard">
+        {createMainGrid()}
+        </div>
+      </div>
     </div>
   );
 };

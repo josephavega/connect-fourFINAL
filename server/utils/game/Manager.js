@@ -7,6 +7,18 @@ class Manager{
         this.GameLogic = new GameLogic();
     }
 
+    printBoard() {
+        this.GameLogic.printBoard();
+    }
+
+    createBoard() {
+        this.GameLogic.board = this.GameLogic.createBoard();
+        console.log("New board created:");
+        this.printBoard();
+    }
+
+
+
     setGameType(gameType){
         this.gameType = gameType;
     }

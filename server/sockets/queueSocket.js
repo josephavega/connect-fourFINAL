@@ -110,12 +110,12 @@ export default function queueSocketHandler(io) {
         heartbeatTrackers.delete(sessionID);
       }
 
-      if (users.userInQueue(sessionID)) {
-        users.removeFromQueue(sessionID);
-        queueNamespace.emit('queueUpdated', users.getQueue());
-      } else {
-        console.error('No sessionID found for disconnected socket');
-      }
+      // if (users.userInQueue(sessionID)) {
+      //   users.removeFromQueue(sessionID);
+      //   queueNamespace.emit('queueUpdated', users.getQueue());
+      // } else {
+      //   console.error('No sessionID found for disconnected socket');
+      // }
       
     });
   });

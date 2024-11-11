@@ -7,6 +7,16 @@ class Manager{
         this.GameLogic = new GameLogic();
     }
 
+    printBoard() {
+        this.GameLogic.printBoard();
+    }
+
+    createBoard() {
+        this.GameLogic.board = this.GameLogic.createBoard();
+        console.log("New board created:");
+        this.printBoard();
+    }
+
 
 
     setGameType(gameType){
@@ -21,16 +31,9 @@ class Manager{
         });
     }
     
-    playerCount = 0
-    setPlayer(name){
-        playerColor = this.playerCount === 0 ? 'R' : 'Y' 
-        player = new Player(name, playerColor, this.GameLogic)
-        this.GameLogic.setPlayer(player)
-        this.playerCount++
-    }
-
-    getCurrentPlayer(){
-        return this.GameLogic.player[this.GameLogic.currentPlayerIndex];
+    setPlayer(name, color){
+        player = new Player(name, color, this.GameLogic)
+        color === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);
     }
 
     placeChip(player, column){
@@ -48,8 +51,6 @@ class Manager{
     useBrick(player, column){
         player.powerups.Brick(column);
     }
-
-
 
 
     swapPage(currentPage, newPage) {

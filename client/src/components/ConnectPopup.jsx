@@ -38,7 +38,7 @@ const ConnectPopup = ({ onClose }) => {
   const joinQueue = () => {
     const sessionID = localStorage.getItem('sessionID');
 
-    if (username.trim() === '' || username.length !== 3) {
+    if (!/^[a-zA-Z0-9]{3}$/.test(username)) { //Makes sure Username is three alphanumeric Characters
       alert('Username must be exactly 3 characters long.');
       return;
     }

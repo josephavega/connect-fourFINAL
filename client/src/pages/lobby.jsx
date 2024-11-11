@@ -14,7 +14,7 @@ const Lobby = () => {
   return (
     <div className="lobby-wrapper">
       {/* Left Side Container */}
-      <div className="lobby-container">
+      <aside className="lobby-container">
         
         <div className="toggle-buttons">
           <button 
@@ -47,18 +47,25 @@ const Lobby = () => {
         <div className="debugButton">
           <DebugButton />
         </div>
-        
+
         <div>
           <GameButton />
         </div>
-      </div>
+      </aside>
 
-      {/* Right Side */}
-      <div className="right-container">
+      {/* Middle Side */}
+      <main className="right-container">
         <div className="gameboardBox">
           <Gameboard />
         </div>
-      </div>
+      </main>
+      
+      {/* Right Side */}
+      <aside className="lobby-container">
+        <div className="gameboardBox">
+          Spectated Powerups will show here
+        </div>
+      </aside>
     </div>
   );
 };

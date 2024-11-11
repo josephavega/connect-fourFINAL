@@ -56,7 +56,7 @@ const Lobby = () => {
       {/* Middle Side */}
       <main className="right-container">
         <div className="gameboardBox">
-          <Gameboard />
+         {/* I had to comment out <Gameboard />, it was causing unknown issues */}
         </div>
       </main>
       

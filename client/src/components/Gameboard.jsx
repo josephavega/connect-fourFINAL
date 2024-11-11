@@ -8,6 +8,10 @@ import BoardTileFront from '../assets/Board/BoardTileFront.png';
 import HoverIndicator from '../assets/Board/BoardTileBack.png';
 import { io } from 'socket.io-client';
 import BoardBorder from "../assets/Board/Board_Boarder.png";
+import RedSidebarBackground from '../assets/Board/Construction/Sidebar_Red.png';
+import RedAnvilButton from '../assets/Board/Construction/Button_Anvil_Red.png';
+import RedBrickButton from '../assets/Board/Construction/Button_Brick_Red.png';
+import RedLightningButton from '../assets/Board/Construction/Button_Lightning_Red.png';
 
 const socket = io('/game'); // Initialize the socket connection
 
@@ -91,6 +95,16 @@ const Gameboard = ({ board, onClick }) => {
   };
 
   return (
+    <div className="gameboard-container">
+      <div className="sidebar">
+        <img src={RedSidebarBackground} alt="Sidebar Background" className="sidebar-background" />
+        <div className="sidebar-content">
+          <div className="sidebar-text">AAA</div>
+          <button className="sidebar-button"><img src={RedAnvilButton} alt="Anvil Button" /></button>
+          <button className="sidebar-button"><img src={RedLightningButton} alt="Lightning Button" /></button>
+          <button className="sidebar-button"><img src={RedBrickButton} alt="Brick Button" /></button>
+        </div>
+      </div>
     <div>
       {createTopGrid()}
       <div className="gameboard-wrapper">
@@ -99,6 +113,7 @@ const Gameboard = ({ board, onClick }) => {
         {createMainGrid()}
         </div>
       </div>
+    </div>
     </div>
   );
 };

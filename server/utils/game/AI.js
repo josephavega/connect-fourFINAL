@@ -153,7 +153,9 @@ class AI {
         return tile;
     }
 
-    validBrick
+    validBrick(board){
+        
+    }
 
 
 }

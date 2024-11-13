@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import Leaderboard from '../components/Leaderboard';
 import ConnectPopup from '../components/ConnectPopup';
-import QueueComponent from '../components/Queue';
 import HelpPopup from '../components/HelpPopup'; 
 import DebugButton from '../components/DebugButton';
 import '../styles/homepage.css';
-
 
 const Homepage = () => {
   const [isConnectPopupOpen, setConnectPopupOpen] = useState(false);
@@ -33,6 +30,9 @@ const Homepage = () => {
         <button><img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join Button" onClick={openConnectPopup} /></button>
         <button><img src="./src/assets/Menu/Buttons/Button_Help.png" alt="Help Button" onClick={openHelpPopup} /></button>
         </section>
+        <div>
+          {/* <DebugButton/> */}
+        </div>
       </div>
 
       {/* Connect Popup */}

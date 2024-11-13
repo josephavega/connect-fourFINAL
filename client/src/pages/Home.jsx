@@ -30,12 +30,9 @@ const Homepage = () => {
         <button><img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join Button" onClick={openConnectPopup} /></button>
         <button><img src="./src/assets/Menu/Buttons/Button_Help.png" alt="Help Button" onClick={openHelpPopup} /></button>
         </section>
-<<<<<<< Updated upstream
-=======
         <div>
           {/* <DebugButton/> */}
         </div>
->>>>>>> Stashed changes
       </div>
 
       {/* Connect Popup */}

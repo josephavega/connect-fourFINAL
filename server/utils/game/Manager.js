@@ -1,14 +1,20 @@
 import GameLogic from './gameLogic.js'
 import player from './Player.js'
+import gameSocketHandler from '../../sockets/gameSocket.js';
 
 
 class Manager{
-    constructor(){
+    constructor(gameSocket){
         this.GameLogic = new GameLogic();
+        this.gameSocket = gameSocket
     }
 
     printBoard() {
         this.GameLogic.printBoard();
+    }
+
+    updateFrontEnd(){
+        this.GameLogic.updateFrontEnd()
     }
 
     createBoard() {

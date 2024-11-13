@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import users from '../utils/users.js'
 import Manager from '../utils/game/Manager.js'
 
-const game = Manager; // Create an instance of the GameLogic class
+const game = Manager(this); // Create an instance of the GameLogic class
 
 export default function gameSocketHandler(io) {
   const gameNamespace = io.of('/game');

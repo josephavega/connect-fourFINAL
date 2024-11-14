@@ -6,7 +6,7 @@ class Player {
         this.gl = gl
         this.color = color
         this.name = name
-        this.powerups = new Powerups
+        this.powerups = new Powerups(this, gl)
     }
 
 

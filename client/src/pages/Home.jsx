@@ -33,7 +33,6 @@ const Homepage = () => {
         <div>
           {/* <DebugButton/> */}
         </div>
-
       </div>
 
       {/* Connect Popup */}

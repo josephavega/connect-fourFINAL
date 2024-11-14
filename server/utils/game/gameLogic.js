@@ -9,8 +9,13 @@ class GameLogic {
         this.ai = [new AI(1), new AI(1)]; // AI difficulty Medium
         this.isAIvsAI = true;
         this.gameOver = false;
-        this.isPlayerVsAI = false; 
+        this.isPlayerVsAI = false;
+        var moves = null //[Action,Col,Row,Player]
+        //Action 'Place', 'Anvil', 'Broken', 'Lightning', 'Flipped', 'Brick', 'StoppedL','StoppedA', 'Win','Full'
+        //Lightning for the inititial
     }
+
+    
 
     setPlayer(newPlayer){
         player[this.playerCount] = newPlayer
@@ -86,19 +91,23 @@ class GameLogic {
         console.log("\n");
     }
 
-    placePiece(columnIndex) {
-        // Bottom to top
-        for (let i = this.board[columnIndex].length - 1; i >= 0; i--) {
-            if (this.board[columnIndex][i] === 0) {
-                this.board[columnIndex][i] = this.getCurrentPlayer();
-            
+    updateFrontEnd(){
+        
+    }
 
+
+
+    placePiece(columnIndex) {
+        moves = null
+        // Bottom to top
+        for (let i = 0; i < this.board.length; i++) {
+            if (this.board[columnIndex][i] === 0) {
+                this.board[columnIndex][i] = this.getCurrentPlayer().color;
+                moves.push(['Place',columnIndex,i,this.getCurrentPlayer().color])
                 if (this.checkWin()) {
                     this.gameOver = true;
-            
                     return;
                 }
-
                 this.switchPlayer();
                 return;
             }
@@ -107,7 +116,7 @@ class GameLogic {
     }
 
     getCurrentPlayer() {
-        return this.player[this.currentPlayerIndex].color;
+        return this.player[this.currentPlayerIndex];
     }
 
     switchPlayer() {
@@ -121,15 +130,22 @@ class GameLogic {
     }
 
     checkVerticalWin() {
+        
         for (let col = 0; col < this.board.length; col++) {
-            let count = 0;
+            var winningMoves
             for (let row = 0; row < this.board[col].length; row++) {
-                if (this.board[col][row] === this.getCurrentPlayer()) {
-                    count++;
-                    if (count === 4) return true;
-                } else {
-                    count = 0;
-                }
+                if (this.board[col][row] === this.getCurrentPlayer().color) {
+                    winningMoves.push([col,row])
+                    
+                    if (winningMoves.length === 4){
+                        for(let i = 0; i < winningMoves.length; i++){
+                            this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
+                        }
+                        return true;
+                    } 
+                }else{
+                    winningMoves = null
+                } 
             }
         }
         return false;
@@ -137,16 +153,22 @@ class GameLogic {
 
     checkHorizontalWin() {
         for (let row = 0; row < this.board[0].length; row++) {
-            let count = 0;
+            var winningMoves
             for (let col = 0; col < this.board.length; col++) {
-                if (this.board[col][row] === this.getCurrentPlayer()) {
-                    count++;
-                    if (count === 4) return true;
-                } else {
-                    count = 0;
-                }
+                if (this.board[col][row] === this.getCurrentPlayer().color) {
+                    winningMoves.push([col,row])
+                    
+                    if (winningMoves.length === 4){
+                        for(let i = 0; i < winningMoves.length; i++){
+                            this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
+                        }
+                        return true;
+                    } 
+                }else{
+                    winningMoves = null
+                    }
+                } 
             }
-        }
         return false;
     }
 
@@ -160,6 +182,10 @@ class GameLogic {
                     this.board[col + 2][row + 2] === this.getCurrentPlayer() &&
                     this.board[col + 3][row + 3] === this.getCurrentPlayer()
                 ) {
+                    this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',col+1,row+1,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',col+2,row+2,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',col+3,row+3,this.getCurrentPlayer.color])
                     return true;
                 }
             }
@@ -174,6 +200,10 @@ class GameLogic {
                     this.board[col - 2][row + 2] === this.getCurrentPlayer() &&
                     this.board[col - 3][row + 3] === this.getCurrentPlayer()
                 ) {
+                    this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',col-1,row+1,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',col-2,row+2,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',col-3,row+3,this.getCurrentPlayer.color])
                     return true;
                 }
             }
@@ -183,10 +213,14 @@ class GameLogic {
 
     isBoardFull() {
         for (let col = 0; col < this.board.length; col++) {
-            if (this.board[col][0] === 0) {
-                return false;
+            var winningMoves
+            for (let row = 0; row < this.board[col].length; row++) {
+                if (this.board[col][row] === 0) {
+                    return false;
+                }
             }
         }
+        this.moves.push(['Full',-1,-1,this.getCurrentPlayer])
         return true;
     }
 

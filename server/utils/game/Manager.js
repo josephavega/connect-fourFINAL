@@ -1,7 +1,5 @@
 import GameLogic from './gameLogic.js'
 import player from './Player.js'
-import gameSocketHandler from '../../sockets/gameSocket.js';
-
 
 class Manager{
     constructor(){

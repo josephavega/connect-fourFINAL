@@ -1,29 +1,38 @@
 .gameboard-container {
   display: flex;
-  align-items: stretch;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start; /* Align sidebars and gameboard to the top */
+  padding-top: 60px; 
 }
 
-.sidebar {
-  position: relative;
-  width: 100px; /* Adjust width as needed */
-  height: 100%;
+.red-sidebar, .yellow-sidebar {
+  width: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: translate(-4px,50px);
-
+  height: auto;
+  position: relative;
 }
 
-.sidebar-background {
+.red-sidebar {
+  transform: translate(-7px,54px); 
+}
+
+.yellow-sidebar {
+  transform: translate(7px,54px); 
+}
+
+.red-sidebar-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 92%;
+  height: 100%;
   z-index: 0;
 }
 
-.sidebar-content {
+.red-sidebar-content {
   margin-top: 100px;
   position: relative;
   z-index: 1;
@@ -42,20 +51,60 @@
   font-style: normal;
 }
 
-.sidebar-text {
+.red-sidebar-text {
   font-size: 40px;
   color: #ebebeb;
-  font-family: 'Pixel', sans-serif; /* Use a pixel-style font if desired */
+  font-family: 'Pixel', sans-serif; 
 }
 
-.sidebar-button {
+.red-sidebar-button {
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
 }
 
-.sidebar-button img {
+.red-sidebar-button img {
+  width: 64px; /* Slightly larger for better fit */
+  height: 64px;
+}
+
+
+.yellow-sidebar-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.yellow-sidebar-content {
+  margin-top: 100px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* Increase gap for better spacing between items */
+  transform: translateY(-10px);
+
+}
+
+.yellow-sidebar-text {
+  font-size: 40px;
+  color: #ebebeb;
+  font-family: 'Pixel', sans-serif; /* Use a pixel-style font if desired */
+}
+
+.yellow-sidebar-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.yellow-sidebar-button img {
   width: 64px; /* Slightly larger for better fit */
   height: 64px;
 }

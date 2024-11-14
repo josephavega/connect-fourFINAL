@@ -37,7 +37,7 @@ const Game = () => {
     setChanged(`Row ${lowestEmptyRow + 1}, Column ${colIndex + 1}`);
 
     // Update the board with the current player's chip
-    const chipColor = currentPlayer === 'Red' ? 'RedChip' : 'YellowChip';
+    const chipColor = currentPlayer === 'Red' ? 'R' : 'Y';
     const updatedBoard = board.map((row, rIdx) =>
       row.map((cell, cIdx) => (rIdx === lowestEmptyRow && cIdx === colIndex ? chipColor : cell))
     );

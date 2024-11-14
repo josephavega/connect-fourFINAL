@@ -10,7 +10,7 @@ class GameLogic {
         this.isAIvsAI = true;
         this.gameOver = false;
         this.isPlayerVsAI = false;
-        var moves = null //[Rule,Col,Row,Type]
+        this.moves = [] //[Rule,Col,Row,Type]
         //Rule 'Place', 'Anvil', 'Broken', 'Lightning', 'Flipped', 'Brick', 'StoppedL','StoppedA', 'Win','Full'
         //Lightning for the inititial shock location
         //Anvil/Brick for column
@@ -29,13 +29,18 @@ class GameLogic {
 
     startAIVsAI(callback) {
         this.isAIvsAI = true;
+        this.player[0]=this.ai[0]
+        this.player[0].color = 'R'
+        this.player[1]=this.ai[1]
+        this.player[1].color = 'Y'
         this.runAIGame(callback);
         
     }
 
     startPlayerVsAI() {
         this.isPlayerVsAI = true;
-        this.ai[1] = new AI(2); 
+        this.player[1] = this.ai[0]
+        this.player[1].color = this.player[0].color == 'R'? 'Y':'R'
     }
 
     runAIGame(callback) {
@@ -107,7 +112,7 @@ class GameLogic {
         for (let i = 0; i < this.board.length; i++) {
             if (this.board[columnIndex][i] === 0) {
                 this.board[columnIndex][i] = this.getCurrentPlayer().color;
-                moves.push(['Place',columnIndex,i,this.getCurrentPlayer().color])
+                this.moves.push(['Place',columnIndex,i,this.getCurrentPlayer().color])
                 if (this.checkWin()) {
                     this.gameOver = true;
                     return;
@@ -136,7 +141,7 @@ class GameLogic {
     checkVerticalWin() {
         
         for (let col = 0; col < this.board.length; col++) {
-            var winningMoves
+            var winningMoves = []
             for (let row = 0; row < this.board[col].length; row++) {
                 if (this.board[col][row] === this.getCurrentPlayer().color) {
                     winningMoves.push([col,row])
@@ -148,7 +153,7 @@ class GameLogic {
                         return true;
                     } 
                 }else{
-                    winningMoves = null
+                    winningMoves = []
                 } 
             }
         }
@@ -157,7 +162,7 @@ class GameLogic {
 
     checkHorizontalWin() {
         for (let row = 0; row < this.board[0].length; row++) {
-            var winningMoves
+            var winningMoves = []
             for (let col = 0; col < this.board.length; col++) {
                 if (this.board[col][row] === this.getCurrentPlayer().color) {
                     winningMoves.push([col,row])
@@ -169,7 +174,7 @@ class GameLogic {
                         return true;
                     } 
                 }else{
-                    winningMoves = null
+                    winningMoves = []
                     }
                 } 
             }

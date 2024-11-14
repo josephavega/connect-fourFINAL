@@ -4,10 +4,11 @@ import gameSocketHandler from '../../sockets/gameSocket.js';
 
 
 class Manager{
-    constructor(gameSocket){
+    constructor(){
         this.GameLogic = new GameLogic();
-        this.gameSocket = gameSocket
     }
+
+    
 
     printBoard() {
         this.GameLogic.printBoard();
@@ -29,6 +30,10 @@ class Manager{
         this.gameType = gameType;
     }
 
+    wipeMoves(){
+        this.GameLogic.moves = null
+    }
+
     startAIvsAI() {
         console.log("Starting AI vs. AI game...");
         this.GameLogic.startAIVsAI((gameState) => {
@@ -44,18 +49,22 @@ class Manager{
 
     placeChip(player, column){
         player.placeChip(column);
+        return this.GameLogic.moves
     }
 
     useLightning(player, column, row){
         player.powerups.Lighting(column,row);
+        return this.GameLogic.moves
     }
 
     useAnvil(player, column){
         player.powerups.Anvil(column);
+        return this.GameLogic.moves
     }
 
     useBrick(player, column){
         player.powerups.Brick(column);
+        return this.GameLogic.moves
     }
 
 
@@ -66,4 +75,4 @@ class Manager{
 
 }
 
-export default new Manager();
+export default new Manager;

@@ -2,10 +2,11 @@
 import { io } from 'socket.io-client';
 import users from '../utils/users.js'
 import Manager from '../utils/game/Manager.js'
+const game = Manager; // Create an instance of the GameLogic class
 
-const game = Manager(this); // Create an instance of the GameLogic class
 
 export default function gameSocketHandler(io) {
+  
   const gameNamespace = io.of('/game');
 
   gameNamespace.on('connection', (socket) => {
@@ -22,7 +23,7 @@ export default function gameSocketHandler(io) {
 
     socket.on('/joinGame', data => {
       const {username, sessionID} = data;
-      Manager.setPlayer(username);
+      game.setPlayer(username);
       console.log(`${username} joined Game with ID: ${sessionID}`);
     })
 
@@ -31,19 +32,22 @@ export default function gameSocketHandler(io) {
       const {rowIndex, colIndex, sessionID, powerupType} = data;
       const username = users.getUser(sessionID);
       console.log(`Player ${username} made a move in column: ${colIndex}`);
-  
+      
       try {
         const currentPlayer = game.getCurrentPlayer();
+        var moves = null
+        game.wipeMoves()
         switch(data.powerupType){
           case 'Brick':
-            game.useBrick(currentPlayer, data.colIndex)
+          moves = game.useBrick(currentPlayer, data.colIndex)
           case 'Anvil':
-            game.useAnvil(currentPlayer, data.colIndex)
+          moves = game.useAnvil(currentPlayer, data.colIndex)
           case 'Lightning':
-            game.useLightning(currentPlayer, data.colIndex, data.rowIndex)
+          moves = game.useLightning(currentPlayer, data.colIndex, data.rowIndex)
         default:
-          game.placeChip(currentPlayer,colIndex); // Place the piece in the game logic
+          moves = game.placeChip(currentPlayer,colIndex); // Place the piece in the game logic
         }
+        gameNamespace.emit('sendInstructions', moves)
         gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all connected clients
         currentPlayer = game.getCurrentPlayer();
         gameNamespace.emit('playerTurn', currentPlayer); // Notify whose turn it is
@@ -59,10 +63,12 @@ export default function gameSocketHandler(io) {
         console.error('Error during move:', error.message);
       }
     });
+
+
+
   
     // Handle disconnect event for players in the middle of a game
-    socket.on('disconnect', () => {
-      console.log(`${socket.id} disconnected`);
+    socket.on('disconnect', () => {      console.log(`${socket.id} disconnected`);
   
       // const username = users.get(sessionID);
       
@@ -80,7 +86,7 @@ export default function gameSocketHandler(io) {
     // Handle restart or reset game request
     socket.on('resetGame', () => {
       console.log(`Game reset requested by ${username}`);
-      game = new Manager
+      game = new Manager(this)
       gameNamespace.emit('gameReset', { message: 'The game has been reset.' });
     });
   

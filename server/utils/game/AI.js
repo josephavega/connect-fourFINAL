@@ -8,6 +8,12 @@ class AI {
         this.difficulty = difficulty;
         this.powerups = new Powerups
     }
+
+    constructor(difficulty, color) {
+        this.color = color
+        this.difficulty = difficulty;
+        this.powerups = new Powerups
+    }
     
 
     makeMove(board) {

@@ -9,11 +9,7 @@ class AI {
         this.powerups = new Powerups
     }
 
-    constructor(difficulty, color) {
-        this.color = color
-        this.difficulty = difficulty;
-        this.powerups = new Powerups
-    }
+    
     
 
     makeMove(board) {
@@ -44,12 +40,15 @@ class AI {
         
         let validMoves = [];
         for (let col = 0; col < board.length; col++) {
-            if (board[col][0] === 0) {
-                validMoves.push(col);
-            }
+            for (let row = 0; row < board[col].length; row++) {
+                if (board[col][row] === 0) {
+                    validMoves.push(col);           
         }
+    }
+}
         return validMoves.length > 0 ? validMoves[Math.floor(Math.random() * validMoves.length)] : null;
     }
+
 
     validAnvil(board){
         const rows = 6;

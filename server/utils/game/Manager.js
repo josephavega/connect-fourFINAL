@@ -1,5 +1,5 @@
 import GameLogic from './gameLogic.js'
-import player from './Player.js'
+import Player from './Player.js'
 
 class Manager{
     constructor(){
@@ -40,9 +40,9 @@ class Manager{
         });
     }
     
-    setPlayer(name, color){
-        player = new Player(name, color, this.GameLogic)
-        color === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);
+    setPlayer(sessionId,username){
+        const player = new Player(sessionId,username, -1, this.GameLogic)
+        this.GameLogic.setPlayer(player)
     }
 
     placeChip(player, column){

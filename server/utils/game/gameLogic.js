@@ -24,6 +24,7 @@ class GameLogic {
 
     setPlayer(newPlayer){
         player[this.playerCount] = newPlayer
+        player[this.playerCount].color = this.playerCount === 0 ? 'R':'Y'
         this.playerCount++
     }
 

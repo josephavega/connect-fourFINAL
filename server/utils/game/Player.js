@@ -2,7 +2,8 @@ import Powerups from './gamePowerups.js'
 import GameLogic from './gameLogic.js'
 
 class Player {
-    constructor(name,color, gl) {
+    constructor(sessionId, name, color, gl) {
+        this.sessionId = sessionId
         this.gl = gl
         this.color = color
         this.name = name
@@ -27,4 +28,4 @@ class Player {
     }
 }
 
-export default new Player();
+export default Player;

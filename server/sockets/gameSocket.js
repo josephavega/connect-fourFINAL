@@ -100,7 +100,7 @@ export default function gameSocketHandler(io) {
     });
   
     // Handle players joining or leaving a game session
-    socket.on('joinGame', () => {
+    socket.on('joinGame', (username) => {
       console.log(`${username} joined the game.`);
       gameNamespace.emit('playerJoined', { player: username });
     });

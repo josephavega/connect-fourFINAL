@@ -1,12 +1,11 @@
 import GameLogic from './gameLogic.js'
-import Player from './Player.js'
+import Player from '../game/Player.js'
 import Users from '../users.js';
 
 
 class Manager{
     constructor(){
         this.GameLogic = new GameLogic();
-        this.player;
     }
 
     
@@ -44,7 +43,7 @@ class Manager{
     }
     
     setPlayer(name, color){
-        player = new Player(name, color, this.GameLogic);
+        let player = new Player(name, color, this.GameLogic)
         color === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);
         
         const sessionID = Users.getUserFromName(name);

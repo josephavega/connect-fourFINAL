@@ -21,7 +21,7 @@ class GameLogic {
     }   
 
     setPlayer(newPlayer, team){
-        player[this.playerCount] = [newPlayer, team];
+        this.player[this.playerCount] = newPlayer;
         this.playerCount++;
     }
 

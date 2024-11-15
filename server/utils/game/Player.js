@@ -27,4 +27,4 @@ class Player {
     }
 }
 
-export default new Player();
+export default Player;

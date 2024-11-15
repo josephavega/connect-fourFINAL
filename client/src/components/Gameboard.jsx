@@ -63,7 +63,6 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
 
   const [hoveredColumn, setHoveredColumn] = useState(-1);
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
-  const [currentPlayer, setCurrentPlayer] = useState('red'); // Start with red player
   const sessionID = localStorage.getItem('sessionID');
   
 

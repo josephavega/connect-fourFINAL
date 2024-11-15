@@ -25,11 +25,42 @@ import UsedAnvilButton from '../assets/Board/Construction/Button_Anvil_Used.png'
 import UsedLightningButton from '../assets/Board/Construction/Button_Lightning_Used.png';
 import UsedBrickButton from '../assets/Board/Construction/Button_Brick_Used.png';
 
-
-
 const socket = io('/game'); // Initialize the socket connection
 
-const Gameboard = ({ board, onClick }) => {
+const Gameboard = ({ board, onClick, currentPlayer}) => {
+  const [redAnvilImage, setRedAnvilImage] = useState(RedAnvilButton);
+  const [redLightningImage, setRedLightningImage] = useState(RedLightningButton);
+  const [redBrickImage, setRedBrickImage] = useState(RedBrickButton);
+
+  const [yellowAnvilImage, setYellowAnvilImage] = useState(YellowAnvilButton);
+  const [yellowLightningImage, setYellowLightningImage] = useState(YellowLightningButton);
+  const [yellowBrickImage, setYellowBrickImage] = useState(YellowBrickButton);
+
+  const toggleRedAnvilImage = () => {
+    if (currentPlayer === 'Red') {
+    setRedAnvilImage((prevImage) => (prevImage === RedAnvilButton ? UsedAnvilButton : RedAnvilButton));
+  }};
+  const toggleRedLightningImage = () => {
+    if (currentPlayer === 'Red') {
+    setRedLightningImage((prevImage) => (prevImage === RedLightningButton ? UsedLightningButton : RedLightningButton));
+  }};
+  const toggleRedBrickImage = () => {
+    if (currentPlayer === 'Red') {
+    setRedBrickImage((prevImage) => (prevImage === RedBrickButton ? UsedBrickButton : RedBrickButton));
+  }};
+  const toggleYellowAnvilImage = () => {
+    if (currentPlayer === 'Yellow') {
+    setYellowAnvilImage((prevImage) => (prevImage === YellowAnvilButton ? UsedAnvilButton : YellowAnvilButton));
+  }};
+  const toggleYellowLightningImage = () => {
+    if (currentPlayer === 'Yellow') {
+    setYellowLightningImage((prevImage) => (prevImage === YellowLightningButton ? UsedLightningButton : YellowLightningButton));
+  }};
+  const toggleYellowBrickImage = () => {
+    if (currentPlayer === 'Yellow') {
+    setYellowBrickImage((prevImage) => (prevImage === YellowBrickButton ? UsedBrickButton : YellowBrickButton));
+  }};
+
   const [hoveredColumn, setHoveredColumn] = useState(-1);
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
   const sessionID = localStorage.getItem('sessionID');
@@ -59,7 +90,11 @@ const Gameboard = ({ board, onClick }) => {
         {Array.from({ length: cols }, (_, colIndex) => (
           <div key={colIndex} className="top-cell">
             {hoveredColumn === colIndex && (
-              <img src={HoverIndicator} alt="Hover Indicator" className="hover-img" />
+              <img
+                src={currentPlayer === 'Red' ? RedChip : YellowChip}
+                alt="Hover Indicator"
+                className="hover-img"
+              />
             )}
           </div>
         ))}
@@ -110,35 +145,46 @@ const Gameboard = ({ board, onClick }) => {
 
   return (
     <div className="gameboard-container">
-   <div className="red-sidebar">
-     <img src={RedSidebarBackground} alt="Sidebar Background" className="red-sidebar-background" />
-     <div className="red-sidebar-content">
-       <div className="red-sidebar-text">ABC</div>
-       <button className="red-sidebar-button"><img src={RedAnvilButton} alt="Anvil Button" /></button>
-       <button className="red-sidebar-button"><img src={RedLightningButton} alt="Lightning Button" /></button>
-       <button className="red-sidebar-button"><img src={RedBrickButton} alt="Brick Button" /></button>
-     </div>
-   </div>
-   <div>
-     {createTopGrid()}
-     <div className="gameboard-wrapper">
-       <img src={BoardBorder} alt="Board Border" className="board-border" />
-       <div className="gameboard">
-         {createMainGrid()}
-       </div>
-     </div>
-   </div>
-   <div className="yellow-sidebar">
-     <img src={YellowSidebarBackground} alt="Sidebar Background" className="yellow-sidebar-background" />
-     <div className="yellow-sidebar-content">
-       <div className="yellow-sidebar-text">DEF</div>
-       <button className="yellow-sidebar-button"><img src={YellowAnvilButton} alt="Anvil Button" /></button>
-       <button className="yellow-sidebar-button"><img src={YellowLightningButton} alt="Lightning Button" /></button>
-       <button className="yellow-sidebar-button"><img src={YellowBrickButton} alt="Brick Button" /></button>
-     </div>
-   </div>
-</div>
-
+      <div className="red-sidebar">
+        <img src={RedSidebarBackground} alt="Sidebar Background" className="red-sidebar-background" />
+        <div className="red-sidebar-content">
+          <div className="red-sidebar-text">ABC</div>
+          <button className="red-sidebar-button" onClick={toggleRedAnvilImage} disabled={currentPlayer !== 'Red'}>
+            <img src={redAnvilImage} alt="Anvil Button" />
+          </button>
+          <button className="red-sidebar-button" onClick={toggleRedLightningImage} disabled={currentPlayer !== 'Red'}>
+            <img src={redLightningImage} alt="Lightning Button" />
+          </button>
+          <button className="red-sidebar-button" onClick={toggleRedBrickImage} disabled={currentPlayer !== 'Red'}>
+            <img src={redBrickImage} alt="Brick Button" />
+          </button>
+        </div>
+      </div>
+      <div>
+        {createTopGrid()}
+        <div className="gameboard-wrapper">
+          <img src={BoardBorder} alt="Board Border" className="board-border" />
+          <div className="gameboard">
+            {createMainGrid()}
+          </div>
+        </div>
+      </div>
+      <div className="yellow-sidebar">
+        <img src={YellowSidebarBackground} alt="Sidebar Background" className="yellow-sidebar-background" />
+        <div className="yellow-sidebar-content">
+          <div className="yellow-sidebar-text">DEF</div>
+          <button className="yellow-sidebar-button" onClick={toggleYellowAnvilImage} disabled={currentPlayer !== 'Yellow'}>
+            <img src={yellowAnvilImage} alt="Anvil Button" />
+          </button>
+          <button className="yellow-sidebar-button" onClick={toggleYellowLightningImage} disabled={currentPlayer !== 'Yellow'}>
+            <img src={yellowLightningImage} alt="Lightning Button" />
+          </button>
+          <button className="yellow-sidebar-button" onClick={toggleYellowBrickImage} disabled={currentPlayer !== 'Yellow'}>
+            <img src={yellowBrickImage} alt="Brick Button" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

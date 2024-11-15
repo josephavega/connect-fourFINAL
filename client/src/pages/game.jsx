@@ -52,7 +52,7 @@ const Game = () => {
 
   return (
     <div className="game-wrapper">
-      <GameBoard board={board} onClick={handleClick} />
+      <GameBoard board={board} onClick={handleClick} currentPlayer={currentPlayer} />
       <div className="click-info">
         <p>Last changed tile: {lastChanged}</p>
         <p>Current Player: {currentPlayer}</p>

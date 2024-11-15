@@ -120,7 +120,7 @@ const Gameboard = ({ board, onClick }) => {
   );
 };
 
-// foobar.on('sendInstructions', moves => {
+// socket.on('sendInstructions', moves => {
 //   //'Place', 'Anvil', 'Broken', 'Lightning', 'Flipped', 'Brick', 'StoppedL','StoppedA', 'Win','Full'
 // moves.forEach(instruction => {
 //   var rule = instruction[0]

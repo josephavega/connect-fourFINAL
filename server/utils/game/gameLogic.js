@@ -91,7 +91,7 @@ class GameLogic {
     printBoard() {
         const rows = 6;
         const columns = 7;
-        for (let row = 0; row < rows; row++) {
+        for (let row = rows-1; row >= 0; row--) {
             let rowStr = "";
             for (let col = 0; col < columns; col++) {
                 rowStr += this.board[col][row] === 0 ? "[0]" : `[${this.board[col][row]}]`;

@@ -14,17 +14,26 @@ export default function gameSocketHandler(io) {
     socket.on('message', (data) => {
       console.log(`Message from client: ${data}`);
       socket.emit('message', { message: 'Hello from the server!' });
-      game.setPlayer(data.sessionID)
     });
 
-    socket.on('/updateGameboard', data => {
-      socket.emit('/updatedGameboard')
-    })
 
-    socket.on('/joinGame', data => {
-      const {username, sessionID} = data;
-      game.setPlayer(username);
-      console.log(`${username} joined Game with ID: ${sessionID}`);
+    socket.on('getBoard', () => {
+      try {
+        console.log('Received getBoard request');
+        const board = game.board;
+        game.printBoard();
+        socket.emit('sentBoard', board);
+      } catch (error) {
+        console.error('Error sending board:', error);
+        socket.emit('sentBoard', { error: 'Failed to retrieve board' });
+      }
+    });
+    
+
+    socket.on('joinGame', data => {
+      const {username, color} = data;
+      game.setPlayer(username, color);
+      console.log(`${username} joined as ${color}`);
     })
 
     // Listen for a player move

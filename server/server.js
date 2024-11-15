@@ -4,8 +4,6 @@ import cors from 'cors';
 import session from 'express-session';
 import { Server } from 'socket.io';
 import Manager from './utils/game/Manager.js';
-import Users from './utils/users.js';
-
 
 // Import routes and socket handlers
 import queueRoutes from './routes/queueRoutes.js';
@@ -13,6 +11,11 @@ import gameRoutes from './routes/gameRoutes.js';
 import leaderboardRoutes from './routes/leaderboardRoutes.js';
 import queueSocketHandler from './sockets/queueSocket.js';
 import gameSocketHandler from './sockets/gameSocket.js';
+
+import Users from './utils/users.js';
+
+
+
 
 
 const app = express();
@@ -59,9 +62,8 @@ gameSocketHandler(io);
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-
-  //Manager.startAIvsAI();
-  Manager.setGameType(0);
-  Manager.createBoard();
+  // Manager.startAIvsAI();
+   Manager.setGameType(0);
+   Manager.createBoard();
 
 });

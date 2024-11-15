@@ -2,15 +2,15 @@ import Powerups from './gamePowerups.js'
 import GameLogic from './gameLogic.js'
 
 class Player {
-    constructor(name,color, gl) {
-        this.gl = gl
-        this.color = color
-        this.name = name
-        this.powerups = new Powerups(this, gl)
+    constructor(name, color, gameLogic) {
+        this.gl = gameLogic;
+        this.color = color;
+        this.name = name;
+        this.powerups = new Powerups(this, this.gameLogic);
     }
 
 
-    placeChip(column){
+    placeChip(colIndex){
         this.gl.placePiece(colIndex)
     }
 
@@ -27,4 +27,4 @@ class Player {
     }
 }
 
-export default new Player();
+export default Player;

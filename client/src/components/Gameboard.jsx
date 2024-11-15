@@ -63,7 +63,9 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
 
   const [hoveredColumn, setHoveredColumn] = useState(-1);
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
+  const [currentPlayer, setCurrentPlayer] = useState('red'); // Start with red player
   const sessionID = localStorage.getItem('sessionID');
+  
 
   useEffect(() => {
     socket.on('powerupUsed', ({ powerupType }) => {
@@ -187,5 +189,39 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
     </div>
   );
 };
+
+// foobar.on('sendInstructions', moves => {
+//   //'Place', 'Anvil', 'Broken', 'Lightning', 'Flipped', 'Brick', 'StoppedL','StoppedA', 'Win','Full'
+// moves.forEach(instruction => {
+//   var rule = instruction[0]
+//   var col = instruction[1]
+//   var row = instruction[2]
+//   var type = instruction[3]
+//   switch(rule){
+//     case 'Place':
+//       board[col][row] = type
+//       break;
+//     case 'Anvil':
+//       //Play Anvil animation
+//       break;
+//     case 'Broken':
+//       board[col][row] = type
+//       break;
+//     case 'Lightning':
+//       //Play Lightning Animation
+//       break;
+//     case 'Flipped':
+//       board[col][row] = type
+//       break;
+      
+//   }
+// });
+
+
+
+
+
+
+// });
 
 export default Gameboard;

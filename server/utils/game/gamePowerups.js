@@ -18,6 +18,7 @@ class Powerup_Lightning {
                 }
             }
             this.gl.board[x][y] = this.gl.board[x][y] === 'R' ? 'Y' : 'R';
+            this.gl.moves.push(['Flipped',x,row,this.player.color])
             
         }else{
             this.gl.board[x][y] = this.gl.board[x][y] === 'R' ? 'Y' : 'R';
@@ -43,12 +44,14 @@ class Powerup_Lightning {
             this.Lightning(r, y,0);
         } else {
             this.done[1] = 1;
+           if(this.gl.board[r][y] !== 'B') this.gl.moves.push(['StoppedL', x, row, this.powerup.player.color])
             this.LightningDone();
         }
         if (l >= 0 && this.gl.board[l][y] !== 'B') {
             this.Lightning(l, y,0);
         } else {
             this.done[0] = 1;
+            if(this.gl.board[r][y] !== 'B') this.gl.moves.push(['StoppedL', x, row, this.powerup.player.color])
             this.LightningDone();
         }
     }

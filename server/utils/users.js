@@ -46,6 +46,15 @@ class Users {
       return this.usersMap.get(sessionID);
     }
   
+    getUserFromName(username) {
+      for (let [sessionID, user] of this.usersMap.entries()) {
+        if (user.username === username) {
+          return sessionID;
+        }
+      }
+      return null; // Return null if no matching username is found
+    }
+
     // Check if a user exists
     userExists(sessionID) {
       return this.usersMap.has(sessionID);
@@ -87,12 +96,17 @@ class Users {
     }
   
     // Add user to an active game
-    addToGame(sessionID) {
+    addToGame(username, team, sessionID) {
       if (this.usersMap.has(sessionID)) {
-        this.activeGames.add(sessionID);
+        this.setUser(username, sessionID, false, true);
+        this.activeGames.add([sessionID, team]);
         this.usersMap.get(sessionID).inQueue = false; // Remove from queue if they join a game
         this.usersMap.get(sessionID).inGame = true;
-        this.queue.delete(sessionID);
+        if (this.queue.has(sessionID)) {
+          this.queue.delete(sessionID);
+        };
+      
+        
       }
     }
   
@@ -102,6 +116,10 @@ class Users {
         this.activeGames.delete(sessionID);
         this.usersMap.get(sessionID).inGame = false;
       }
+    }
+
+    clearGameUsers() {
+     this.activeGames.clear;
     }
   
     // Get all users in active games

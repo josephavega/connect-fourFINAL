@@ -20,7 +20,7 @@ export default function gameSocketHandler(io) {
     socket.on('getBoard', () => {
       try {
         console.log('Received getBoard request');
-        const board = game.board;
+        const board = game.GameLogic.board;
         game.printBoard();
         socket.emit('sentBoard', board);
       } catch (error) {

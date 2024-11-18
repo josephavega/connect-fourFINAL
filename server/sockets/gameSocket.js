@@ -31,9 +31,13 @@ export default function gameSocketHandler(io) {
     
 
     socket.on('joinGame', data => {
+      if (game.GameLogic.getPlayers < 2 || !game.GameLogic.gameActive) {
       const {username, color} = data;
       game.setPlayer(username, color);
       console.log(`${username} joined as ${color}`);
+      } else {
+        console.log(`${username} attempted to join but the game is active.`);
+      }
     })
 
     // Listen for a player move

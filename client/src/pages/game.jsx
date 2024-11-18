@@ -74,6 +74,7 @@ const Game = () => {
       <button
       className={`confirm-button ${currentPlayer.toLowerCase()}`}
       onClick={handleConfirm}
+      disabled={!selectedMove} // Disable if no move is selected
       >
         Confirm Move
       </button>

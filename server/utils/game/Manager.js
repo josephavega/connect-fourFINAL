@@ -24,7 +24,9 @@ class Manager{
         this.printBoard();
     }
 
-
+    getBoard() {
+        return this.GameLogic.board;
+    }
 
     setGameType(gameType){
         this.gameType = gameType;

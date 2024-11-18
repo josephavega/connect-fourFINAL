@@ -27,9 +27,9 @@ const HelpPopup = ({ onClose }) => {
   return (
     <div className="help-popup-overlay">
       <div className="help-popup">
-        <div className="popup-header">
+        <div className="popup-header2">
           <h2>How To Play</h2>
-          <button className="close-btn" onClick={onClose}>X</button>
+          <button className="close-btn" onClick={onClose}><img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="" /></button>
         </div>
         <div className="popup-content">
           <div className="instruction-container">

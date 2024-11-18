@@ -38,6 +38,9 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
   const [yellowLightningImage, setYellowLightningImage] = useState(YellowLightningButton);
   const [yellowBrickImage, setYellowBrickImage] = useState(YellowBrickButton);
 
+  const [username, setUsername] = useState('');
+  const [usernameB, setUsernameB] = useState('');
+
   const toggleRedAnvilImage = () => {
     if (currentPlayer === 'Red') {
     setRedAnvilImage((prevImage) => (prevImage === RedAnvilButton ? UsedAnvilButton : RedAnvilButton));
@@ -69,10 +72,13 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
   
 
   useEffect(() => {
+
+    setUsername(localStorage.getItem('username'));
+
     socket.on('powerupUsed', ({ powerupType }) => {
       setActivePowerup(powerupType);
     });
-
+    
     return () => {
       socket.off('powerupUsed');
     };
@@ -132,7 +138,7 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
       <div className="red-sidebar">
         <img src={RedSidebarBackground} alt="Sidebar Background" className="red-sidebar-background" />
         <div className="red-sidebar-content">
-          <div className="red-sidebar-text">ABC</div>
+          <div className="red-sidebar-text">{username}</div>
           <button className="red-sidebar-button" onClick={toggleRedAnvilImage} disabled={currentPlayer !== 'Red'}>
             <img src={redAnvilImage} alt="Anvil Button" />
           </button>
@@ -156,7 +162,7 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
       <div className="yellow-sidebar">
         <img src={YellowSidebarBackground} alt="Sidebar Background" className="yellow-sidebar-background" />
         <div className="yellow-sidebar-content">
-          <div className="yellow-sidebar-text">DEF</div>
+          <div className="yellow-sidebar-text">NPC</div>
           <button className="yellow-sidebar-button" onClick={toggleYellowAnvilImage} disabled={currentPlayer !== 'Yellow'}>
             <img src={yellowAnvilImage} alt="Anvil Button" />
           </button>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Grid2 } from '@mui/material';
 import '../styles/gameboard.css';
+import TopGrid from '../components/TopGrid.jsx';
+import ChipAnimation from '../components/ChipAnimation.jsx';
 
 import EmptyChip from '../assets/Board/BoardTileBack.png';
 import RedChip from '../assets/Board/Gamepieces/Chip_Red.png';
@@ -84,25 +86,6 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
     setHoveredColumn(-1);
   };
 
-  const createTopGrid = () => {
-    const cols = 7;
-    return (
-      <div className="top-grid">
-        {Array.from({ length: cols }, (_, colIndex) => (
-          <div key={colIndex} className="top-cell">
-            {hoveredColumn === colIndex && (
-              <img
-                src={currentPlayer === 'Red' ? RedChip : YellowChip}
-                alt="Hover Indicator"
-                className="hover-img"
-              />
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   const createMainGrid = () => {
     const rows = 6;
     const cols = 7;
@@ -162,7 +145,7 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
         </div>
       </div>
       <div>
-        {createTopGrid()}
+        <TopGrid hoveredColumn={hoveredColumn} currentPlayer={currentPlayer} />
         <div className="gameboard-wrapper">
           <img src={BoardBorder} alt="Board Border" className="board-border" />
           <div className="gameboard">

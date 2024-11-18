@@ -1,0 +1,5 @@
+.chip-animation {
+    width: 64px; /* Adjust based on your chip size */
+    height: 64px;
+    z-index: 10; /* Ensure it appears above other elements */
+  }

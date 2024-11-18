@@ -1,0 +1,21 @@
+.top-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 64px); /* Match your grid dimensions */
+    gap: 0;
+    height: 64px; /* Same height as the main grid cells */
+  }
+  
+  .top-cell {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    background-color: transparent; /* Keep it visually clean */
+  }
+  
+  .hover-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  

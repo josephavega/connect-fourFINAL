@@ -1,5 +1,6 @@
 
 import GameLogic from './gameLogic.js'
+
 import Player from '../game/Player.js'
 import Users from '../users.js';
 
@@ -47,15 +48,11 @@ class Manager{
     }
     
     setPlayer(name, color){
-        if (this.GameLogic.playerCount < 2) {
-       
         let player = new Player(name, color, this.GameLogic)
         color === 0 ? this.GameLogic.setPlayer(player, 0) : this.GameLogic.setPlayer(player, 1);
         
         const sessionID = Users.getUserFromName(name);
         Users.addToGame(name, color, sessionID);
-
-        } 
     }
 
     placeChip(player, column){

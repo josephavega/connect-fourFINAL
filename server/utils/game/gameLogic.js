@@ -25,10 +25,17 @@ class GameLogic {
         this.playerCount++;
     }
 
+
     getPlayers() {
         player_one = this.player[0];
         player_two = this.player[1];
         console.log(`Player One: ${player_one}, Player Two: ${player_two}`);
+
+    setPlayer(newPlayer){
+        player[this.playerCount] = newPlayer
+        player[this.playerCount].color = this.playerCount === 0 ? 'R':'Y'
+        this.playerCount++
+
     }
 
     startAIVsAI(callback) {
@@ -95,7 +102,9 @@ class GameLogic {
     printBoard() {
         const rows = 6;
         const columns = 7;
+
         for (let row = rows - 1; row >= 0; row--) {
+
             let rowStr = "";
             for (let col = 0; col < columns; col++) {
                 rowStr += this.board[col][row] === 0 ? "[0]" : `[${this.board[col][row]}]`;

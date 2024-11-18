@@ -31,9 +31,9 @@ export default function gameSocketHandler(io) {
     
 
     socket.on('joinGame', data => {
-      const {username, color} = data;
-      game.setPlayer(username, color);
-      console.log(`${username} joined as ${color}`);
+      const {sessionID, username} = data;
+      game.setPlayer(sessionID, username);
+      console.log(`${username} joined as ${game.getCurrentPlayer.color}`);
     })
 
     // Listen for a player move
@@ -43,16 +43,19 @@ export default function gameSocketHandler(io) {
       console.log(`Player ${username} made a move in column: ${colIndex}`);
       
       try {
-        const currentPlayer = game.getCurrentPlayer();
-        var moves = null
+        let currentPlayer = game.getCurrentPlayer();
+        var moves = []
         game.wipeMoves()
         switch(data.powerupType){
           case 'Brick':
           moves = game.useBrick(currentPlayer, data.colIndex)
+          break;
           case 'Anvil':
           moves = game.useAnvil(currentPlayer, data.colIndex)
+          break;
           case 'Lightning':
           moves = game.useLightning(currentPlayer, data.colIndex, data.rowIndex)
+          break;
         default:
           moves = game.placeChip(currentPlayer,colIndex); // Place the piece in the game logic
         }
@@ -62,11 +65,11 @@ export default function gameSocketHandler(io) {
         gameNamespace.emit('playerTurn', currentPlayer); // Notify whose turn it is
         console.log('Gameboard Updated:', game.board);
   
-        // Check if the game is over
-        if (game.checkWin()) {
-          io.emit('gameOver', { winner: currentPlayer });
-          console.log(`Player ${currentPlayer} wins!`);
-        }
+        // // Check if the game is over
+        // if (game.GameLogic.checkWin()) {
+        //   io.emit('gameOver', { winner: currentPlayer });
+        //   console.log(`Player ${currentPlayer} wins!`);
+        // }
       } catch (error) {
         socket.emit('moveError', { error: error.message });
         console.error('Error during move:', error.message);

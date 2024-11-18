@@ -11,12 +11,55 @@ const Game = () => {
   const [isVictoryPopupOpen, setVictoryPopupOpen] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState('Red'); // Track the current player
   const sessionID = localStorage.getItem('sessionID');
+  const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
 
   const openVictoryPopup = () => setVictoryPopupOpen(true);
 
   const togglePlayer = () => {
     setCurrentPlayer(currentPlayer === 'Red' ? 'Yellow' : 'Red');
   };
+  // useEffect(() => {
+  //   const socket = gameSocket;
+
+  //   const handleInstructions = (moves) => {
+  //     setBoard((prevBoard) => {
+  //       const updatedBoard = prevBoard.map((row) => [...row]);
+  //     moves.forEach((instruction) => {
+  //       const [rule, col, row, type] = instruction;
+  //       switch (rule) {
+  //           case 'Place':
+  //             updatedBoard[col][row] = type
+  //             break;
+  //           case 'Anvil':
+  //             //Play Anvil animation
+  //             break;
+  //           case 'Broken':
+  //             updatedBoard[col][row] = type
+  //             break;
+  //           case 'Lightning':
+  //             //Play Lightning Animation
+  //             break;
+  //           case 'Flipped':
+  //             updatedBoard[col][row] = type
+  //             break;
+  //           case 'Win':
+  //           openVictoryPopup()
+  //           break;
+              
+  //         }
+  //       });
+  //       return updatedBoard;
+  //     });
+
+  //     togglePlayer(); // Switch the player after processing instructions
+  //   };
+
+  //   gameSocket.on('sendInstructions', handleInstructions);
+
+  //   return () => {
+  //     gameSocket.off('sendInstructions', handleInstructions); // Cleanup listener
+  //   };
+  // }, []);
 
   const handleClick = (rowIndex, colIndex) => {
     // Find the lowest empty row in the selected column
@@ -47,8 +90,9 @@ const Game = () => {
     // Toggle to the other player
     togglePlayer();
 
-    const data = { rowIndex: lowestEmptyRow, colIndex, sessionID };
+    const data = {colIndex, rowIndex, sessionID, activePowerup};
     gameSocket.emit('playerMove', data);
+    
   };
 
   return (

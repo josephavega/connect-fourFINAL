@@ -3,8 +3,8 @@ import GameLogic from './gameLogic.js'
 
 class Player {
 
-    constructor(sessionId, name, color, gl) {
-        this.sessionId = sessionId
+    constructor(sessionID, name, color, gl) {
+        this.sessionID = sessionID
         this.gl = gl
         this.color = color
         this.name = name

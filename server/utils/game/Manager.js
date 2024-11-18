@@ -34,7 +34,7 @@ class Manager{
     }
 
     wipeMoves(){
-        this.GameLogic.moves = null
+        this.GameLogic.moves = []
     }
 
     startAIvsAI() {
@@ -45,12 +45,19 @@ class Manager{
         });
     }
     
-    setPlayer(sessionId,username){
-        const player = new Player(sessionId,username, -1, this.GameLogic)
+    setPlayer(sessionID,username){
+        const player = new Player(sessionID,username, -1, this.GameLogic)
         this.GameLogic.setPlayer(player)
-  const sessionID = Users.getUserFromName(name);
-        Users.addToGame(name, color, sessionID);
+        Users.addToGame(username, color, sessionID);
+    }
 
+    getPlayerID(username){
+        const sessionID = Users.getUserFromName(username);
+    }
+
+
+    getCurrentPlayer(){
+        return this.GameLogic.getCurrentPlayer()
     }
 
     placeChip(player, column){
@@ -72,7 +79,6 @@ class Manager{
         player.powerups.Brick(column);
         return this.GameLogic.moves
     }
-
 
     swapPage(currentPage, newPage) {
 

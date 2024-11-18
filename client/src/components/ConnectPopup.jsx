@@ -78,7 +78,7 @@ const ConnectPopup = ({ onClose }) => {
       <div className="connect-popup">
         <div className="popup-header">
           <h2>Start a Game</h2>
-          <button className="close-btn" onClick={onClose}>X</button>
+          <button className="close-btn" onClick={onClose}><img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="" /></button>
         </div>
         <div className="popup-content">
           <label>

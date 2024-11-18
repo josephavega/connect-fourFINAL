@@ -119,7 +119,7 @@ class GameLogic {
         for (let i = 0; i < this.board.length; i++) {
             if (this.board[columnIndex][i] === 0) {
                 this.board[columnIndex][i] = this.getCurrentPlayer().color;
-                this.moves.push(['Place',columnIndex,i,this.getCurrentPlayer().color])
+                this.moves.push(['Place',i,columnIndex,this.getCurrentPlayer().color])
                 if (this.checkWin()) {
                     this.gameOver = true;
                     return;
@@ -155,7 +155,7 @@ class GameLogic {
                     
                     if (winningMoves.length === 4){
                         for(let i = 0; i < winningMoves.length; i++){
-                            this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
+                            this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
                         }
                         return true;
                     } 
@@ -172,11 +172,11 @@ class GameLogic {
             var winningMoves = []
             for (let col = 0; col < this.board.length; col++) {
                 if (this.board[col][row] === this.getCurrentPlayer().color) {
-                    winningMoves.push([col,row])
+                    winningMoves.push([,row,col,])
                     
                     if (winningMoves.length === 4){
                         for(let i = 0; i < winningMoves.length; i++){
-                            this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
+                            this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
                         }
                         return true;
                     } 
@@ -198,10 +198,10 @@ class GameLogic {
                     this.board[col + 2][row + 2] === this.getCurrentPlayer().color &&
                     this.board[col + 3][row + 3] === this.getCurrentPlayer().color
                 ) {
-                    this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col+1,row+1,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col+2,row+2,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col+3,row+3,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row+1,col+1,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row+2,col+2,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row+3,col+3,this.getCurrentPlayer.color])
                     return true;
                 }
             }
@@ -216,10 +216,10 @@ class GameLogic {
                     this.board[col - 2][row + 2] === this.getCurrentPlayer().color &&
                     this.board[col - 3][row + 3] === this.getCurrentPlayer().color
                 ) {
-                    this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col-1,row+1,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col-2,row+2,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col-3,row+3,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row-1,col+1,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row-2,col+2,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row-3,col+3,this.getCurrentPlayer.color])
                     return true;
                 }
             }

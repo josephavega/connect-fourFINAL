@@ -99,7 +99,7 @@ const Game = () => {
     setBoard(updatedBoard);
   
     // Emit the move to the server
-    const data = { rowIndex: row, colIndex: col, sessionID };
+    const data = {rowIndex: row, colIndex: col, sessionID, activePowerup};
     gameSocket.emit('playerMove', data);
   
     // Reset the selected move and toggle player

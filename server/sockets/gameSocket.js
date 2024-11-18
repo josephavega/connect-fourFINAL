@@ -38,7 +38,7 @@ export default function gameSocketHandler(io) {
 
     // Listen for a player move
     socket.on('playerMove', data => {
-      const {colIndex, rowIndex, sessionID, powerupType} = data;
+      const {rowIndex, colIndex, sessionID, powerupType} = data;
       const username = users.getUser(sessionID);
       console.log(`Player ${username} made a move in column: ${colIndex}`);
       

@@ -2,11 +2,13 @@ import Powerups from './gamePowerups.js'
 import GameLogic from './gameLogic.js'
 
 class Player {
-    constructor(name, color, gameLogic) {
-        this.gl = gameLogic;
-        this.color = color;
-        this.name = name;
-        this.powerups = new Powerups(this, this.gameLogic);
+
+    constructor(sessionId, name, color, gl) {
+        this.sessionId = sessionId
+        this.gl = gl
+        this.color = color
+        this.name = name
+        this.powerups = new Powerups(this, this.gl)
     }
 
 

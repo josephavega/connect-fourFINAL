@@ -68,15 +68,7 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
   const sessionID = localStorage.getItem('sessionID');
   
 
-  useEffect(() => {
-    socket.on('powerupUsed', ({ powerupType }) => {
-      setActivePowerup(powerupType);
-    });
-
-    return () => {
-      socket.off('powerupUsed');
-    };
-  }, []);
+  
 
   const handleMouseEnter = (colIndex) => {
     setHoveredColumn(colIndex);

@@ -1,9 +1,10 @@
 import AI from './AI.js'
+import Player from './Player.js';
 
 class GameLogic {
     constructor() {
         this.board = this.createBoard();
-        this.player = [null, null]
+        this.player = [new Player(-1,'Red','R',this), new Player(-1,'Yellow','Y',this)]
         this.currentPlayerIndex = 0;
         this.playerCount = 0;
         this.ai = [new AI(1), new AI(1)]; // AI difficulty Medium
@@ -20,9 +21,10 @@ class GameLogic {
         
     }   
 
-    setPlayer(newPlayer, team){
-        this.player[this.playerCount] = newPlayer;
-        this.playerCount++;
+    setPlayer(sessionID,username){
+        this.player[this.currentPlayerIndex].sessionID = sessionID
+        this.player[this.currentPlayerIndex].username = username
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % 2;
     }
 
 
@@ -30,20 +32,12 @@ class GameLogic {
         player_one = this.player[0];
         player_two = this.player[1];
         console.log(`Player One: ${player_one}, Player Two: ${player_two}`);
-
-    setPlayer(newPlayer){
-        player[this.playerCount] = newPlayer
-        player[this.playerCount].color = this.playerCount === 0 ? 'R':'Y'
-        this.playerCount++
-
     }
 
     startAIVsAI(callback) {
         this.isAIvsAI = true;
         this.player[0]=this.ai[0]
-        this.player[0].color = 'R'
         this.player[1]=this.ai[1]
-        this.player[1].color = 'Y'
         this.runAIGame(callback);
         
     }
@@ -51,7 +45,7 @@ class GameLogic {
     startPlayerVsAI() {
         this.isPlayerVsAI = true;
         this.player[1] = this.ai[0]
-        this.player[1].color = this.player[0].color == 'R'? 'Y':'R'
+        this.player[1].color = 'Y'
     }
 
     runAIGame(callback) {
@@ -125,7 +119,7 @@ class GameLogic {
         for (let i = 0; i < this.board.length; i++) {
             if (this.board[columnIndex][i] === 0) {
                 this.board[columnIndex][i] = this.getCurrentPlayer().color;
-                this.moves.push(['Place',columnIndex,i,this.getCurrentPlayer().color])
+                this.moves.push(['Place',i,columnIndex,this.getCurrentPlayer().color])
                 if (this.checkWin()) {
                     this.gameOver = true;
                     return;
@@ -161,7 +155,7 @@ class GameLogic {
                     
                     if (winningMoves.length === 4){
                         for(let i = 0; i < winningMoves.length; i++){
-                            this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
+                            this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
                         }
                         return true;
                     } 
@@ -178,11 +172,11 @@ class GameLogic {
             var winningMoves = []
             for (let col = 0; col < this.board.length; col++) {
                 if (this.board[col][row] === this.getCurrentPlayer().color) {
-                    winningMoves.push([col,row])
+                    winningMoves.push([,row,col,])
                     
                     if (winningMoves.length === 4){
                         for(let i = 0; i < winningMoves.length; i++){
-                            this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
+                            this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
                         }
                         return true;
                     } 
@@ -204,10 +198,10 @@ class GameLogic {
                     this.board[col + 2][row + 2] === this.getCurrentPlayer().color &&
                     this.board[col + 3][row + 3] === this.getCurrentPlayer().color
                 ) {
-                    this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col+1,row+1,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col+2,row+2,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col+3,row+3,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row+1,col+1,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row+2,col+2,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row+3,col+3,this.getCurrentPlayer.color])
                     return true;
                 }
             }
@@ -222,10 +216,10 @@ class GameLogic {
                     this.board[col - 2][row + 2] === this.getCurrentPlayer().color &&
                     this.board[col - 3][row + 3] === this.getCurrentPlayer().color
                 ) {
-                    this.moves.push(['Win',col,row,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col-1,row+1,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col-2,row+2,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',col-3,row+3,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row-1,col+1,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row-2,col+2,this.getCurrentPlayer.color])
+                    this.moves.push(['Win',row-3,col+3,this.getCurrentPlayer.color])
                     return true;
                 }
             }

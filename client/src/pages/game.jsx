@@ -10,6 +10,7 @@ const Game = () => {
   const [lastChanged, setChanged] = useState('None');
   const [isVictoryPopupOpen, setVictoryPopupOpen] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState('Red'); // Track the current player
+  const [selectedMove, setSelectedMove] = useState(null);
   const sessionID = localStorage.getItem('sessionID');
 
   const openVictoryPopup = () => setVictoryPopupOpen(true);
@@ -27,28 +28,40 @@ const Game = () => {
         break;
       }
     }
-
+  
     // If there is no empty row, the column is full
     if (lowestEmptyRow === -1) {
       console.log(`Column ${colIndex} is full.`);
       return; // Exit function if column is full
     }
-
-    console.log(`Cell clicked at row ${lowestEmptyRow}, column ${colIndex}`);
-    setChanged(`Row ${lowestEmptyRow + 1}, Column ${colIndex + 1}`);
-
-    // Update the board with the current player's chip
+  
+    console.log(`Move selected at row ${lowestEmptyRow}, column ${colIndex}`);
+    setSelectedMove({ row: lowestEmptyRow, col: colIndex }); // Store the move
+    setChanged(`Row ${lowestEmptyRow + 1}, Column ${colIndex + 1}`); // Update last changed info
+  };
+  
+  const handleConfirm = () => {
+    if (!selectedMove) {
+      console.log('No move selected to confirm.');
+      return;
+    }
+  
+    const { row, col } = selectedMove;
     const chipColor = currentPlayer === 'Red' ? 'R' : 'Y';
-    const updatedBoard = board.map((row, rIdx) =>
-      row.map((cell, cIdx) => (rIdx === lowestEmptyRow && cIdx === colIndex ? chipColor : cell))
+  
+    // Update the board with the selected move
+    const updatedBoard = board.map((r, rIdx) =>
+      r.map((cell, cIdx) => (rIdx === row && cIdx === col ? chipColor : cell))
     );
     setBoard(updatedBoard);
-
-    // Toggle to the other player
-    togglePlayer();
-
-    const data = { rowIndex: lowestEmptyRow, colIndex, sessionID };
+  
+    // Emit the move to the server
+    const data = { rowIndex: row, colIndex: col, sessionID };
     gameSocket.emit('playerMove', data);
+  
+    // Reset the selected move and toggle player
+    setSelectedMove(null);
+    togglePlayer();
   };
 
   return (
@@ -58,6 +71,13 @@ const Game = () => {
         <p>Last changed tile: {lastChanged}</p>
         <p>Current Player: {currentPlayer}</p>
       </div>
+      <button
+      className={`confirm-button ${currentPlayer.toLowerCase()}`}
+      onClick={handleConfirm}
+      >
+        Confirm Move
+      </button>
+
       <button
         className={`player-toggle-button ${currentPlayer.toLowerCase()}`}
         onClick={togglePlayer}

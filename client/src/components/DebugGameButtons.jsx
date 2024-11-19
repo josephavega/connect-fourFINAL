@@ -78,6 +78,7 @@ const DebugGameButtons = () => {
   gameSocket.on('sentBoard', (board) => {
     setBoard(board);
     console.log('Board updated:', board);
+    
   });
 
   return (

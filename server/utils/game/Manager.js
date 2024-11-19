@@ -60,9 +60,15 @@ class Manager{
         return this.GameLogic.getCurrentPlayer()
     }
 
-    placeChip(player, column){
-        player.placeChip(column);
-        return this.GameLogic.moves
+      // Updated to handle moves
+      placeChip(sessionID, column) {
+        const player = Users.getUser(sessionID);
+        if (player) {
+            return this.GameLogic.placePiece(column, player);
+        } else {
+            console.error(`Player with sessionID: ${sessionID} not found.`);
+            return [];
+        }
     }
 
     useLightning(player, column, row){

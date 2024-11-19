@@ -114,12 +114,16 @@ class GameLogic {
 
 
 
-    placePiece(columnIndex) {
-        // Bottom to top
-        for (let i = 0; i < this.board.length; i++) {
+    placePiece(columnIndex, player) {
+        if (!player) {
+            console.error('No valid player found for move.');
+            return;
+        }
+        
+        for (let i = 0; i < this.board[columnIndex].length; i++) {
             if (this.board[columnIndex][i] === 0) {
-                this.board[columnIndex][i] = this.getCurrentPlayer().color;
-                this.moves.push(['Place',i,columnIndex,this.getCurrentPlayer().color])
+                this.board[columnIndex][i] = player.color;
+                this.moves.push(['Place', i, columnIndex, player.color]);
                 if (this.checkWin()) {
                     this.gameOver = true;
                     return;

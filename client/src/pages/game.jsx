@@ -80,9 +80,19 @@ const Game = () => {
   
     console.log(`Move selected at row ${lowestEmptyRow}, column ${colIndex}`);
     setSelectedMove({ row: lowestEmptyRow, col: colIndex }); // Store the move
+
     setChanged(`Row ${lowestEmptyRow + 1}, Column ${colIndex + 1}`); // Update last changed info
   };
   
+  function handleMove(colIndex) {
+    const sessionID = localStorage.getItem('sessionID');
+    const username = localStorage.getItem('username');
+    const data = { colIndex, sessionID, username };
+
+    gameSocket.emit('playerMove', data);
+}
+
+
   const handleConfirm = () => {
     if (!selectedMove) {
       console.log('No move selected to confirm.');
@@ -99,8 +109,7 @@ const Game = () => {
     setBoard(updatedBoard);
   
     // Emit the move to the server
-    const data = {rowIndex: row, colIndex: col, sessionID, activePowerup};
-    gameSocket.emit('playerMove', data);
+    handleMove(col);
   
     // Reset the selected move and toggle player
     setSelectedMove(null);

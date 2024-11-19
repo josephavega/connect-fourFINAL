@@ -46,9 +46,8 @@ class Manager{
     }
     
     setPlayer(sessionID,username){
-        const player = new Player(sessionID,username, -1, this.GameLogic)
-        this.GameLogic.setPlayer(player)
-        Users.addToGame(username, color, sessionID);
+        this.GameLogic.setPlayer(sessionID,username)
+        Users.addToGame(username,sessionID);
     }
 
     getPlayerID(username){

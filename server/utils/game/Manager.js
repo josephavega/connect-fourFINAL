@@ -1,7 +1,9 @@
+
 import GameLogic from './gameLogic.js'
 
 import Player from '../game/Player.js'
 import Users from '../users.js';
+
 
 
 class Manager{
@@ -41,14 +43,12 @@ class Manager{
         console.log("Starting AI vs. AI game...");
         this.GameLogic.startAIVsAI((gameState) => {
             //console.log('Game state updated:', gameState);
-        
         });
     }
     
     setPlayer(sessionID,username){
-        const player = new Player(sessionID,username, -1, this.GameLogic)
-        this.GameLogic.setPlayer(player)
-        Users.addToGame(username, color, sessionID);
+        this.GameLogic.setPlayer(sessionID,username)
+        Users.addToGame(username,sessionID);
     }
 
     getPlayerID(username){

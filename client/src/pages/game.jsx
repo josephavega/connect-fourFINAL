@@ -5,12 +5,15 @@ import gameSocket from '../sockets/gameSocket';
 import VictoryPopup from '../components/VictoryPopup';
 import DebugGameButtons from '../components/DebugGameButtons';
 
+
 const Game = () => {
   const [board, setBoard] = useState(Array(6).fill(null).map(() => Array(7).fill('EmptyChip')));
   const [lastChanged, setChanged] = useState('None');
   const [isVictoryPopupOpen, setVictoryPopupOpen] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState('Red'); // Track the current player
   const [selectedMove, setSelectedMove] = useState(null);
+  const [selectedColumn, setSelectedColumn] = useState(null); // Track the currently clicked column
+
   const sessionID = localStorage.getItem('sessionID');
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
 
@@ -80,9 +83,19 @@ const Game = () => {
   
     console.log(`Move selected at row ${lowestEmptyRow}, column ${colIndex}`);
     setSelectedMove({ row: lowestEmptyRow, col: colIndex }); // Store the move
+    setSelectedColumn(colIndex); // Highlight the selected column
     setChanged(`Row ${lowestEmptyRow + 1}, Column ${colIndex + 1}`); // Update last changed info
   };
   
+  function handleMove(colIndex) {
+    const sessionID = localStorage.getItem('sessionID');
+    const username = localStorage.getItem('username');
+    const data = { colIndex, sessionID, username };
+
+    gameSocket.emit('playerMove', data);
+}
+
+
   const handleConfirm = () => {
     if (!selectedMove) {
       console.log('No move selected to confirm.');
@@ -99,17 +112,22 @@ const Game = () => {
     setBoard(updatedBoard);
   
     // Emit the move to the server
-    const data = {rowIndex: row, colIndex: col, sessionID, activePowerup};
-    gameSocket.emit('playerMove', data);
+    handleMove(col);
   
     // Reset the selected move and toggle player
     setSelectedMove(null);
+    setSelectedColumn(null);
     togglePlayer();
   };
 
   return (
     <div className="game-wrapper">
-      <GameBoard board={board} onClick={handleClick} currentPlayer={currentPlayer} />
+      <GameBoard 
+      board={board}
+      onClick={handleClick}
+      currentPlayer={currentPlayer}
+      selectedColumn={selectedColumn}
+      />
       <div className="click-info">
         <p>Last changed tile: {lastChanged}</p>
         <p>Current Player: {currentPlayer}</p>

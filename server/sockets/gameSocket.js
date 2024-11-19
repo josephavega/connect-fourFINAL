@@ -108,6 +108,38 @@ export default function gameSocketHandler(io) {
       socket.emit('sendBoard', game.getBoard);
     });
 
+
+socket.on('playerMove', (data) => {
+    const { colIndex, sessionID, username } = data;
+    const user = users.getUser(sessionID);
+  
+
+    if (!username) {
+      console.error("Username not found for sessionID:", sessionID);
+      return;
+    }
+
+    console.log(`Player ${username} made a move in column: ${colIndex}`);
+    
+    try {
+      // Process the move in the game logic
+      const currentPlayer = game.getCurrentPlayer();
+      const moves = game.placeChip(currentPlayer, colIndex); 
+      
+      gameNamespace.emit('sendInstructions', moves);
+      gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all clients
+      console.log('Gameboard Updated:', game.board);
+
+      // Check if the game is over
+      if (game.GameLogic.checkWin()) {
+        io.emit('gameOver', { winner: currentPlayer });
+        console.log(`Player ${currentPlayer} wins!`);
+      }
+    } catch (error) {
+      console.error('Error during move:', error);
+      socket.emit('moveError', { error: error.message });
+    }
+  });
   
     // Handle players joining or leaving a game session
     socket.on('joinGame', (username) => {

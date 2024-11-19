@@ -89,7 +89,7 @@ class GameLogic {
     createBoard() {
         const rows = 6;
         const columns = 7;
-        const board = Array.from({ length: columns }, () => Array(rows).fill(0));
+        const board = Array.from({ length: rows }, () => Array(columns).fill(0));
         return board;
     }
 
@@ -101,7 +101,7 @@ class GameLogic {
 
             let rowStr = "";
             for (let col = 0; col < columns; col++) {
-                rowStr += this.board[col][row] === 0 ? "[0]" : `[${this.board[col][row]}]`;
+                rowStr += this.board[row][col] === 0 ? "[0]" : `[${this.board[row][col]}]`;
             }
             console.log(rowStr);
         }
@@ -116,10 +116,10 @@ class GameLogic {
 
     placePiece(columnIndex) {
         // Bottom to top
-        for (let i = 0; i < this.board.length; i++) {
-            if (this.board[columnIndex][i] === 0) {
-                this.board[columnIndex][i] = this.getCurrentPlayer().color;
-                this.moves.push(['Place',i,columnIndex,this.getCurrentPlayer().color])
+        for (let row = 0; row < this.board.length; row++) {
+            if (this.board[row][columnIndex] === 0) {
+                this.board[row][columnIndex] = this.getCurrentPlayer().color;
+                this.moves.push(['Place',row,columnIndex,this.getCurrentPlayer().color])
                 if (this.checkWin()) {
                     this.gameOver = true;
                     return;
@@ -146,12 +146,12 @@ class GameLogic {
     }
 
     checkVerticalWin() {
-        
-        for (let col = 0; col < this.board.length; col++) {
+        const rows = 6
+        for (let col = 0; col < this.board.length[rows]; col++) {
             var winningMoves = []
-            for (let row = 0; row < this.board[col].length; row++) {
-                if (this.board[col][row] === this.getCurrentPlayer().color) {
-                    winningMoves.push([col,row])
+            for (let row = 0; row < this.board.length; row++) {
+                if (this.board[row][col] === this.getCurrentPlayer().color) {
+                    winningMoves.push([row,col])
                     
                     if (winningMoves.length === 4){
                         for(let i = 0; i < winningMoves.length; i++){
@@ -168,11 +168,11 @@ class GameLogic {
     }
 
     checkHorizontalWin() {
-        for (let row = 0; row < this.board[0].length; row++) {
+        for (let row = 0; row < this.board.length; row++) {
             var winningMoves = []
-            for (let col = 0; col < this.board.length; col++) {
-                if (this.board[col][row] === this.getCurrentPlayer().color) {
-                    winningMoves.push([,row,col,])
+            for (let col = 0; col < this.board[0].length; col++) {
+                if (this.board[row][col] === this.getCurrentPlayer().color) {
+                    winningMoves.push([row,col])
                     
                     if (winningMoves.length === 4){
                         for(let i = 0; i < winningMoves.length; i++){
@@ -190,13 +190,13 @@ class GameLogic {
 
     checkDiagonalWin() {
         // Left to right diagonal
-        for (let col = 0; col < this.board.length - 3; col++) {
-            for (let row = 0; row < this.board[0].length - 3; row++) {
+        for (let col = 0; col < this.board[0].length - 3; col++) {
+            for (let row = 0; row < this.board.length - 3; row++) {
                 if (
-                    this.board[col][row] === this.getCurrentPlayer().color &&
-                    this.board[col + 1][row + 1] === this.getCurrentPlayer().color &&
-                    this.board[col + 2][row + 2] === this.getCurrentPlayer().color &&
-                    this.board[col + 3][row + 3] === this.getCurrentPlayer().color
+                    this.board[row][col] === this.getCurrentPlayer().color &&
+                    this.board[row + 1][col + 1] === this.getCurrentPlayer().color &&
+                    this.board[row + 2][col + 2] === this.getCurrentPlayer().color &&
+                    this.board[row + 3][col + 3] === this.getCurrentPlayer().color
                 ) {
                     this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
                     this.moves.push(['Win',row+1,col+1,this.getCurrentPlayer.color])
@@ -211,10 +211,10 @@ class GameLogic {
         for (let col = 3; col < this.board.length; col++) {
             for (let row = 0; row < this.board[0].length - 3; row++) {
                 if (
-                    this.board[col][row] === this.getCurrentPlayer().color &&
-                    this.board[col - 1][row + 1] === this.getCurrentPlayer().color &&
-                    this.board[col - 2][row + 2] === this.getCurrentPlayer().color &&
-                    this.board[col - 3][row + 3] === this.getCurrentPlayer().color
+                    this.board[row][col] === this.getCurrentPlayer().color &&
+                    this.board[row + 1][col - 1] === this.getCurrentPlayer().color &&
+                    this.board[row + 2][col - 2] === this.getCurrentPlayer().color &&
+                    this.board[row + 3[col - 3]] === this.getCurrentPlayer().color
                 ) {
                     this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
                     this.moves.push(['Win',row-1,col+1,this.getCurrentPlayer.color])
@@ -228,10 +228,10 @@ class GameLogic {
     }
 
     isBoardFull() {
-        for (let col = 0; col < this.board.length; col++) {
-            var winningMoves
-            for (let row = 0; row < this.board[col].length; row++) {
-                if (this.board[col][row] === 0) {
+        for (let row = 0; row < this.board.length; row++) {
+            var winningMoves = []
+            for (let col = 0; col < this.board[0].length; col++) {
+                if (this.board[row][col] === 0) {
                     return false;
                 }
             }

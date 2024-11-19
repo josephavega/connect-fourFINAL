@@ -16,11 +16,11 @@
 }
 
 .red-sidebar {
-  transform: translate(-7px,54px); 
+  transform: translate(-7px,64px); 
 }
 
 .yellow-sidebar {
-  transform: translate(7px,54px); 
+  transform: translate(7px,64px); 
 }
 
 .red-sidebar-background {
@@ -181,3 +181,6 @@
     transform: scale(1.05);
   }
   
+  .top-grid{
+    display: none;
+  }

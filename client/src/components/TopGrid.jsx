@@ -1,21 +1,30 @@
 import React from 'react';
-import '../styles/topGrid.css'; // Import the new CSS file
 import RedChip from '../assets/Board/Gamepieces/Chip_Red.png';
 import YellowChip from '../assets/Board/Gamepieces/Chip_Yellow.png';
+import '../styles/topgrid.css';
 
-const TopGrid = ({ hoveredColumn, currentPlayer }) => {
-  const cols = 7;
+const TopGrid = ({ selectedColumn, currentPlayer }) => {
+  if (selectedColumn === null) return null; // Do not render if no column is selected
+
+  const gridStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: '10px',
+  };
+
   return (
-    <div className="top-grid">
-      {Array.from({ length: cols }, (_, colIndex) => (
-        <div key={colIndex} className="top-cell">
-          {hoveredColumn === colIndex && (
-            <img
-              src={currentPlayer === 'Red' ? RedChip : YellowChip}
-              alt="Hover Indicator"
-              className="hover-img"
-            />
-          )}
+    <div style={gridStyle}>
+      {Array(7).fill(null).map((_, index) => (
+        <div
+          key={index}
+          style={{
+            visibility: index === selectedColumn ? 'visible' : 'hidden',
+          }}
+        >
+          <img
+            src={currentPlayer === 'Red' ? RedChip : YellowChip}
+            alt={`${currentPlayer} Chip`}
+          />
         </div>
       ))}
     </div>

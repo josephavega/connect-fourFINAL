@@ -1,8 +1,10 @@
 .top-grid {
-    display: grid;
+    display: block;
     grid-template-columns: repeat(7, 64px); /* Match your grid dimensions */
-    gap: 0;
+    gap: 0px;
     height: 64px; /* Same height as the main grid cells */
+    padding-bottom:10px;
+
   }
   
   .top-cell {

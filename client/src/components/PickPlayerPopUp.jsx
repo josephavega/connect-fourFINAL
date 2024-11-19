@@ -19,7 +19,7 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
               Select an opponent
             </option>
             {queue
-              .filter((player) => player.username !== currentUser) // Exclude the current user
+              .filter((player) => player.username !== currentUser) 
               .map((player, index) => (
                 <option key={index} value={player.username}>
                   {player.username}

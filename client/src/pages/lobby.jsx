@@ -4,17 +4,21 @@ import Leaderboard from '../components/Leaderboard';
 import QueueButton from '../components/QueueButton';
 import DebugButton from '../components/DebugButton';
 import GameButton from '../components/GameButton';
-//import PickPlayerPopUp from '../components/PickPlayerPopUp';
-import Gameboard from '../components/Gameboard';
+import PickPlayerPopUp from '../components/PickPlayerPopUp';
 import '../styles/lobby.css';
-import queueSocket from '../sockets/queueSocket';
 
 const Lobby = () => {
   const [view, setView] = useState('queue');
   const [isPopupVisible, setIsPopupVisible] = useState(false); 
   const [queue, setQueue] = useState([]); 
   const [selectedOpponent, setSelectedOpponent] = useState('');
-  const currentUser = 'NPC';
+  const [usernameA, setUsernameA] = useState('');
+
+  useEffect(() => {
+    setUsernameA(localStorage.getItem('username') || 'Guest');
+  }, []);
+
+  const currentUser = usernameA;
 
   const fetchQueue = () => {
     const simulatedQueue = [
@@ -25,12 +29,10 @@ const Lobby = () => {
     setQueue(simulatedQueue);
   };
 
-  
-   const handleJoinClick = () => {
+  const handleJoinClick = () => {
     fetchQueue(); 
     setIsPopupVisible(true); 
   };
-
 
   const handleOpponentSelect = (opponent) => {
     setSelectedOpponent(opponent);
@@ -38,16 +40,13 @@ const Lobby = () => {
     setIsPopupVisible(false);
   };
 
-
   const handlePopupClose = () => {
     setIsPopupVisible(false); 
   };
 
   return (
     <div className="lobby-wrapper">
-      {/* Left Side Container */}
       <aside className="lobby-container">
-        
         <div className="toggle-buttons">
           <button 
             onClick={() => setView('queue')} 
@@ -86,27 +85,26 @@ const Lobby = () => {
         </div>
       </aside>
 
-      {/* Middle Side */}
       <main className="right-container">
         <div className="gameboardBox">
-         {/* I had to comment out <Gameboard />, it was causing unknown issues */}
+          {/* <Gameboard /> */}
         </div>
       </main>
       
-      {/* Right Side */}
       <aside className="lobby-container">
         <div className="gameboardBox">
           Spectated Powerups will show here
         </div>
       </aside>
+      
       {isPopupVisible && (
-  <PickPlayerPopUp
-    queue={queue} 
-    currentUser={currentUser} 
-    onOpponentSelect={handleOpponentSelect} 
-    onClose={handlePopupClose} 
-  />
-)}
+        <PickPlayerPopUp
+          queue={queue} 
+          currentUser={currentUser} 
+          onOpponentSelect={handleOpponentSelect} 
+          onClose={handlePopupClose} 
+        />
+      )}
     </div>
   );
 };

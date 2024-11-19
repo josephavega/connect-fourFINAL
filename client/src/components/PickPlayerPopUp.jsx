@@ -35,4 +35,4 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
   );
 };
 
-export default pickPlayerPopUp;
+export default PickPlayerPopUp;

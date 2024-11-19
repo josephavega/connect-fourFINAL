@@ -2,8 +2,8 @@ import { MAX } from "uuid";
 import Powerups from "./gamePowerups.js";
 
 class AI {
-    constructor(difficulty, color, io) {
-        this.io = io;
+    constructor(difficulty, color) {
+        
         this.color = color
         this.difficulty = difficulty;
         this.powerups = new Powerups
@@ -25,9 +25,9 @@ class AI {
         let availableMoves = [];  // Declare availableMoves within this method's scope
 
         // Add logic for determining a winning move (for now, just gathering valid moves)
-        for (let col = 0; col < board.length; col++) {
-            if (board[col].includes(0)) {
-                availableMoves.push(col);
+        for (let row = 0; row < board.length; row++) {
+            if (board[row].includes(0)) {
+                availableMoves.push(row);
             }
         }
 

@@ -12,17 +12,17 @@ class Powerup_Lightning {
         if(start){
             this.gl.moves.push(['Lightning',x,row,this.player.powerup.color])
             for (let row = y-1; row > 0; row--) {
-                if(this.gl.board[x][row]=='B'){
-                    this.gl.moves.push(['StoppedL', x, row, this.powerup.player.color])
+                if(this.gl.board[row][col]=='B'){
+                    this.gl.moves.push(['StoppedL', row, x, this.powerup.player.color])
                     return
                 }
             }
-            this.gl.board[x][y] = this.gl.board[x][y] === 'R' ? 'Y' : 'R';
-            this.gl.moves.push(['Flipped',x,row,this.player.color])
+            this.gl.board[y][x] = this.gl.board[y][x] === 'R' ? 'Y' : 'R';
+            this.gl.moves.push(['Flipped',row,x,this.player.color])
             
         }else{
-            this.gl.board[x][y] = this.gl.board[x][y] === 'R' ? 'Y' : 'R';
-            this.gl.moves.push(['Flipped',x,row,this.player.color])
+            this.gl.board[y][x] = this.gl.board[y][x] === 'R' ? 'Y' : 'R';
+            this.gl.moves.push(['Flipped',row,x,this.player.color])
         }
         
         this.checked[x] = 1;
@@ -30,28 +30,28 @@ class Powerup_Lightning {
         let r = x + 1;
 
         // Check if left/right is empty then move to next slot and add to checked
-        while (r < 7 && this.gl.board[r][y] === 0) {
+        while (r < 7 && this.gl.board[y][r] === 0) {
             this.checked[r] = 1;
             r++;
         }
-        while (l >= 0 && this.gl.board[l][y] === 0) {
+        while (l >= 0 && this.gl.board[y][l] === 0) {
             this.checked[l] = 1;
             l--;
         }
 
         // Lightning on next chip within bounds and not brick
-        if (r < 7 && this.gl.board[r][y] !== 'B') {
+        if (r < 7 && this.gl.board[y][r] !== 'B') {
             this.Lightning(r, y,0);
         } else {
             this.done[1] = 1;
-           if(this.gl.board[r][y] !== 'B') this.gl.moves.push(['StoppedL', x, row, this.powerup.player.color])
+           if(this.gl.board[y][r] == 'B') this.gl.moves.push(['StoppedL', row, r, this.powerup.player.color])
             this.LightningDone();
         }
-        if (l >= 0 && this.gl.board[l][y] !== 'B') {
+        if (l >= 0 && this.gl.board[y][l] !== 'B') {
             this.Lightning(l, y,0);
         } else {
             this.done[0] = 1;
-            if(this.gl.board[r][y] !== 'B') this.gl.moves.push(['StoppedL', x, row, this.powerup.player.color])
+            if(this.gl.board[y][l] == 'B') this.gl.moves.push(['StoppedL', row, l, this.powerup.player.color])
             this.LightningDone();
         }
     }
@@ -82,17 +82,17 @@ class Powerup_Anvil {
 
     Anvil(columnIndex) {
         this.used = true;
-        this.gl.moves.push(['Anvil',columnIndex,-1,this.player.color])
+        this.gl.moves.push(['Anvil',-1,columnIndex,this.player.color])
         for (let row = 6; row > 0; row--) { // Destroy column till end or brick
-            if (this.gl.board[columnIndex][row] !== 0) {
-                if (this.gl.board[columnIndex][row] === 'B'){
+            if (this.gl.board[row][columnIndex] !== 0) {
+                if (this.gl.board[row][columnIndex] === 'B'){
                     this.gl.moves.push(['StoppedA',columnIndex,row,this.powerup.player.color])
                     this.switchPlayer();
                     return;
                 }
 
-                this.gl.board[columnIndex][row] = 0;
-                this.gl.moves.push(['Broken',columnIndex,row,0])
+                this.gl.board[row][columnIndex] = 0;
+                this.gl.moves.push(['Broken',row,columnIndex,0])
             }
         }
         this.switchPlayer();
@@ -109,9 +109,9 @@ class Powerup_Brick {
     Brick(columnIndex) {
         this.used = true;
         for (let row = 0; row < 6; row++) { // Like a normal chip
-            if (this.gl.board[columnIndex][y] === 0) {
-                this.gl.moves.push(['Brick',columnIndex,row,0])
-                this.gl.board[columnIndex][y] = 'B';
+            if (this.gl.board[row][columnIndex] === 0) {
+                this.gl.moves.push(['Brick',row,columnIndex,0])
+                this.gl.board[row][columnIndex] = 'B';
                 this.switchPlayer();
                 return;
             }

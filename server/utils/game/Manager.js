@@ -1,7 +1,9 @@
+
 import GameLogic from './gameLogic.js'
 
 import Player from '../game/Player.js'
 import Users from '../users.js';
+
 
 
 class Manager{
@@ -34,23 +36,28 @@ class Manager{
     }
 
     wipeMoves(){
-        this.GameLogic.moves = null
+        this.GameLogic.moves = []
     }
 
     startAIvsAI() {
         console.log("Starting AI vs. AI game...");
         this.GameLogic.startAIVsAI((gameState) => {
             //console.log('Game state updated:', gameState);
-        
         });
     }
     
-    setPlayer(sessionId,username){
-        const player = new Player(sessionId,username, -1, this.GameLogic)
-        this.GameLogic.setPlayer(player)
-  const sessionID = Users.getUserFromName(name);
-        Users.addToGame(name, color, sessionID);
+    setPlayer(sessionID,username){
+        this.GameLogic.setPlayer(sessionID,username)
+        Users.addToGame(username,sessionID);
+    }
 
+    getPlayerID(username){
+        const sessionID = Users.getUserFromName(username);
+    }
+
+
+    getCurrentPlayer(){
+        return this.GameLogic.getCurrentPlayer()
     }
 
     placeChip(player, column){
@@ -72,7 +79,6 @@ class Manager{
         player.powerups.Brick(column);
         return this.GameLogic.moves
     }
-
 
     swapPage(currentPage, newPage) {
 

@@ -29,52 +29,108 @@ import UsedBrickButton from '../assets/Board/Construction/Button_Brick_Used.png'
 
 const socket = io('/game'); // Initialize the socket connection
 
-const Gameboard = ({ board, onClick, currentPlayer, selectedColumn}) => {
+const Gameboard = ({ 
+  board,
+  onClick,
+  currentPlayer,
+  selectedColumn,
+  redActiveButton, 
+  setRedActiveButton, 
+  yellowActiveButton, 
+  setYellowActiveButton 
+}) => {
+
   const [redAnvilImage, setRedAnvilImage] = useState(RedAnvilButton);
   const [redLightningImage, setRedLightningImage] = useState(RedLightningButton);
   const [redBrickImage, setRedBrickImage] = useState(RedBrickButton);
-  const [redActiveButton, setRedActiveButton] = useState(null);
-
   const [yellowAnvilImage, setYellowAnvilImage] = useState(YellowAnvilButton);
   const [yellowLightningImage, setYellowLightningImage] = useState(YellowLightningButton);
   const [yellowBrickImage, setYellowBrickImage] = useState(YellowBrickButton);
-  const [yellowActiveButton, setYellowActiveButton] = useState(null);
 
   const [username, setUsername] = useState('');
   const [usernameB, setUsernameB] = useState('');
 
+  const [usedRedPowerups, setUsedRedPowerups] = useState({ anvil: false, lightning: false, brick: false });
+  const [usedYellowPowerups, setUsedYellowPowerups] = useState({ anvil: false, lightning: false, brick: false });
+
+  {/*
+    TOGGLE BUTTON FORMAT:
+      Player is the correct color 
+    AND 
+      Selected powerup hasn't been used yet 
+    AND    
+          Another powerup button isnt currently active 
+        AND
+          Selected powerup isn't on used image (NEEDED DOUBLE CHECK)
+      OR 
+        Player wants to cancel selected powerup
+  */}
+
   const toggleRedAnvilImage = () => {
-    if (currentPlayer === 'Red' && (!redActiveButton || redActiveButton === 'anvil')) {
+    if (currentPlayer === 'Red' 
+      && 
+        !usedRedPowerups.anvil 
+      &&
+          ((!redActiveButton && redAnvilImage !== UsedAnvilButton)
+        ||
+          redActiveButton === 'anvil')) {
       setRedAnvilImage((prevImage) => (prevImage === RedAnvilButton ? UsedAnvilButton : RedAnvilButton));
       setRedActiveButton(redActiveButton === 'anvil' ? null : 'anvil');
-  }};
-  
+  }}; 
+
   const toggleRedLightningImage = () => {
-    if (currentPlayer === 'Red' && (!redActiveButton || redActiveButton === 'lightning')) {
+    if (currentPlayer === 'Red' 
+      && 
+        !usedRedPowerups.lightning
+      &&
+          ((!redActiveButton && redLightningImage !== UsedLightningButton) 
+        || 
+          redActiveButton === 'lightning')) {
       setRedLightningImage((prevImage) => (prevImage === RedLightningButton ? UsedLightningButton : RedLightningButton));
       setRedActiveButton(redActiveButton === 'lightning' ? null : 'lightning');
-  }};
-  
+  }}; 
   const toggleRedBrickImage = () => {
-    if (currentPlayer === 'Red' && (!redActiveButton || redActiveButton === 'brick')) {
+    if (currentPlayer === 'Red' 
+      && 
+        !usedRedPowerups.brick
+      &&
+          ((!redActiveButton && redBrickImage !== UsedBrickButton) 
+        || 
+          redActiveButton === 'brick')) {
       setRedBrickImage((prevImage) => (prevImage === RedBrickButton ? UsedBrickButton : RedBrickButton));
       setRedActiveButton(redActiveButton === 'brick' ? null : 'brick');
   }};
   
   const toggleYellowAnvilImage = () => {
-    if (currentPlayer === 'Yellow' && (!yellowActiveButton || yellowActiveButton === 'anvil')) {
+    if (currentPlayer === 'Yellow' 
+      && 
+        !usedYellowPowerups.anvil
+      &&
+          ((!yellowActiveButton && yellowAnvilImage !== UsedAnvilButton) 
+        || 
+          yellowActiveButton === 'anvil')) {
       setYellowAnvilImage((prevImage) => (prevImage === YellowAnvilButton ? UsedAnvilButton : YellowAnvilButton));
       setYellowActiveButton(yellowActiveButton === 'anvil' ? null : 'anvil');
-  }};
-
+  }}; 
   const toggleYellowLightningImage = () => {
-    if (currentPlayer === 'Yellow' && (!yellowActiveButton || yellowActiveButton === 'lightning')) {
+    if (currentPlayer === 'Yellow' 
+      && 
+        !usedYellowPowerups.lightning
+      &&
+          ((!yellowActiveButton && yellowLightningImage !== UsedLightningButton) 
+        || 
+          yellowActiveButton === 'lightning')) {
       setYellowLightningImage((prevImage) => (prevImage === YellowLightningButton ? UsedLightningButton : YellowLightningButton));
       setYellowActiveButton(yellowActiveButton === 'lightning' ? null : 'lightning');
   }};
-  
   const toggleYellowBrickImage = () => {
-    if (currentPlayer === 'Yellow' && (!yellowActiveButton || yellowActiveButton === 'brick')) {
+    if (currentPlayer === 'Yellow' 
+      && 
+        !usedYellowPowerups.brick
+      &&
+          ((!yellowActiveButton && yellowBrickImage !== UsedBrickButton) 
+        || 
+          yellowActiveButton === 'brick')) {
       setYellowBrickImage((prevImage) => (prevImage === YellowBrickButton ? UsedBrickButton : YellowBrickButton));
       setYellowActiveButton(yellowActiveButton === 'brick' ? null : 'brick');
   }};
@@ -118,7 +174,6 @@ const Gameboard = ({ board, onClick, currentPlayer, selectedColumn}) => {
 
   return (
     <div className="gameboard-container">
-
       {/* LEFT */}
       <div>
         {/* RED SIDEBAR */}
@@ -130,20 +185,31 @@ const Gameboard = ({ board, onClick, currentPlayer, selectedColumn}) => {
             <div className="red-sidebar-text">{username}</div> 
             
             {/* Red Anvil */}
-            <button className="red-sidebar-button" onClick={toggleRedAnvilImage} 
-              disabled={currentPlayer !== 'Red' || (redActiveButton && redActiveButton !=='anvil')}> 
-              <img src={redAnvilImage} alt="Anvil Button" /></button>
+            <button 
+            className="red-sidebar-button" 
+            onClick={toggleRedAnvilImage} 
+            disabled={currentPlayer !== 'Red' || usedRedPowerups.anvil || (redActiveButton && redActiveButton !== 'anvil')}
+            > 
+              <img src={redAnvilImage} alt="Anvil Button" />
+            </button>
 
             {/* Red Lightning */}
-            <button className="red-sidebar-button" onClick={toggleRedLightningImage} 
-              disabled={currentPlayer !== 'Red' || (redActiveButton && redActiveButton !== 'lightning')}> 
-              <img src={redLightningImage} alt="Lightning Button" /></button>
+            <button 
+            className="red-sidebar-button" 
+            onClick={toggleRedLightningImage} 
+            disabled={currentPlayer !== 'Red' || usedRedPowerups.lightning || (redActiveButton && redActiveButton !== 'lightning')}
+            > 
+              <img src={redLightningImage} alt="Lightning Button" />
+            </button>
 
             {/* R_Brick */}
-            <button className="red-sidebar-button" onClick={toggleRedBrickImage} 
-              disabled={currentPlayer !== 'Red' || (redActiveButton && redActiveButton !== 'brick')}> 
-              <img src={redBrickImage} alt="Brick Button" /></button>
-
+            <button 
+            className="red-sidebar-button" 
+            onClick={toggleRedBrickImage} 
+            disabled={currentPlayer !== 'Red' || usedRedPowerups.brick || (redActiveButton && redActiveButton !== 'brick')}
+            > 
+              <img src={redBrickImage} alt="Brick Button" />
+            </button>
           </div> 
         </div> 
       </div> 
@@ -170,24 +236,34 @@ const Gameboard = ({ board, onClick, currentPlayer, selectedColumn}) => {
             <div className="yellow-sidebar-text">NPC</div>
 
             {/* Yellow Anvil */}
-            <button className="yellow-sidebar-button" onClick={toggleYellowAnvilImage} 
-            disabled={currentPlayer !== 'Yellow' || (yellowActiveButton && yellowActiveButton !== 'brick')}>
-              <img src={yellowAnvilImage} alt="Anvil Button" /></button>
+            <button 
+            className="yellow-sidebar-button" 
+            onClick={toggleYellowAnvilImage} 
+            disabled={currentPlayer !== 'Yellow' || usedYellowPowerups.anvil || (yellowActiveButton && yellowActiveButton !== 'brick')}
+            >
+              <img src={yellowAnvilImage} alt="Anvil Button" />
+            </button>
 
             {/* Yellow Lightning */}
-            <button className="yellow-sidebar-button" onClick={toggleYellowLightningImage} 
-            disabled={currentPlayer !== 'Yellow' || (yellowActiveButton && yellowActiveButton !== 'lightning')}>
-              <img src={yellowLightningImage} alt="Lightning Button" /></button>
+            <button 
+            className="yellow-sidebar-button" 
+            onClick={toggleYellowLightningImage} 
+            disabled={currentPlayer !== 'Yellow' || usedYellowPowerups.lightning || (yellowActiveButton && yellowActiveButton !== 'lightning')}
+            >
+              <img src={yellowLightningImage} alt="Lightning Button" />
+            </button>
 
             {/* Yellow Brick */}
-            <button className="yellow-sidebar-button" onClick={toggleYellowBrickImage} 
-            disabled={currentPlayer !== 'Yellow' || (yellowActiveButton && yellowActiveButton !== 'brick')}>
-              <img src={yellowBrickImage} alt="Brick Button" /></button>
-
+            <button 
+            className="yellow-sidebar-button" 
+            onClick={toggleYellowBrickImage} 
+            disabled={currentPlayer !== 'Yellow' || usedYellowPowerups.brick || (yellowActiveButton && yellowActiveButton !== 'brick')}
+            >
+              <img src={yellowBrickImage} alt="Brick Button" />
+            </button>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

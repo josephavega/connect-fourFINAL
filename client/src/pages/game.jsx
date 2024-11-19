@@ -5,6 +5,7 @@ import gameSocket from '../sockets/gameSocket';
 import VictoryPopup from '../components/VictoryPopup';
 import DebugGameButtons from '../components/DebugGameButtons';
 
+
 const Game = () => {
   const [board, setBoard] = useState(Array(6).fill(null).map(() => Array(7).fill('EmptyChip')));
   const [lastChanged, setChanged] = useState('None');

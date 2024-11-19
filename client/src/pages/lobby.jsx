@@ -4,7 +4,7 @@ import Leaderboard from '../components/Leaderboard';
 import QueueButton from '../components/QueueButton';
 import DebugButton from '../components/DebugButton';
 import GameButton from '../components/GameButton';
-import PickPlayerPopUp from '../components/PickPlayerPopUp';
+//import PickPlayerPopUp from '../components/PickPlayerPopUp';
 import Gameboard from '../components/Gameboard';
 import '../styles/lobby.css';
 import queueSocket from '../sockets/queueSocket';

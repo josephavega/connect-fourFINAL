@@ -2,8 +2,7 @@ import { MAX } from "uuid";
 import Powerups from "./gamePowerups.js";
 
 class AI {
-    constructor(difficulty, color, io) {
-        this.io = io;
+    constructor(difficulty, color) {
         this.color = color
         this.difficulty = difficulty;
         this.powerups = new Powerups

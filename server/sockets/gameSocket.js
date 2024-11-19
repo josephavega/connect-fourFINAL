@@ -94,13 +94,20 @@ export default function gameSocketHandler(io) {
       //   }
       // }
     });
-  
+
+
     // Handle restart or reset game request
     socket.on('resetGame', () => {
       console.log(`Game reset requested by ${username}`);
       game = new Manager(this)
       gameNamespace.emit('gameReset', { message: 'The game has been reset.' });
     });
+
+    socket.on('getBoard', ()  => {
+      console.log('Fetched board');
+      socket.emit('sendBoard', game.getBoard);
+    });
+
   
     // Handle players joining or leaving a game session
     socket.on('joinGame', (username) => {

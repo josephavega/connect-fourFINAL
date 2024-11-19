@@ -11,6 +11,8 @@ const Game = () => {
   const [isVictoryPopupOpen, setVictoryPopupOpen] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState('Red'); // Track the current player
   const [selectedMove, setSelectedMove] = useState(null);
+  const [selectedColumn, setSelectedColumn] = useState(null); // Track the currently clicked column
+
   const sessionID = localStorage.getItem('sessionID');
 
   const openVictoryPopup = () => setVictoryPopupOpen(true);
@@ -37,6 +39,7 @@ const Game = () => {
   
     console.log(`Move selected at row ${lowestEmptyRow}, column ${colIndex}`);
     setSelectedMove({ row: lowestEmptyRow, col: colIndex }); // Store the move
+    setSelectedColumn(colIndex); // Highlight the selected column
     setChanged(`Row ${lowestEmptyRow + 1}, Column ${colIndex + 1}`); // Update last changed info
   };
   
@@ -61,12 +64,18 @@ const Game = () => {
   
     // Reset the selected move and toggle player
     setSelectedMove(null);
+    setSelectedColumn(null);
     togglePlayer();
   };
 
   return (
     <div className="game-wrapper">
-      <GameBoard board={board} onClick={handleClick} currentPlayer={currentPlayer} />
+      <GameBoard 
+      board={board}
+      onClick={handleClick}
+      currentPlayer={currentPlayer}
+      selectedColumn={selectedColumn}
+      />
       <div className="click-info">
         <p>Last changed tile: {lastChanged}</p>
         <p>Current Player: {currentPlayer}</p>

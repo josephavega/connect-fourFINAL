@@ -29,7 +29,7 @@ import UsedBrickButton from '../assets/Board/Construction/Button_Brick_Used.png'
 
 const socket = io('/game'); // Initialize the socket connection
 
-const Gameboard = ({ board, onClick, currentPlayer}) => {
+const Gameboard = ({ board, onClick, currentPlayer, selectedColumn}) => {
   const [redAnvilImage, setRedAnvilImage] = useState(RedAnvilButton);
   const [redLightningImage, setRedLightningImage] = useState(RedLightningButton);
   const [redBrickImage, setRedBrickImage] = useState(RedBrickButton);
@@ -63,7 +63,7 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
     setYellowBrickImage((prevImage) => (prevImage === YellowBrickButton ? UsedBrickButton : YellowBrickButton));
   }};
 
-  const [hoveredColumn, setHoveredColumn] = useState(-1);
+
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
   const sessionID = localStorage.getItem('sessionID');
   
@@ -77,14 +77,6 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
       socket.off('powerupUsed');
     };
   }, []);
-
-  const handleMouseEnter = (colIndex) => {
-    setHoveredColumn(colIndex);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredColumn(-1);
-  };
 
   const createMainGrid = () => {
     const rows = 6;
@@ -108,8 +100,6 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
             item
             key={`${i}-${j}`}
             className="tile-container"
-            onMouseEnter={() => handleMouseEnter(j)}
-            onMouseLeave={handleMouseLeave}
           >
             <div className="tile" onClick={() => onClick(i, j)}>
               <img src={chipType} alt="Tile Chip" className="tile-back" />
@@ -145,7 +135,9 @@ const Gameboard = ({ board, onClick, currentPlayer}) => {
         </div>
       </div>
       <div>
-        <TopGrid hoveredColumn={hoveredColumn} currentPlayer={currentPlayer} />
+      <div className="top-grid">
+        <TopGrid selectedColumn={selectedColumn} currentPlayer={currentPlayer} />
+      </div>
         <div className="gameboard-wrapper">
           <img src={BoardBorder} alt="Board Border" className="board-border" />
           <div className="gameboard">

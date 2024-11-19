@@ -10,9 +10,13 @@ const Game = () => {
   const [board, setBoard] = useState(Array(6).fill(null).map(() => Array(7).fill('EmptyChip')));
   const [lastChanged, setChanged] = useState('None');
   const [isVictoryPopupOpen, setVictoryPopupOpen] = useState(false);
+
   const [currentPlayer, setCurrentPlayer] = useState('Red'); // Track the current player
+  const [previousPlayer, setPreviousPlayer] = useState(null);
+  
   const [selectedMove, setSelectedMove] = useState(null);
   const [selectedColumn, setSelectedColumn] = useState(null); // Track the currently clicked column
+
 
   const sessionID = localStorage.getItem('sessionID');
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
@@ -20,8 +24,12 @@ const Game = () => {
   const openVictoryPopup = () => setVictoryPopupOpen(true);
 
   const togglePlayer = () => {
+    setPreviousPlayer(previousPlayer === currentPlayer);
     setCurrentPlayer(currentPlayer === 'Red' ? 'Yellow' : 'Red');
+
+
   };
+
   // useEffect(() => {
   //   const socket = gameSocket;
 
@@ -115,9 +123,18 @@ const Game = () => {
     handleMove(col);
   
     // Reset the selected move and toggle player
+
     setSelectedMove(null);
     setSelectedColumn(null);
     togglePlayer();
+
+    if (previousPlayer === 'Red') {
+      setRedActiveButton(null);
+    } else if (Player === 'Yellow') {
+      setYellowActiveButton(null);
+    }
+    togglePlayer();
+    
   };
 
   return (

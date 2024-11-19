@@ -1,7 +1,9 @@
+
 import GameLogic from './gameLogic.js'
 
 import Player from '../game/Player.js'
 import Users from '../users.js';
+
 
 
 class Manager{
@@ -41,7 +43,6 @@ class Manager{
         console.log("Starting AI vs. AI game...");
         this.GameLogic.startAIVsAI((gameState) => {
             //console.log('Game state updated:', gameState);
-        
         });
     }
     

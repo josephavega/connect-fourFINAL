@@ -24,7 +24,7 @@ const DebugGameButtons = () => {
     const data = {
       username: localUsername,
       color: team === 0 ? 'Red' : 'Yellow',
-      sessionID: localSessionID
+      sessionID: localSessionID 
     };
     
     gameSocket.emit('joinGame', data);

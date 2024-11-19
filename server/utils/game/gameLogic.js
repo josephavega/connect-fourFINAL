@@ -22,8 +22,8 @@ class GameLogic {
     }   
 
     setPlayer(sessionID,username){
-        this.player[this.currentPlayerIndex].sessionID = sessionID
-        this.player[this.currentPlayerIndex].username = username
+        this.player[this.currentPlayerIndex].sessionID = sessionID;
+        this.player[this.currentPlayerIndex].username = username;
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % 2;
     }
 

@@ -4,12 +4,44 @@ import Leaderboard from '../components/Leaderboard';
 import QueueButton from '../components/QueueButton';
 import DebugButton from '../components/DebugButton';
 import GameButton from '../components/GameButton';
+import PickPlayerPopUp from '../components/PickPlayerPopUp';
 import Gameboard from '../components/Gameboard';
 import '../styles/lobby.css';
 import queueSocket from '../sockets/queueSocket';
 
 const Lobby = () => {
   const [view, setView] = useState('queue');
+  const [isPopupVisible, setIsPopupVisible] = useState(false); 
+  const [queue, setQueue] = useState([]); 
+  const [selectedOpponent, setSelectedOpponent] = useState('');
+  const currentUser = 'NPC';
+
+  const fetchQueue = () => {
+    const simulatedQueue = [
+      { username: 'User1' },
+      { username: 'User2' },
+      { username: 'User3' },
+    ];
+    setQueue(simulatedQueue);
+  };
+
+  
+   const handleJoinClick = () => {
+    fetchQueue(); 
+    setIsPopupVisible(true); 
+  };
+
+
+  const handleOpponentSelect = (opponent) => {
+    setSelectedOpponent(opponent);
+    console.log('Selected opponent:', opponent);
+    setIsPopupVisible(false);
+  };
+
+
+  const handlePopupClose = () => {
+    setIsPopupVisible(false); 
+  };
 
   return (
     <div className="lobby-wrapper">
@@ -41,6 +73,7 @@ const Lobby = () => {
             src="../src/assets/Menu/Buttons/Button_Join.png" 
             alt="Join Queue" 
             className="join-button-overlay" 
+            onClick={handleJoinClick}
           />
         </div>
         
@@ -66,6 +99,14 @@ const Lobby = () => {
           Spectated Powerups will show here
         </div>
       </aside>
+      {isPopupVisible && (
+  <PickPlayerPopUp
+    queue={queue} 
+    currentUser={currentUser} 
+    onOpponentSelect={handleOpponentSelect} 
+    onClose={handlePopupClose} 
+  />
+)}
     </div>
   );
 };

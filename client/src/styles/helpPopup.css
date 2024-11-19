@@ -13,8 +13,11 @@
 }
 
 .help-popup {
-    background: #cce0ff;
     padding: 20px;
+    background-image: url('../src/assets/Menu/BlueBoard.png');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
     border-radius: 8px;
     width: 600px; 
     max-width: 90%;
@@ -31,8 +34,10 @@
 
 .popup-header2 h2 {
     margin: 0;
+    color: red;
     font-family: 'ArcadeClassic', sans-serif; 
-    font-size: 51px;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.425);
+    font-size: 60px;
 }
 
 @font-face {
@@ -47,6 +52,7 @@
     border: none;
     font-size: 1.5em;
     cursor: pointer;
+    display: flex;
 }
 
 .instruction-container {

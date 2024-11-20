@@ -179,10 +179,22 @@ const Game = () => {
     if (currentPlayer === 'Red' && redActiveButton) {
       console.log(`Using Red Power-Up: ${redActiveButton}`);
       setUsedRedPowerups((prev) => ({ ...prev, [redActiveButton]: true }));
+      //if anvil
+
+      //if lightning
+
+      //if brick
+
       setRedActiveButton(null); // Clear active power-up
     } else if (currentPlayer === 'Yellow' && yellowActiveButton) {
       console.log(`Using Yellow Power-Up: ${yellowActiveButton}`);
       setUsedYellowPowerups((prev) => ({ ...prev, [yellowActiveButton]: true }));
+      //if anvil
+
+      //if lightning
+      
+      //if brick
+      
       setYellowActiveButton(null); // Clear active power-up
     }
 

@@ -86,9 +86,20 @@ const Game = () => {
     // Listen for board data from the server
     gameSocket.connect();
 
+    gameSocket.on('gameOver', data => {
+      const winner = data;
+      console.log(`${winner} won the match!`);
+      setVictoryPopupOpen('true');
+    })
+
     gameSocket.on('sentBoard', (board) => {
-      setBoard(board);
-      console.log('Board updated:', board);
+      // Flip the board using a manual loop to create a new flipped board
+      const flippedBoard = [];
+      for (let i = board.length - 1; i >= 0; i--) {
+        flippedBoard.push(board[i]);
+      }
+      setBoard(flippedBoard);
+      console.log('Board updated:', flippedBoard);
     });
   
     // Listen for game status data from the server
@@ -109,8 +120,10 @@ const Game = () => {
   }, []);
 
   const handleClick = (rowIndex, colIndex) => {
-    // Find the lowest empty row in the selected column
+    // Corrected: Find the lowest empty row in the selected column
     let lowestEmptyRow = -1;
+  
+    // Assuming that board[row][col] is the correct representation
     for (let i = board.length - 1; i >= 0; i--) {
       if (board[i][colIndex] === 'EmptyChip') {
         lowestEmptyRow = i;
@@ -119,23 +132,24 @@ const Game = () => {
     }
   
     // If there is no empty row, the column is full
-    if (lowestEmptyRow === -1) {
-      console.log(`Column ${colIndex} is full.`);
-      return; // Exit function if column is full
-    }
+    // if (lowestEmptyRow === -1) {
+    //   console.log(`Column ${colIndex} is full.`);
+    //   return; // Exit function if column is full
+    // }
   
     console.log(`Move selected at row ${lowestEmptyRow}, column ${colIndex}`);
     setSelectedMove({ row: lowestEmptyRow, col: colIndex }); // Store the move
     setSelectedColumn(colIndex); // Highlight the selected column
     setChanged(`Row ${lowestEmptyRow + 1}, Column ${colIndex + 1}`); // Update last changed info
   };
-  
   function handleMove(colIndex) {
     const sessionID = localStorage.getItem('sessionID');
     const username = localStorage.getItem('username');
     const data = { colIndex, sessionID, username };
 
     gameSocket.emit('playerMove', data);
+    gameSocket.emit('getBoard');
+   
 }
 
 
@@ -148,17 +162,18 @@ const Game = () => {
   
     console.log('Selected move:', selectedMove);
 
-    const { row, col } = selectedMove;
-    const chipColor = currentPlayer === 'Red' ? 'R' : 'Y';
+    // const { row, col } = selectedMove;
+    // const chipColor = currentPlayer === 'Red' ? 'R' : 'Y';
   
-    // Update the board with the selected move
-    const updatedBoard = board.map((r, rIdx) =>
-      r.map((cell, cIdx) => (rIdx === row && cIdx === col ? chipColor : cell))
-    );
-    setBoard(updatedBoard);
+    // // Update the board with the selected move
+    // const updatedBoard = board.map((r, rIdx) =>
+    //   r.map((cell, cIdx) => (rIdx === row && cIdx === col ? chipColor : cell))
+    // );
+    // setBoard(updatedBoard);
   
     // Emit the move to the server
-    handleMove(col);
+    handleMove(selectedColumn);
+  
   
     // Mark the active power-up as used
     if (currentPlayer === 'Red' && redActiveButton) {

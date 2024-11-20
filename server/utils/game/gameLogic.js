@@ -11,7 +11,8 @@ class GameLogic {
         this.isAIvsAI = true;
         this.gameOver = false;
         this.isPlayerVsAI = false;
-        this.moves = [] //[Rule,Col,Row,Type]
+        this.moves = []
+        this.winner = ''; //[Rule,Col,Row,Type]
         //Rule 'Place', 'Anvil', 'Broken', 'Lightning', 'Flipped', 'Brick', 'StoppedL','StoppedA', 'Win','Full'
         //Lightning for the inititial shock location
         //Anvil/Brick for column
@@ -108,10 +109,10 @@ class GameLogic {
         console.log("\n");
     }
 
-    updateFrontEnd(){
-        
+    getFlippedBoard() {
+        // Reverse the rows to "flip" the board upside down
+        return this.board.slice().reverse();
     }
-
 
 
     placePiece(columnIndex) {
@@ -122,13 +123,18 @@ class GameLogic {
                 this.moves.push(['Place',row,columnIndex,this.getCurrentPlayer().color])
                 if (this.checkWin()) {
                     this.gameOver = true;
+                    this.winner = this.getCurrentPlayer();
+                    console.log(`${this.winner.color} has won the game!`);
+                    this.board = this.createBoard();
                     return;
                 }
+            
                 this.switchPlayer();
                 return;
             }
         }
         console.log("No valid moves available in this column.");
+    
     }
 
     getCurrentPlayer() {
@@ -146,80 +152,86 @@ class GameLogic {
     }
 
     checkVerticalWin() {
-        const rows = 6
-        for (let col = 0; col < this.board.length[rows]; col++) {
-            var winningMoves = []
-            for (let row = 0; row < this.board.length; row++) {
+        const rows = this.board.length;
+        const columns = this.board[0].length;
+    
+        for (let col = 0; col < columns; col++) {
+            let winningMoves = [];
+            for (let row = 0; row < rows; row++) {
                 if (this.board[row][col] === this.getCurrentPlayer().color) {
-                    winningMoves.push([row,col])
-                    
-                    if (winningMoves.length === 4){
-                        for(let i = 0; i < winningMoves.length; i++){
-                            this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
+                    winningMoves.push([row, col]);
+                    if (winningMoves.length === 4) {
+                        for (let move of winningMoves) {
+                            this.moves.push(['Win', move[0], move[1], this.getCurrentPlayer().color]);
                         }
                         return true;
-                    } 
-                }else{
-                    winningMoves = []
-                } 
+                    }
+                } else {
+                    winningMoves = [];
+                }
             }
         }
         return false;
     }
-
+    
     checkHorizontalWin() {
-        for (let row = 0; row < this.board.length; row++) {
-            var winningMoves = []
-            for (let col = 0; col < this.board[0].length; col++) {
+        const rows = this.board.length;
+        const columns = this.board[0].length;
+    
+        for (let row = 0; row < rows; row++) {
+            let winningMoves = [];
+            for (let col = 0; col < columns; col++) {
                 if (this.board[row][col] === this.getCurrentPlayer().color) {
-                    winningMoves.push([row,col])
-                    
-                    if (winningMoves.length === 4){
-                        for(let i = 0; i < winningMoves.length; i++){
-                            this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
+                    winningMoves.push([row, col]);
+                    if (winningMoves.length === 4) {
+                        for (let move of winningMoves) {
+                            this.moves.push(['Win', move[0], move[1], this.getCurrentPlayer().color]);
                         }
                         return true;
-                    } 
-                }else{
-                    winningMoves = []
                     }
-                } 
+                } else {
+                    winningMoves = [];
+                }
             }
+        }
         return false;
     }
-
+    
     checkDiagonalWin() {
+        const rows = this.board.length;
+        const columns = this.board[0].length;
+    
         // Left to right diagonal
-        for (let col = 0; col < this.board[0].length - 3; col++) {
-            for (let row = 0; row < this.board.length - 3; row++) {
+        for (let row = 0; row < rows - 3; row++) {
+            for (let col = 0; col < columns - 3; col++) {
                 if (
                     this.board[row][col] === this.getCurrentPlayer().color &&
                     this.board[row + 1][col + 1] === this.getCurrentPlayer().color &&
                     this.board[row + 2][col + 2] === this.getCurrentPlayer().color &&
                     this.board[row + 3][col + 3] === this.getCurrentPlayer().color
                 ) {
-                    this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',row+1,col+1,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',row+2,col+2,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',row+3,col+3,this.getCurrentPlayer.color])
+                    this.moves.push(['Win', row, col, this.getCurrentPlayer().color]);
+                    this.moves.push(['Win', row + 1, col + 1, this.getCurrentPlayer().color]);
+                    this.moves.push(['Win', row + 2, col + 2, this.getCurrentPlayer().color]);
+                    this.moves.push(['Win', row + 3, col + 3, this.getCurrentPlayer().color]);
                     return true;
                 }
             }
         }
-
+    
         // Right to left diagonal
-        for (let col = 3; col < this.board.length; col++) {
-            for (let row = 0; row < this.board[0].length - 3; row++) {
+        for (let row = 0; row < rows - 3; row++) {
+            for (let col = 3; col < columns; col++) {
                 if (
                     this.board[row][col] === this.getCurrentPlayer().color &&
                     this.board[row + 1][col - 1] === this.getCurrentPlayer().color &&
                     this.board[row + 2][col - 2] === this.getCurrentPlayer().color &&
-                    this.board[row + 3[col - 3]] === this.getCurrentPlayer().color
+                    this.board[row + 3][col - 3] === this.getCurrentPlayer().color
                 ) {
-                    this.moves.push(['Win',row,col,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',row-1,col+1,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',row-2,col+2,this.getCurrentPlayer.color])
-                    this.moves.push(['Win',row-3,col+3,this.getCurrentPlayer.color])
+                    this.moves.push(['Win', row, col, this.getCurrentPlayer().color]);
+                    this.moves.push(['Win', row + 1, col - 1, this.getCurrentPlayer().color]);
+                    this.moves.push(['Win', row + 2, col - 2, this.getCurrentPlayer().color]);
+                    this.moves.push(['Win', row + 3, col - 3, this.getCurrentPlayer().color]);
                     return true;
                 }
             }

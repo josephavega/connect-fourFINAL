@@ -4,8 +4,15 @@ import Player from './Player.js'
 
 
 class Manager{
-    constructor(){
+    constructor() {
         this.GameLogic = new GameLogic();
+        
+        // Debug GameLogic creation
+        if (!this.GameLogic) {
+            console.error('GameLogic instance could not be created');
+        } else {
+            console.log('GameLogic instance created successfully');
+        }
     }
 
     printBoard() {
@@ -13,39 +20,55 @@ class Manager{
     }
 
     getBoard() {
+        if (!this.GameLogic) {
+            console.error('GameLogic is undefined. Cannot fetch the board.');
+            return null;
+        }
         return this.GameLogic.board;
     }
 
     getStatus() {
-        let red_player;
-        let yellow_player;
-        let currentPlayer = 'null';
-        let gamemode;
-
+        let red_player, yellow_player, currentPlayer, gamemode;
+    
+        // Extract only the necessary details from player objects
         if (this.GameLogic.player[0]) {
-            red_player = this.GameLogic.player[0];
+            red_player = {
+                username: this.GameLogic.player[0].username,
+                sessionID: this.GameLogic.player[0].sessionID,
+                color: this.GameLogic.player[0].color,
+            };
         } else {
             red_player = "null";
         }
+    
         if (this.GameLogic.player[1]) {
-            yellow_player = this.GameLogic.player[1];
-        }else {
+            yellow_player = {
+                username: this.GameLogic.player[1].username,
+                sessionID: this.GameLogic.player[1].sessionID,
+                color: this.GameLogic.player[1].color,
+            };
+        } else {
             yellow_player = "null";
         }
-       
+    
         gamemode = this.gameType;
-        currentPlayer = this.GameLogic.getCurrentPlayer;
-        const data = {red_player, yellow_player, gamemode, currentPlayer};
+        currentPlayer = this.GameLogic.getCurrentPlayer();
+    
+        const data = { red_player, yellow_player, gamemode, currentPlayer };
         console.log(data);
         return data;
     }
+    
 
     createBoard() {
+        if (!this.GameLogic) {
+            console.error('Cannot create board. GameLogic is not instantiated.');
+            return;
+        }
         this.GameLogic.board = this.GameLogic.createBoard();
         console.log("New board created:");
         this.printBoard();
     }
-
 
 
     setGameType(gameType){
@@ -55,8 +78,7 @@ class Manager{
     startAIvsAI() {
         console.log("Starting AI vs. AI game...");
         this.GameLogic.startAIVsAI((gameState) => {
-            //console.log('Game state updated:', gameState);
-        
+            
         });
     }
     
@@ -81,6 +103,7 @@ class Manager{
 
     placeChip(player, column){
         player.placeChip(column);
+        //console.log(this.GameLogic.getStatus);
     }
 
     useLightning(player, column, row){
@@ -96,9 +119,12 @@ class Manager{
     }
 
 
-
     swapPage(currentPage, newPage) {
 
+    }
+
+    checkWin() {
+        return this.GameLogic.checkWin;
     }
 
 

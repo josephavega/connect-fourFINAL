@@ -125,7 +125,7 @@ class GameLogic {
                     this.gameOver = true;
                     this.winner = this.getCurrentPlayer();
                     console.log(`${this.winner.color} has won the game!`);
-                    this.board = this.createBoard();
+                   // this.board = this.createBoard();
                     return;
                 }
             

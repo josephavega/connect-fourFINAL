@@ -176,16 +176,16 @@ socket.on('playerMove', (data) => {
     
     try {
       // Process the move in the game logic
-      const currentPlayer = game.getCurrentPlayer();
+      const currentPlayer = game.GameLogic.getCurrentPlayer();
       const moves = game.placeChip(currentPlayer, colIndex); 
       
       gameNamespace.emit('sendInstructions', moves);
-      console.log('Gameboard Updated:', game.board);
+      console.log('Gameboard Updated:', game.getBoard());
 
       // Check if the game is over
-      if (game.checkWin()) {
-        socket.emit('gameOver', currentPlayer );
-        console.log(`Player ${currentPlayer} wins!`);
+      if (game.GameLogic.checkWin()) {
+        socket.emit('gameOver', currentPlayer.username );
+        console.log(`Player ${currentPlayer.username} wins!`);
       }
     } catch (error) {
       console.error('Error during move:', error);

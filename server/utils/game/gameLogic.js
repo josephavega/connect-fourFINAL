@@ -2,6 +2,7 @@ import AI from './AI.js'
 import Player from './Player.js';
 
 class GameLogic {
+
     constructor() {
         this.board = this.createBoard();
         this.player = [new Player(-1,'Red','R',this), new Player(-1,'Yellow','Y',this)]

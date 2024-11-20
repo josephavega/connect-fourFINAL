@@ -74,10 +74,8 @@ class AI {
                     if (board[col][row] === oppositeColor) {
                         oppositeColorCount++ //Track opponents chips
                     }
+                }
             }
-                
-            }
-
         }
         let bestCol = -1
         let maxCount = -1

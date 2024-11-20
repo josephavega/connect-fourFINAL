@@ -240,7 +240,7 @@ const Gameboard = ({
             <button 
             className="yellow-sidebar-button" 
             onClick={toggleYellowAnvilImage} 
-            disabled={currentPlayer !== 'Yellow' || usedYellowPowerups.anvil || (yellowActiveButton && yellowActiveButton !== 'brick')}
+            disabled={currentPlayer !== 'Yellow' || usedYellowPowerups.anvil || (yellowActiveButton && yellowActiveButton !== 'anvil')}
             >
             <img src={yellowAnvilImage} alt="Anvil Button" />
           </button>

@@ -13,7 +13,7 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
       <div className="popup-content">
         <h3>Match Setup</h3>
         <p>
-          <b>{currentUser}</b> vs {' '}
+          <b>{currentUser} </b> vs {' '}
           <select onChange={handleOpponentChange} defaultValue="">
             <option value="" disabled>
               Select an opponent
@@ -25,8 +25,18 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
                   {player.username}
                 </option>
               ))}
+              
           </select>
         </p>
+          <div className="classicArcadeVS">
+          <div className="pair">
+            <p>Classic <button className="bubble-button1"></button></p>
+          </div>
+          <div className="pair">
+            <p>Arcade <button className="bubble-button2"></button></p>
+          </div>
+        </div>
+
         <div className="popup-buttons">
           <button onClick={onClose}>Cancel</button>
         </div>

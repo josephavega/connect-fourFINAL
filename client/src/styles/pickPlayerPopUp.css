@@ -3,15 +3,55 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
-    border: 1px solid #ccc;
+    background-image: url('../src/assets/Menu/BlueBoard.png');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
     padding: 20px;
+    width: 300px;
+    height: 300px;
     z-index: 1000;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
+  .classicArcadeVS {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 20px; 
+  }
   
+  .pair {
+    display: flex; 
+    align-items: center; 
+  }
+  
+  .bubble-button1, .bubble-button2 {
+    background-color: #ffffff; 
+    border-radius: 50%; 
+    width: 20px;
+    height: 20px;
+    cursor: pointer; 
+    margin-left: 5px; 
+  }
+  
+  .bubble-button1:hover, .bubble-button2:hover {
+    background-color: #ff0000; 
+  }
+  
+  
+  
+  
+  @font-face {
+    font-family: 'ArcadeClassic'; 
+    src: url('../src/assets/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
+    font-weight: normal; 
+    font-style: normal; 
+}
   .popup-content {
     text-align: center;
+    color: aliceblue;
+    font-family: 'ArcadeClassic', sans-serif; 
+    font-size: 25px;
   }
   
   .popup-content select {

@@ -29,48 +29,49 @@ export default function gameSocketHandler(io) {
       }
     });
 
+
     socket.on('getGameStatus', () => {
       try {
-        const redPlayer = game.GameLogic.player[0]; // Assuming the players are stored here
-        const yellowPlayer = game.GameLogic.player[1];
-        const currentPlayer = game.GameLogic.getCurrentPlayer();
-    
-        // Prepare the data to be sent without cyclic references
-        const data = {
-          red_player: {
-            username: redPlayer.username,
-            sessionID: redPlayer.sessionID,
-            color: redPlayer.color,
-          },
-          yellow_player: {
-            username: yellowPlayer.username,
-            sessionID: yellowPlayer.sessionID,
-            color: yellowPlayer.color,
-          },
-          gamemode: game.gameType, // Assuming you have set this somewhere
-          currentPlayer: {
-            username: currentPlayer.username,
-            color: currentPlayer.color,
-            sessionID: currentPlayer.sessionID,
-          },
-        };
-    
-        // Ensure no cyclic references are included
-        socket.emit('sentGameStatus', data);
+          const redPlayer = game.GameLogic.player[0];
+          const yellowPlayer = game.GameLogic.player[1];
+          const currentPlayer = game.GameLogic.getCurrentPlayer();
+          
+          // Prepare a simplified version to avoid circular references
+          const data = {
+              red_player: redPlayer ? {
+                  username: redPlayer.username,
+                  sessionID: redPlayer.sessionID,
+                  color: redPlayer.color,
+              } : null,
+              yellow_player: yellowPlayer ? {
+                  username: yellowPlayer.username,
+                  sessionID: yellowPlayer.sessionID,
+                  color: yellowPlayer.color,
+              } : null,
+              gamemode: game.gameType || null,
+              currentPlayer: currentPlayer ? {
+                  username: currentPlayer.username,
+                  color: currentPlayer.color,
+                  sessionID: currentPlayer.sessionID,
+              } : null,
+          };
+  
+          socket.emit('sentGameStatus', data);
+          console.log(data);
       } catch (error) {
-        console.error('Error getting game status:', error);
-        socket.emit('sentGameStatus', { error: 'Failed to retrieve game status' });
+          console.error('Error getting game status:', error);
+          socket.emit('sentGameStatus', { error: 'Failed to retrieve game status' });
       }
-    });
+  });
   
 
 
     socket.on('createGame', (data) => {
-      const {gameType} = data;
+      //const {gameType} = data;
       game.createBoard();
-      game.setGameType(0);
-      const status = game.getStatus();
-      socket.emit('getGameStatus', status);
+      //game.setGameType(gameType);
+      //const status = game.getStatus();
+      //socket.emit('getGameStatus', status);
     })
     
 
@@ -141,19 +142,28 @@ export default function gameSocketHandler(io) {
 
     // Handle restart or reset game request
     socket.on('resetGame', () => {
-      console.log(`Game reset requested by ${username}`);
-      game = new Manager(this)
+      console.log('Game reset requested');
+      this.GameLogic.board = createBoard();  // Resetting the board without instantiating a new Manager
       gameNamespace.emit('gameReset', { message: 'The game has been reset.' });
-    });
+  });
 
-    socket.on('getBoard', ()  => {
-      console.log('Fetched board');
-      socket.emit('sendBoard', game.getBoard);
-    });
+//   socket.on('getBoard', () => {
+//     try {
+//         console.log('Received getBoard request');
+//         const board = game.getBoard();
+//         //game.printBoard();
 
+//         // Ensure the board is a plain structure without references
+//         socket.emit('sentBoard', JSON.parse(JSON.stringify(board)));
+//     } catch (error) {
+//         console.error('Error sending board:', error);
+//         socket.emit('sentBoard', { error: 'Failed to retrieve board' });
+//     }
+// });
 
 socket.on('playerMove', (data) => {
-    const { colIndex, sessionID, username } = data;
+
+    const  {colIndex, sessionID, username} = data;
     const user = users.getUser(sessionID);
   
 
@@ -170,12 +180,11 @@ socket.on('playerMove', (data) => {
       const moves = game.placeChip(currentPlayer, colIndex); 
       
       gameNamespace.emit('sendInstructions', moves);
-      gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all clients
       console.log('Gameboard Updated:', game.board);
 
       // Check if the game is over
-      if (game.GameLogic.checkWin()) {
-        io.emit('gameOver', { winner: currentPlayer });
+      if (game.checkWin()) {
+        //socket.emit('gameOver', currentPlayer );
         console.log(`Player ${currentPlayer} wins!`);
       }
     } catch (error) {

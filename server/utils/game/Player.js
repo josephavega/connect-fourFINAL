@@ -3,9 +3,9 @@ import Powerups from './gamePowerups.js'
 
 class Player {
 
-    constructor(sessionID, name, color, gl) {
+    constructor(sessionID, name, color, gameLogic) {
         this.sessionID = sessionID
-        this.gl = gl
+        this.gl = gameLogic
         this.color = color
         this.name = name
         this.powerups = new Powerups(this, this.gl)

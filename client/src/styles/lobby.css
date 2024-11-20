@@ -28,19 +28,26 @@
   font-weight: bold;
 }
 
+@font-face {
+  font-family: 'ArcadeClassic'; 
+  src: url('../src/assets/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
+  font-weight: normal; 
+  font-style: normal; 
+}
+
 .queue {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   max-height: 600px;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'ArcadeClassic'; 
   text-align:left;
-  width: 50%; 
-  padding: 15px;
-  border-radius: 5px;
+  font-size: 30px;
+  width: 70%; 
+  padding: 10px;
+  border-radius: 10px;
   background-color: #ffffff;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .queue-button-container {

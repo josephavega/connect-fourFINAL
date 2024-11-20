@@ -1,96 +1,133 @@
-
-import GameLogic from './gameLogic.js'
-
-import Player from '../game/Player.js'
-import Users from '../users.js';
-
+import users from '../users.js';
+import GameLogic from './GameLogic.js'
+import Player from './Player.js'
 
 
 class Manager{
-    constructor(){
+    constructor() {
         this.GameLogic = new GameLogic();
+        
+        // Debug GameLogic creation
+        if (!this.GameLogic) {
+            console.error('GameLogic instance could not be created');
+        } else {
+            console.log('GameLogic instance created successfully');
+        }
     }
-
-    
 
     printBoard() {
         this.GameLogic.printBoard();
     }
 
-    updateFrontEnd(){
-        this.GameLogic.updateFrontEnd()
+    getBoard() {
+        if (!this.GameLogic) {
+            console.error('GameLogic is undefined. Cannot fetch the board.');
+            return null;
+        }
+        return this.GameLogic.board;
     }
 
+    getStatus() {
+        let red_player, yellow_player, currentPlayer, gamemode;
+    
+        // Extract only the necessary details from player objects
+        if (this.GameLogic.player[0]) {
+            red_player = {
+                username: this.GameLogic.player[0].username,
+                sessionID: this.GameLogic.player[0].sessionID,
+                color: this.GameLogic.player[0].color,
+            };
+        } else {
+            red_player = "null";
+        }
+    
+        if (this.GameLogic.player[1]) {
+            yellow_player = {
+                username: this.GameLogic.player[1].username,
+                sessionID: this.GameLogic.player[1].sessionID,
+                color: this.GameLogic.player[1].color,
+            };
+        } else {
+            yellow_player = "null";
+        }
+    
+        gamemode = this.gameType;
+        currentPlayer = this.GameLogic.getCurrentPlayer();
+    
+        const data = { red_player, yellow_player, gamemode, currentPlayer };
+        console.log(data);
+        return data;
+    }
+    
+
     createBoard() {
+        if (!this.GameLogic) {
+            console.error('Cannot create board. GameLogic is not instantiated.');
+            return;
+        }
         this.GameLogic.board = this.GameLogic.createBoard();
         console.log("New board created:");
         this.printBoard();
     }
 
-    getBoard() {
-        return this.GameLogic.board;
-    }
 
     setGameType(gameType){
         this.gameType = gameType;
     }
 
-    wipeMoves(){
-        this.GameLogic.moves = []
-    }
-
     startAIvsAI() {
         console.log("Starting AI vs. AI game...");
         this.GameLogic.startAIVsAI((gameState) => {
-            //console.log('Game state updated:', gameState);
+            
         });
     }
     
-    setPlayer(sessionID,username){
-        this.GameLogic.setPlayer(sessionID,username)
-        Users.addToGame(username,sessionID);
+  
+    setPlayer(name) {
+        // Declare the playerColor variable
+        const playerColor = this.playerCount === 0 ? 'R' : 'Y'; 
+        const sessionID = users.getUserFromName(name);
+        // Create a new player instance
+        const player = new Player(sessionID, name, playerColor, this.GameLogic);
+    
+        // Call the appropriate method to set the player
+        this.GameLogic.setPlayer(player);
+    
+        // Increment the player count
+        this.playerCount++;
     }
-
-    getPlayerID(username){
-        const sessionID = Users.getUserFromName(username);
-    }
-
 
     getCurrentPlayer(){
-        return this.GameLogic.getCurrentPlayer()
+        return this.GameLogic.player[this.GameLogic.currentPlayerIndex];
     }
 
-      // Updated to handle moves
-      placeChip(sessionID, column) {
-        const player = Users.getUser(sessionID);
-        if (player) {
-            return this.GameLogic.placePiece(column, player);
-        } else {
-            console.error(`Player with sessionID: ${sessionID} not found.`);
-            return [];
-        }
+    placeChip(player, column){
+        player.placeChip(column);
+        //console.log(this.GameLogic.getStatus);
     }
 
     useLightning(player, column, row){
         player.powerups.Lighting(column,row);
-        return this.GameLogic.moves
     }
 
     useAnvil(player, column){
         player.powerups.Anvil(column);
-        return this.GameLogic.moves
     }
 
     useBrick(player, column){
         player.powerups.Brick(column);
-        return this.GameLogic.moves
     }
+
 
     swapPage(currentPage, newPage) {
 
     }
 
+    checkWin() {
+        return this.GameLogic.checkWin;
+    }
+
 
 }
 
-export default new Manager;
+export default new Manager();

@@ -10,7 +10,7 @@ import YellowChip from '../assets/Board/Gamepieces/Chip_Yellow.png';
 
 import BoardTileFront from '../assets/Board/BoardTileFront.png';
 import HoverIndicator from '../assets/Board/BoardTileBack.png';
-import { io } from 'socket.io-client';
+import socket from '../sockets/gameSocket.js'
 import BoardBorder from "../assets/Board/Board_Boarder.png";
 
 import RedSidebarBackground from '../assets/Board/Construction/Sidebar_Red.png';
@@ -27,7 +27,6 @@ import UsedAnvilButton from '../assets/Board/Construction/Button_Anvil_Used.png'
 import UsedLightningButton from '../assets/Board/Construction/Button_Lightning_Used.png';
 import UsedBrickButton from '../assets/Board/Construction/Button_Brick_Used.png';
 
-const socket = io('/game'); // Initialize the socket connection
 
 const Gameboard = ({ 
   board,

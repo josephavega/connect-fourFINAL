@@ -28,6 +28,51 @@ export default function gameSocketHandler(io) {
         socket.emit('sentBoard', { error: 'Failed to retrieve board' });
       }
     });
+
+
+    socket.on('getGameStatus', () => {
+      try {
+          const redPlayer = game.GameLogic.player[0];
+          const yellowPlayer = game.GameLogic.player[1];
+          const currentPlayer = game.GameLogic.getCurrentPlayer();
+          
+          // Prepare a simplified version to avoid circular references
+          const data = {
+              red_player: redPlayer ? {
+                  username: redPlayer.username,
+                  sessionID: redPlayer.sessionID,
+                  color: redPlayer.color,
+              } : null,
+              yellow_player: yellowPlayer ? {
+                  username: yellowPlayer.username,
+                  sessionID: yellowPlayer.sessionID,
+                  color: yellowPlayer.color,
+              } : null,
+              gamemode: game.gameType || null,
+              currentPlayer: currentPlayer ? {
+                  username: currentPlayer.username,
+                  color: currentPlayer.color,
+                  sessionID: currentPlayer.sessionID,
+              } : null,
+          };
+  
+          socket.emit('sentGameStatus', data);
+          console.log(data);
+      } catch (error) {
+          console.error('Error getting game status:', error);
+          socket.emit('sentGameStatus', { error: 'Failed to retrieve game status' });
+      }
+  });
+  
+
+
+    socket.on('createGame', (data) => {
+      //const {gameType} = data;
+      game.createBoard();
+      //game.setGameType(gameType);
+      //const status = game.getStatus();
+      //socket.emit('getGameStatus', status);
+    })
     
 
     socket.on('joinGame', data => {
@@ -37,44 +82,43 @@ export default function gameSocketHandler(io) {
     })
 
     // Listen for a player move
-    socket.on('playerMove', data => {
-      const {rowIndex, colIndex, sessionID, powerupType} = data;
-      const username = users.getUser(sessionID);
-      console.log(`Player ${username} made a move in column: ${colIndex}`);
+    // socket.on('playerMove', data => {
+    //   const {rowIndex, colIndex, sessionID, powerupType} = data;
+    //   const username = users.getUser(sessionID);
+    //   console.log(`Player ${username} made a move in column: ${colIndex}`);
       
-      try {
-        let currentPlayer = game.getCurrentPlayer();
-        var moves = []
-        game.wipeMoves()
-        switch(data.powerupType){
-          case 'Brick':
-          moves = game.useBrick(currentPlayer, data.colIndex)
-          break;
-          case 'Anvil':
-          moves = game.useAnvil(currentPlayer, data.colIndex)
-          break;
-          case 'Lightning':
-          moves = game.useLightning(currentPlayer, data.colIndex, data.rowIndex)
-          break;
-        default:
-          moves = game.placeChip(currentPlayer,colIndex); // Place the piece in the game logic
-        }
-        gameNamespace.emit('sendInstructions', moves)
-        gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all connected clients
-        currentPlayer = game.getCurrentPlayer();
-        gameNamespace.emit('playerTurn', currentPlayer); // Notify whose turn it is
-        console.log('Gameboard Updated:', game.board);
+    //   try {
+    //     let currentPlayer = game.getCurrentPlayer();
+    //     var moves = [];
+    //     switch(data.powerupType){
+    //       case 'Brick':
+    //       moves = game.useBrick(currentPlayer, data.colIndex)
+    //       break;
+    //       case 'Anvil':
+    //       moves = game.useAnvil(currentPlayer, data.colIndex)
+    //       break;
+    //       case 'Lightning':
+    //       moves = game.useLightning(currentPlayer, data.colIndex, data.rowIndex)
+    //       break;
+    //     default:
+    //       moves = game.placeChip(currentPlayer,colIndex); // Place the piece in the game logic
+    //     }
+    //     gameNamespace.emit('sendInstructions', moves)
+    //     gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all connected clients
+    //     currentPlayer = game.getCurrentPlayer();
+    //     gameNamespace.emit('playerTurn', currentPlayer); // Notify whose turn it is
+    //     console.log('Gameboard Updated:', game.board);
   
-        // // Check if the game is over
-        // if (game.GameLogic.checkWin()) {
-        //   io.emit('gameOver', { winner: currentPlayer });
-        //   console.log(`Player ${currentPlayer} wins!`);
-        // }
-      } catch (error) {
-        socket.emit('moveError', { error: error.message });
-        console.error('Error during move:', error.message);
-      }
-    });
+    //     // // Check if the game is over
+    //     // if (game.GameLogic.checkWin()) {
+    //     //   io.emit('gameOver', { winner: currentPlayer });
+    //     //   console.log(`Player ${currentPlayer} wins!`);
+    //     // }
+    //   } catch (error) {
+    //     socket.emit('moveError', { error: error.message });
+    //     console.error('Error during move:', error.message);
+    //   }
+    // });
 
 
 
@@ -98,19 +142,28 @@ export default function gameSocketHandler(io) {
 
     // Handle restart or reset game request
     socket.on('resetGame', () => {
-      console.log(`Game reset requested by ${username}`);
-      game = new Manager(this)
+      console.log('Game reset requested');
+      this.GameLogic.board = createBoard();  // Resetting the board without instantiating a new Manager
       gameNamespace.emit('gameReset', { message: 'The game has been reset.' });
-    });
+  });
 
-    socket.on('getBoard', ()  => {
-      console.log('Fetched board');
-      socket.emit('sendBoard', game.getBoard);
-    });
+//   socket.on('getBoard', () => {
+//     try {
+//         console.log('Received getBoard request');
+//         const board = game.getBoard();
+//         //game.printBoard();
 
+//         // Ensure the board is a plain structure without references
+//         socket.emit('sentBoard', JSON.parse(JSON.stringify(board)));
+//     } catch (error) {
+//         console.error('Error sending board:', error);
+//         socket.emit('sentBoard', { error: 'Failed to retrieve board' });
+//     }
+// });
 
 socket.on('playerMove', (data) => {
-    const { colIndex, sessionID, username } = data;
+
+    const  {colIndex, sessionID, username} = data;
     const user = users.getUser(sessionID);
   
 
@@ -127,12 +180,11 @@ socket.on('playerMove', (data) => {
       const moves = game.placeChip(currentPlayer, colIndex); 
       
       gameNamespace.emit('sendInstructions', moves);
-      gameNamespace.emit('gameBoardUpdated', game.board); // Emit updated board to all clients
       console.log('Gameboard Updated:', game.board);
 
       // Check if the game is over
-      if (game.GameLogic.checkWin()) {
-        io.emit('gameOver', { winner: currentPlayer });
+      if (game.checkWin()) {
+        //socket.emit('gameOver', currentPlayer );
         console.log(`Player ${currentPlayer} wins!`);
       }
     } catch (error) {
@@ -142,9 +194,17 @@ socket.on('playerMove', (data) => {
   });
   
     // Handle players joining or leaving a game session
-    socket.on('joinGame', (username) => {
-      console.log(`${username} joined the game.`);
-      gameNamespace.emit('playerJoined', { player: username });
+    socket.on('joinGame', data => {
+      const { sessionID, username } = data;
+      
+      if (!sessionID || !username) {
+        console.error('Missing sessionID or username in joinGame event');
+        return;
+      }
+    
+      game.setPlayer(sessionID, username);
+      users.addToGame(username, sessionID);
+      console.log(`${username} joined as ${game.getCurrentPlayer().color}`);
     });
   
     socket.on('leaveGame', () => {

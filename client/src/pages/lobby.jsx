@@ -90,13 +90,7 @@ const Lobby = () => {
           {/* <Gameboard /> */}
         </div>
       </main>
-      
-      <aside className="lobby-container">
-        <div className="gameboardBox">
-          Spectated Powerups will show here
-        </div>
-      </aside>
-      
+    
       {isPopupVisible && (
         <PickPlayerPopUp
           queue={queue} 
@@ -105,7 +99,14 @@ const Lobby = () => {
           onClose={handlePopupClose} 
         />
       )}
+      <div>
+      <iframe src="url" title="description"></iframe>
+      </div>
+      <aside className="lobby-container">
+       {/*<Spectate/>*/}
+      </aside>  
     </div>
+    
   );
 };
 

@@ -152,7 +152,6 @@ const Game = () => {
    
 }
 
-
   const handleConfirm = () => {
     console.log('Confirming move...');
     if (!selectedMove) {
@@ -174,7 +173,6 @@ const Game = () => {
     // Emit the move to the server
     handleMove(selectedColumn);
   
-  
     // Mark the active power-up as used
     if (currentPlayer === 'Red' && redActiveButton) {
       console.log(`Using Red Power-Up: ${redActiveButton}`);
@@ -194,7 +192,7 @@ const Game = () => {
       //if lightning
       
       //if brick
-      
+
       setYellowActiveButton(null); // Clear active power-up
     }
 
@@ -218,18 +216,20 @@ const Game = () => {
       setRedActiveButton={setRedActiveButton}
       setYellowActiveButton={setYellowActiveButton}
       />
-      <div className="click-info">
-        <p>Tile Selected: {lastChanged}</p>
-        <p>Column Selected: {selectedColumn + 1}</p>
-        <p>Current Player: {currentPlayer}</p>
-      </div>
-      <button
+      <p></p>
+            <button
       className={`confirm-button ${currentPlayer.toLowerCase()}`}
       onClick={handleConfirm}
       disabled={!selectedMove} 
       >
         Confirm Move
       </button>
+      <div className="click-info">
+        <p>Tile Selected: {lastChanged}</p>
+        <p>Column Selected: {selectedColumn + 1}</p>
+        <p>Current Player: {currentPlayer}</p>
+      </div>
+
 
       <button
         className={`player-toggle-button ${currentPlayer.toLowerCase()}`}

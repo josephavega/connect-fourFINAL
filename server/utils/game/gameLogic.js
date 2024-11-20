@@ -2,6 +2,7 @@ import AI from './AI.js'
 import Player from './Player.js';
 
 class GameLogic {
+
     constructor() {
         this.board = this.createBoard();
         this.player = [new Player(-1,'Red','R',this), new Player(-1,'Yellow','Y',this)]
@@ -12,14 +13,15 @@ class GameLogic {
         this.gameOver = false;
         this.isPlayerVsAI = false;
         this.moves = []
-        this.winner = ''; //[Rule,Col,Row,Type]
+        this.winner = ''; 
+        
+        //[Rule,Col,Row,Type]
         //Rule 'Place', 'Anvil', 'Broken', 'Lightning', 'Flipped', 'Brick', 'StoppedL','StoppedA', 'Win','Full'
         //Lightning for the inititial shock location
         //Anvil/Brick for column
         //Flipped for chips hit with the lightning
         //StoppedL for if Lightning hits a brick
         //StoppedA for if Anvil hits a brick
-        
     }   
 
     setPlayer(sessionID,username){
@@ -125,7 +127,8 @@ class GameLogic {
                     this.gameOver = true;
                     this.winner = this.getCurrentPlayer();
                     console.log(`${this.winner.color} has won the game!`);
-                    this.board = this.createBoard();
+                
+                    //this.board = this.createBoard();
                     return;
                 }
             

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import RedChip from '../assets/Board/Gamepieces/Chip_Red.png';
 import YellowChip from '../assets/Board/Gamepieces/Chip_Yellow.png';
-import '../styles/chipAnimation.css';
+import '../styles/chipAnimation';
 
 const ChipAnimation = ({ startX, startY, endX, endY, chipType, onAnimationEnd }) => {
   const [style, setStyle] = useState({});

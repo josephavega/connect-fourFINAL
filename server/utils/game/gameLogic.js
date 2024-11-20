@@ -2,6 +2,7 @@ import AI from './AI.js'
 import Player from './Player.js';
 
 class GameLogic {
+
     constructor() {
         this.board = this.createBoard();
         this.player = [new Player(-1,'Red','R',this), new Player(-1,'Yellow','Y',this)]
@@ -125,7 +126,8 @@ class GameLogic {
                     this.gameOver = true;
                     this.winner = this.getCurrentPlayer();
                     console.log(`${this.winner.color} has won the game!`);
-                    this.board = this.createBoard();
+                
+                    //this.board = this.createBoard();
                     return;
                 }
             

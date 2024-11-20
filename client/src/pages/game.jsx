@@ -152,7 +152,6 @@ const Game = () => {
    
 }
 
-
   const handleConfirm = () => {
     console.log('Confirming move...');
     if (!selectedMove) {
@@ -174,7 +173,6 @@ const Game = () => {
     // Emit the move to the server
     handleMove(selectedColumn);
   
-  
     // Mark the active power-up as used
     if (currentPlayer === 'Red' && redActiveButton) {
       console.log(`Using Red Power-Up: ${redActiveButton}`);
@@ -194,7 +192,7 @@ const Game = () => {
       //if lightning
       
       //if brick
-      
+
       setYellowActiveButton(null); // Clear active power-up
     }
 

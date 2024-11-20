@@ -13,14 +13,15 @@ class GameLogic {
         this.gameOver = false;
         this.isPlayerVsAI = false;
         this.moves = []
-        this.winner = ''; //[Rule,Col,Row,Type]
+        this.winner = ''; 
+        
+        //[Rule,Col,Row,Type]
         //Rule 'Place', 'Anvil', 'Broken', 'Lightning', 'Flipped', 'Brick', 'StoppedL','StoppedA', 'Win','Full'
         //Lightning for the inititial shock location
         //Anvil/Brick for column
         //Flipped for chips hit with the lightning
         //StoppedL for if Lightning hits a brick
         //StoppedA for if Anvil hits a brick
-        
     }   
 
     setPlayer(sessionID,username){

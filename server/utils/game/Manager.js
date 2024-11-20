@@ -1,5 +1,5 @@
 import users from '../users.js';
-import GameLogic from './GameLogic.js'
+import GameLogic from './gameLogic.js'
 import Player from './Player.js'
 
 
@@ -57,6 +57,10 @@ class Manager{
         const data = { red_player, yellow_player, gamemode, currentPlayer };
         console.log(data);
         return data;
+    }
+
+    getGameOver() {
+        return this.GameLogic.gameOver;
     }
     
 

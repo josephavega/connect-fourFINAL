@@ -206,18 +206,20 @@ const Game = () => {
       setRedActiveButton={setRedActiveButton}
       setYellowActiveButton={setYellowActiveButton}
       />
-      <div className="click-info">
-        <p>Tile Selected: {lastChanged}</p>
-        <p>Column Selected: {selectedColumn + 1}</p>
-        <p>Current Player: {currentPlayer}</p>
-      </div>
-      <button
+      <p></p>
+            <button
       className={`confirm-button ${currentPlayer.toLowerCase()}`}
       onClick={handleConfirm}
       disabled={!selectedMove} 
       >
         Confirm Move
       </button>
+      <div className="click-info">
+        <p>Tile Selected: {lastChanged}</p>
+        <p>Column Selected: {selectedColumn + 1}</p>
+        <p>Current Player: {currentPlayer}</p>
+      </div>
+
 
       <button
         className={`player-toggle-button ${currentPlayer.toLowerCase()}`}

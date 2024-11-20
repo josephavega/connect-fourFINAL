@@ -184,7 +184,7 @@ socket.on('playerMove', (data) => {
 
       // Check if the game is over
       if (game.checkWin()) {
-        //socket.emit('gameOver', currentPlayer );
+        socket.emit('gameOver', currentPlayer );
         console.log(`Player ${currentPlayer} wins!`);
       }
     } catch (error) {

@@ -27,6 +27,7 @@ import UsedAnvilButton from '../assets/Board/Construction/Button_Anvil_Used.png'
 import UsedLightningButton from '../assets/Board/Construction/Button_Lightning_Used.png';
 import UsedBrickButton from '../assets/Board/Construction/Button_Brick_Used.png';
 
+const socket = io('/game'); // Initialize the socket connection
 
 const Gameboard = ({ 
   board,
@@ -42,6 +43,7 @@ const Gameboard = ({
   const [redAnvilImage, setRedAnvilImage] = useState(RedAnvilButton);
   const [redLightningImage, setRedLightningImage] = useState(RedLightningButton);
   const [redBrickImage, setRedBrickImage] = useState(RedBrickButton);
+
   const [yellowAnvilImage, setYellowAnvilImage] = useState(YellowAnvilButton);
   const [yellowLightningImage, setYellowLightningImage] = useState(YellowLightningButton);
   const [yellowBrickImage, setYellowBrickImage] = useState(YellowBrickButton);
@@ -73,9 +75,9 @@ const Gameboard = ({
           ((!redActiveButton && redAnvilImage !== UsedAnvilButton)
         ||
           redActiveButton === 'anvil')) {
-      setRedAnvilImage((prevImage) => (prevImage === RedAnvilButton ? UsedAnvilButton : RedAnvilButton));
+    setRedAnvilImage((prevImage) => (prevImage === RedAnvilButton ? UsedAnvilButton : RedAnvilButton));
       setRedActiveButton(redActiveButton === 'anvil' ? null : 'anvil');
-  }}; 
+  }};
 
   const toggleRedLightningImage = () => {
     if (currentPlayer === 'Red' 
@@ -85,9 +87,9 @@ const Gameboard = ({
           ((!redActiveButton && redLightningImage !== UsedLightningButton) 
         || 
           redActiveButton === 'lightning')) {
-      setRedLightningImage((prevImage) => (prevImage === RedLightningButton ? UsedLightningButton : RedLightningButton));
+    setRedLightningImage((prevImage) => (prevImage === RedLightningButton ? UsedLightningButton : RedLightningButton));
       setRedActiveButton(redActiveButton === 'lightning' ? null : 'lightning');
-  }}; 
+  }};
   const toggleRedBrickImage = () => {
     if (currentPlayer === 'Red' 
       && 
@@ -96,7 +98,7 @@ const Gameboard = ({
           ((!redActiveButton && redBrickImage !== UsedBrickButton) 
         || 
           redActiveButton === 'brick')) {
-      setRedBrickImage((prevImage) => (prevImage === RedBrickButton ? UsedBrickButton : RedBrickButton));
+    setRedBrickImage((prevImage) => (prevImage === RedBrickButton ? UsedBrickButton : RedBrickButton));
       setRedActiveButton(redActiveButton === 'brick' ? null : 'brick');
   }};
   
@@ -108,9 +110,9 @@ const Gameboard = ({
           ((!yellowActiveButton && yellowAnvilImage !== UsedAnvilButton) 
         || 
           yellowActiveButton === 'anvil')) {
-      setYellowAnvilImage((prevImage) => (prevImage === YellowAnvilButton ? UsedAnvilButton : YellowAnvilButton));
+    setYellowAnvilImage((prevImage) => (prevImage === YellowAnvilButton ? UsedAnvilButton : YellowAnvilButton));
       setYellowActiveButton(yellowActiveButton === 'anvil' ? null : 'anvil');
-  }}; 
+  }};
   const toggleYellowLightningImage = () => {
     if (currentPlayer === 'Yellow' 
       && 
@@ -119,7 +121,7 @@ const Gameboard = ({
           ((!yellowActiveButton && yellowLightningImage !== UsedLightningButton) 
         || 
           yellowActiveButton === 'lightning')) {
-      setYellowLightningImage((prevImage) => (prevImage === YellowLightningButton ? UsedLightningButton : YellowLightningButton));
+    setYellowLightningImage((prevImage) => (prevImage === YellowLightningButton ? UsedLightningButton : YellowLightningButton));
       setYellowActiveButton(yellowActiveButton === 'lightning' ? null : 'lightning');
   }};
   const toggleYellowBrickImage = () => {
@@ -130,13 +132,14 @@ const Gameboard = ({
           ((!yellowActiveButton && yellowBrickImage !== UsedBrickButton) 
         || 
           yellowActiveButton === 'brick')) {
-      setYellowBrickImage((prevImage) => (prevImage === YellowBrickButton ? UsedBrickButton : YellowBrickButton));
+    setYellowBrickImage((prevImage) => (prevImage === YellowBrickButton ? UsedBrickButton : YellowBrickButton));
       setYellowActiveButton(yellowActiveButton === 'brick' ? null : 'brick');
   }};
 
+  const [hoveredColumn, setHoveredColumn] = useState(-1);
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
   const sessionID = localStorage.getItem('sessionID');
-
+  
   useEffect(() => {
     setUsername(localStorage.getItem('username'));
     socket.on('powerupUsed', ({ powerupType }) => { setActivePowerup(powerupType) })
@@ -168,7 +171,7 @@ const Gameboard = ({
       grid.push( <Grid2 container key={`row-${i}`} className="row" columns={7}> {rowTiles}</Grid2> )
     }
 
-  return grid;
+    return grid;
   };
 
   return (
@@ -176,9 +179,9 @@ const Gameboard = ({
       {/* LEFT */}
       <div>
         {/* RED SIDEBAR */}
-        <div className="red-sidebar">
-          <img src={RedSidebarBackground} alt="Sidebar Background" className="red-sidebar-background" />
-          <div className="red-sidebar-content">
+      <div className="red-sidebar">
+        <img src={RedSidebarBackground} alt="Sidebar Background" className="red-sidebar-background" />
+        <div className="red-sidebar-content">
             
             {/* Red Username */}
             <div className="red-sidebar-text">{username}</div> 
@@ -189,8 +192,8 @@ const Gameboard = ({
             onClick={toggleRedAnvilImage} 
             disabled={currentPlayer !== 'Red' || usedRedPowerups.anvil || (redActiveButton && redActiveButton !== 'anvil')}
             > 
-              <img src={redAnvilImage} alt="Anvil Button" />
-            </button>
+            <img src={redAnvilImage} alt="Anvil Button" />
+          </button>
 
             {/* Red Lightning */}
             <button 
@@ -198,8 +201,8 @@ const Gameboard = ({
             onClick={toggleRedLightningImage} 
             disabled={currentPlayer !== 'Red' || usedRedPowerups.lightning || (redActiveButton && redActiveButton !== 'lightning')}
             > 
-              <img src={redLightningImage} alt="Lightning Button" />
-            </button>
+            <img src={redLightningImage} alt="Lightning Button" />
+          </button>
 
             {/* R_Brick */}
             <button 
@@ -207,10 +210,10 @@ const Gameboard = ({
             onClick={toggleRedBrickImage} 
             disabled={currentPlayer !== 'Red' || usedRedPowerups.brick || (redActiveButton && redActiveButton !== 'brick')}
             > 
-              <img src={redBrickImage} alt="Brick Button" />
-            </button>
-          </div> 
-        </div> 
+            <img src={redBrickImage} alt="Brick Button" />
+          </button>
+        </div>
+      </div>
       </div> 
 
       {/* MIDDLE */}
@@ -219,18 +222,18 @@ const Gameboard = ({
         <div className="top-grid"> <TopGrid selectedColumn={selectedColumn} currentPlayer={currentPlayer} /> </div> 
         
         {/* GAMEBOARD */}
-        <div className="gameboard-wrapper"> 
+        <div className="gameboard-wrapper">
           <img src={BoardBorder} alt="Board Border" className="board-border" />
           <div className="gameboard"> {createMainGrid()} </div> 
-        </div> 
-      </div> 
+        </div>
+      </div>
 
       {/* RIGHT */}
       <div>
         {/* YELLOW SIDEBAR */}
-        <div className="yellow-sidebar">
-          <img src={YellowSidebarBackground} alt="Sidebar Background" className="yellow-sidebar-background" />
-          <div className="yellow-sidebar-content">
+      <div className="yellow-sidebar">
+        <img src={YellowSidebarBackground} alt="Sidebar Background" className="yellow-sidebar-background" />
+        <div className="yellow-sidebar-content">
             {/* Yellow Username */}
             <div className="yellow-sidebar-text">NPC</div>
 
@@ -240,8 +243,8 @@ const Gameboard = ({
             onClick={toggleYellowAnvilImage} 
             disabled={currentPlayer !== 'Yellow' || usedYellowPowerups.anvil || (yellowActiveButton && yellowActiveButton !== 'brick')}
             >
-              <img src={yellowAnvilImage} alt="Anvil Button" />
-            </button>
+            <img src={yellowAnvilImage} alt="Anvil Button" />
+          </button>
 
             {/* Yellow Lightning */}
             <button 
@@ -249,8 +252,8 @@ const Gameboard = ({
             onClick={toggleYellowLightningImage} 
             disabled={currentPlayer !== 'Yellow' || usedYellowPowerups.lightning || (yellowActiveButton && yellowActiveButton !== 'lightning')}
             >
-              <img src={yellowLightningImage} alt="Lightning Button" />
-            </button>
+            <img src={yellowLightningImage} alt="Lightning Button" />
+          </button>
 
             {/* Yellow Brick */}
             <button 
@@ -258,8 +261,8 @@ const Gameboard = ({
             onClick={toggleYellowBrickImage} 
             disabled={currentPlayer !== 'Yellow' || usedYellowPowerups.brick || (yellowActiveButton && yellowActiveButton !== 'brick')}
             >
-              <img src={yellowBrickImage} alt="Brick Button" />
-            </button>
+            <img src={yellowBrickImage} alt="Brick Button" />
+          </button>
           </div>
         </div>
       </div>

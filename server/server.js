@@ -65,6 +65,6 @@ server.listen(PORT, () => {
    //Manager.startAIvsAI();
    Manager.setGameType(0);
    Manager.createBoard();
-   console.log(`${Manager.getBoard()}`);
+  //  Manager.getStatus();
 
 });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GameBoard from '../components/Gameboard';
 import '../styles/game.css';
 import gameSocket from '../sockets/gameSocket';
@@ -9,6 +9,7 @@ const Game = () => {
   const [board, setBoard] = useState(Array(6).fill(null).map(() => Array(7).fill('EmptyChip')));
   const [lastChanged, setChanged] = useState('None');
   const [isVictoryPopupOpen, setVictoryPopupOpen] = useState(false);
+  const [gameStatus, setGameStatus] = useState('');
 
   const [currentPlayer, setCurrentPlayer] = useState('Red'); // Track the current player
 
@@ -80,6 +81,32 @@ const Game = () => {
   //     gameSocket.off('sendInstructions', handleInstructions); // Cleanup listener
   //   };
   // }, []);
+
+  useEffect(() => {
+    // Listen for board data from the server
+    gameSocket.connect();
+
+    gameSocket.on('sentBoard', (board) => {
+      setBoard(board);
+      console.log('Board updated:', board);
+    });
+  
+    // Listen for game status data from the server
+    gameSocket.on('sentGameStatus', (status) => {
+      if (status) {
+        setGameStatus(status);
+        console.log(`Game Status: \nRed Player: ${JSON.stringify(status.red_player, null, 2)}\nYellow Player: ${JSON.stringify(status.yellow_player, null, 2)}\nGamemode: ${status.gamemode}\nCurrent Player: ${JSON.stringify(status.currentPlayer, null, 2)}`);
+      } else {
+        console.error("Received undefined game status");
+      }
+    });
+  
+    return () => {
+      // Cleanup listeners when component unmounts
+      gameSocket.off('sentBoard');
+      gameSocket.off('sentGameStatus');
+    };
+  }, []);
 
   const handleClick = (rowIndex, colIndex) => {
     // Find the lowest empty row in the selected column

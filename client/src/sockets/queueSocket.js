@@ -10,7 +10,7 @@ if (!sessionID) {
 }
 
 const queueSocket = io('http://localhost:3000/queue', {
-  autoConnect: true,
+  autoConnect: false,
   query: {
     sessionID: sessionID,
   },

@@ -104,18 +104,18 @@ export default function queueSocketHandler(io) {
 
     socket.on('disconnect', () => {
       console.log(`${socket.id} disconnected from the queue namespace`);
-  
+      const sessionID = socket.sessionID;
       if (heartbeatTrackers.has(sessionID)) {
         clearTimeout(heartbeatTrackers.get(sessionID));
         heartbeatTrackers.delete(sessionID);
       }
 
-      // if (users.userInQueue(sessionID)) {
-      //   users.removeFromQueue(sessionID);
-      //   queueNamespace.emit('queueUpdated', users.getQueue());
-      // } else {
-      //   console.error('No sessionID found for disconnected socket');
-      // }
+      
+      if (!sessionID) {
+        console.error('No sessionID found for disconnected socket');
+        return;
+}
+
       
     });
   });

@@ -40,6 +40,7 @@ router.get('/winner', (req, res) => {
 });
 
 
+
 router.get('/gamestate', (req, res) => {
 
     console.log('API Reqeust: GET /gamestate');
@@ -91,6 +92,12 @@ router.post('/gamemode', (req, res) => {
         res.status(400).json({ error: 'Invalid game mode' });
     }
 });
+
+router.post('setPlayer', (req, res) => {
+    const { sessionID, player } = req.body;
+    console.log(`API Request: POST /setPlayer, ${sessionID} : ${player}`)
+    game.setPlayer(sessionID);
+})
 
 
 router.post('/move', (req, res) => {

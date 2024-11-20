@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GameBoard from '../components/Gameboard';
 import '../styles/game.css';
 import gameSocket from '../sockets/gameSocket';
 import VictoryPopup from '../components/VictoryPopup';
 import DebugGameButtons from '../components/DebugGameButtons';
 
-
 const Game = () => {
   const [board, setBoard] = useState(Array(6).fill(null).map(() => Array(7).fill('EmptyChip')));
   const [lastChanged, setChanged] = useState('None');
   const [isVictoryPopupOpen, setVictoryPopupOpen] = useState(false);
+  const [gameStatus, setGameStatus] = useState('');
+
   const [currentPlayer, setCurrentPlayer] = useState('Red'); // Track the current player
+
   const [selectedMove, setSelectedMove] = useState(null);
   const [selectedColumn, setSelectedColumn] = useState(null); // Track the currently clicked column
+  const [redActiveButton, setRedActiveButton] = useState(null);
+  const [yellowActiveButton, setYellowActiveButton] = useState(null);
+
+  const [usedRedPowerups, setUsedRedPowerups] = useState({
+    anvil: false,
+    lightning: false,
+    brick: false,
+  });
+  
+  const [usedYellowPowerups, setUsedYellowPowerups] = useState({
+    anvil: false,
+    lightning: false,
+    brick: false,
+  });
 
   const sessionID = localStorage.getItem('sessionID');
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
@@ -20,8 +36,9 @@ const Game = () => {
   const openVictoryPopup = () => setVictoryPopupOpen(true);
 
   const togglePlayer = () => {
-    setCurrentPlayer(currentPlayer === 'Red' ? 'Yellow' : 'Red');
+    setCurrentPlayer((prevPlayer) => (prevPlayer === 'Red' ? 'Yellow' : 'Red'));
   };
+
   // useEffect(() => {
   //   const socket = gameSocket;
 
@@ -65,6 +82,32 @@ const Game = () => {
   //   };
   // }, []);
 
+  useEffect(() => {
+    // Listen for board data from the server
+    gameSocket.connect();
+
+    gameSocket.on('sentBoard', (board) => {
+      setBoard(board);
+      console.log('Board updated:', board);
+    });
+  
+    // Listen for game status data from the server
+    gameSocket.on('sentGameStatus', (status) => {
+      if (status) {
+        setGameStatus(status);
+        console.log(`Game Status: \nRed Player: ${JSON.stringify(status.red_player, null, 2)}\nYellow Player: ${JSON.stringify(status.yellow_player, null, 2)}\nGamemode: ${status.gamemode}\nCurrent Player: ${JSON.stringify(status.currentPlayer, null, 2)}`);
+      } else {
+        console.error("Received undefined game status");
+      }
+    });
+  
+    return () => {
+      // Cleanup listeners when component unmounts
+      gameSocket.off('sentBoard');
+      gameSocket.off('sentGameStatus');
+    };
+  }, []);
+
   const handleClick = (rowIndex, colIndex) => {
     // Find the lowest empty row in the selected column
     let lowestEmptyRow = -1;
@@ -97,11 +140,14 @@ const Game = () => {
 
 
   const handleConfirm = () => {
+    console.log('Confirming move...');
     if (!selectedMove) {
-      console.log('No move selected to confirm.');
+      console.log('No move selected. Exiting.');
       return;
     }
   
+    console.log('Selected move:', selectedMove);
+
     const { row, col } = selectedMove;
     const chipColor = currentPlayer === 'Red' ? 'R' : 'Y';
   
@@ -114,9 +160,22 @@ const Game = () => {
     // Emit the move to the server
     handleMove(col);
   
+    // Mark the active power-up as used
+    if (currentPlayer === 'Red' && redActiveButton) {
+      console.log(`Using Red Power-Up: ${redActiveButton}`);
+      setUsedRedPowerups((prev) => ({ ...prev, [redActiveButton]: true }));
+      setRedActiveButton(null); // Clear active power-up
+    } else if (currentPlayer === 'Yellow' && yellowActiveButton) {
+      console.log(`Using Yellow Power-Up: ${yellowActiveButton}`);
+      setUsedYellowPowerups((prev) => ({ ...prev, [yellowActiveButton]: true }));
+      setYellowActiveButton(null); // Clear active power-up
+    }
+
     // Reset the selected move and toggle player
+    console.log('Resetting move...');
     setSelectedMove(null);
     setSelectedColumn(null);
+    console.log('Toggling player...');
     togglePlayer();
   };
 
@@ -127,9 +186,14 @@ const Game = () => {
       onClick={handleClick}
       currentPlayer={currentPlayer}
       selectedColumn={selectedColumn}
+      redActiveButton={redActiveButton}
+      yellowActiveButton={yellowActiveButton}
+      setRedActiveButton={setRedActiveButton}
+      setYellowActiveButton={setYellowActiveButton}
       />
       <div className="click-info">
-        <p>Last changed tile: {lastChanged}</p>
+        <p>Tile Selected: {lastChanged}</p>
+        <p>Column Selected: {selectedColumn + 1}</p>
         <p>Current Player: {currentPlayer}</p>
       </div>
       <button

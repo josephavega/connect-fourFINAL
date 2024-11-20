@@ -1,5 +1,5 @@
 import Powerups from './gamePowerups.js'
-import GameLogic from './gameLogic.js'
+//import GameLogic from '.gameLogic.js'
 
 class Player {
 
@@ -9,6 +9,8 @@ class Player {
         this.color = color
         this.name = name
         this.powerups = new Powerups(this, this.gl)
+
+      
     }
 
 

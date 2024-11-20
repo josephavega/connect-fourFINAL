@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid2 } from '@mui/material';
 import '../styles/gameboard.css';
 import TopGrid from '../components/TopGrid.jsx';
-import ChipAnimation from '../components/ChipAnimation.jsx';
+//import ChipAnimation from '../components/ChipAnimation.jsx';
 
 import EmptyChip from '../assets/Board/BoardTileBack.png';
 import RedChip from '../assets/Board/Gamepieces/Chip_Red.png';
@@ -27,7 +27,6 @@ import UsedAnvilButton from '../assets/Board/Construction/Button_Anvil_Used.png'
 import UsedLightningButton from '../assets/Board/Construction/Button_Lightning_Used.png';
 import UsedBrickButton from '../assets/Board/Construction/Button_Brick_Used.png';
 
-const socket = io('/game'); // Initialize the socket connection
 
 const Gameboard = ({ 
   board,

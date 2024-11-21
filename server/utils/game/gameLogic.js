@@ -8,7 +8,7 @@ class GameLogic {
         this.player = [new Player(-1,'Red','R',this), new Player(-1,'Yellow','Y',this)]
         this.currentPlayerIndex = 0;
         this.playerCount = 0;
-        this.ai = [new AI(1,'R'), new AI(1,'Y')]; // AI difficulty Medium
+        this.ai = [new AI(10,'R'), new AI(4,'Y')]; // AI difficulty Medium
         this.isAIvsAI = true;
         this.gameOver = false;
         this.isPlayerVsAI = false;
@@ -77,8 +77,8 @@ class GameLogic {
 
     aiMove(callback) {
         const ai = this.ai[this.currentPlayerIndex];
-        const move = ai.makeMove(this.board);
-        console.log(`AI (${this.getCurrentPlayer().color}) is making move: ${move}`);
+        const move = ai.bestMove(this.board,ai.difficulty)
+        console.log(`AI (${this.getCurrentPlayer().color}) is playing in column: ${move}`);
         if (move !== null) {
             this.placePiece(move);
             this.printBoard(); // Log the board after placing the piece
@@ -135,6 +135,7 @@ class GameLogic {
                 this.switchPlayer();
                 return;
             }
+            
         }
         console.log("No valid moves available in this column.");
     

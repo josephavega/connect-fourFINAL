@@ -3,53 +3,160 @@ import Powerups from "./gamePowerups.js";
 
 class AI {
     constructor(difficulty, color) {
-        
         this.color = color
         this.difficulty = difficulty;
         this.powerups = new Powerups
+        this.oppositeColor = this.color === 'R' ? 'Y' : 'R'
+        this.ROWS = 6
+        this.COLS = 7
+        this.movesMade = 0
     }
 
     
     
+    validMoves(board) {
+        // if(this.movesMade < 3){
+        //    return [this.getRandomInt(0,this.COLS),this.getRandomInt(0,this.COLS),this.getRandomInt(0,this.COLS)]
+        // }
+        return board[0].map((_, col) => col).filter(col => board[this.ROWS-1][col] === 0).sort(() => Math.random() - Math.random())
+    }
 
-    makeMove(board) {
-        const errorProbability = 1 - (this.difficulty / 3);
-        let move = this.findWinningMove(board);
-        if (!move || Math.random() < errorProbability) {
-            move = this.getRandomMove(board);
+    getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    checkWin(board, player) {
+        // Define directions for horizontal, vertical, and diagonal checks
+        const directions = [
+            { dr: 0, dc: 1 },  // Horizontal
+            { dr: 1, dc: 0 },  // Vertical
+            { dr: 1, dc: 1 },  // Diagonal down-right
+            { dr: 1, dc: -1 }  // Diagonal down-left
+        ];
+    
+        // Start from the bottom-most row (row-6) to top (row-1)
+        for (let r = this.ROWS - 1; r >= 0; r--) {
+            for (let c = 0; c < this.COLS; c++) {
+                // If the current cell has the player's piece, check all directions
+                if (board[r][c] === player) {
+                    for (let { dr, dc } of directions) {
+                        if (this.checkDirection(board, r, c, dr, dc, player)) {
+                            return true;  // A winning condition was found
+                        }
+                    }
+                }
+            }
         }
-        return move;
+        return false;  // No win found
+    }
+    
+    
+    checkDirection(board, r, c, dr, dc, player) {
+        // Check if four consecutive cells in the specified direction have the same player's piece
+        for (let i = 0; i < 4; i++) {
+            const nr = r + dr * i;  // New row after moving in the direction
+            const nc = c + dc * i;  // New column after moving in the direction
+            
+            // Ensure we don't go out of bounds
+            if (nr < 0 || nr >= this.ROWS || nc < 0 || nc >= this.COLS) {
+                return false;
+            }
+            
+            // Check if the cell matches the player's piece
+            if (board[nr][nc] !== player) {
+                return false;  // A mismatch means no win in this direction
+            }
+        }
+        return true;  // Four consecutive pieces found
+    }
+    
+
+    gameOver(board) {
+        return this.checkWin(board, this.color) || this.checkWin(board, this.oppositeColor) || this.validMoves(board).length === 0;
     }
 
-    findWinningMove(board) {
-        let availableMoves = [];  // Declare availableMoves within this method's scope
+    minimax(board, depth, alpha, beta, maximizingPlayer) {
+        if (depth === 0 || this.gameOver(board)) {
+            return this.evaluate(board);
+        }
+    
+        if (maximizingPlayer) {
+            let maxEval = -Infinity;
+            for (let col of this.validMoves(board)) {
+                const newBoard = this.makeMove(board, col, this.color);
+                const check = this.minimax(newBoard, depth - 1, alpha, beta, false);
+                maxEval = Math.max(maxEval, check);
+                alpha = Math.max(alpha, check);
+                if (beta <= alpha) break;
+            }
+            return maxEval;
+        } else {
+            let minEval = Infinity;
+            for (let col of this.validMoves(board)) {
+                const newBoard = this.makeMove(board, col, this.oppositeColor);
+                const check = this.minimax(newBoard, depth - 1, alpha, beta, true);
+                minEval = Math.min(minEval, check);
+                beta = Math.min(beta, check);
+                if (beta <= alpha) break;
+            }
+            return minEval;
+        }
+    }
 
-        // Add logic for determining a winning move (for now, just gathering valid moves)
-        for (let row = 0; row < board.length; row++) {
-            if (board[row].includes(0)) {
-                availableMoves.push(row);
+     makeMove(board, col, player) {
+        const newBoard = board.map(row => [...row]); // Deep copy
+        for (let r = this.ROWS - 1; r >= 0; r--) {
+            if (newBoard[r][col] === 0) {
+                newBoard[r][col] = player;
+                break;
+            }
+        }
+        return newBoard;
+    }
+
+    bestMove(board, depth) {
+        let bestScore = -Infinity;
+        let move = null;
+    
+        // First, check if there's a winning move for the AI
+        for (let col of this.validMoves(board)) {
+            const newBoard = this.makeMove(board, col, this.color);
+            if (this.checkWin(newBoard, this.color)) {
+                // If AI can win, return this column immediately
+                return col;
             }
         }
 
-        // This method should return a column that could lead to a win
-        // Currently, just returning `null` (replace with actual logic)
-        return availableMoves.length > 0 ? availableMoves[0] : null; // Placeholder: return the first available move
-    }
-
-    getRandomMove(board) {
-        
-        let validMoves = [];
-        for (let col = 0; col < board.length; col++) {
-            for (let row = 0; row < board[col].length; row++) {
-                if (board[col][row] === 0) {
-                    validMoves.push(col);           
+        for (let col of this.validMoves(board)) {
+            const newBoard = this.makeMove(board, col, this.oppositeColor);
+            if (this.checkWin(newBoard, this.oppositeColor)) {
+                // If opponent can win, block
+                return col;
+            }
         }
-    }
-}
-        return validMoves.length > 0 ? validMoves[Math.floor(Math.random() * validMoves.length)] : null;
+    
+        // If no immediate win, continue with the minimax algorithm
+        for (let col of this.validMoves(board)) {
+            const newBoard = this.makeMove(board, col, this.color);
+            const score = this.minimax(newBoard, depth - 1, -Infinity, Infinity, false);
+            if (score > bestScore) {
+                bestScore = score;
+                move = col;
+            }
+        }
+        this.movesMade++;
+        return move;
     }
 
+    evaluate(board) {
+        // Simplified scoring: +1000 for win, -1000 for loss, 0 otherwise
+        if (this.checkWin(board, this.color)) return 1000;
+        if (this.checkWin(board, this.oppositeColor)) return -1000;
+        return 0;
+    }
 
+    
+    
     validAnvil(board){
         const rows = 6;
         const columns = 7;

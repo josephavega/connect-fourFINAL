@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import "../styles/pickPlayerPopUp.css";
-import { v4 as uuidv4 } from 'uuid';
 
 const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
+  const [selectedMode, setSelectedMode] = useState(null); // Track the selected button
+
+  const handleModeSelect = (mode) => {
+    setSelectedMode(mode); 
+  };
+
   const handleOpponentChange = (event) => {
     onOpponentSelect(event.target.value);
   };
@@ -19,21 +23,37 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
               Select an opponent
             </option>
             {queue
-              .filter((player) => player.username !== currentUser) 
+              .filter((player) => player.username !== currentUser)
               .map((player, index) => (
                 <option key={index} value={player.username}>
                   {player.username}
                 </option>
               ))}
-              
           </select>
         </p>
-          <div className="classicArcadeVS">
+
+        <div className="classicArcadeVS">
           <div className="pair">
-            <p>Classic <button className="bubble-button1"></button></p>
+            <p>
+              Classic{' '}
+              <button
+                className={`bubble-button1 ${
+                  selectedMode === 'classic' ? 'bubble-button-active' : ''
+                }`}
+                onClick={() => handleModeSelect('classic')}
+              ></button>
+            </p>
           </div>
           <div className="pair">
-            <p>Arcade <button className="bubble-button2"></button></p>
+            <p>
+              Arcade{' '}
+              <button
+                className={`bubble-button2 ${
+                  selectedMode === 'arcade' ? 'bubble-button-active' : ''
+                }`}
+                onClick={() => handleModeSelect('arcade')}
+              ></button>
+            </p>
           </div>
         </div>
 

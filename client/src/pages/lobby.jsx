@@ -103,7 +103,7 @@ const Lobby = () => {
       <iframe src="url" title="description"></iframe>
       </div>
       <aside className="lobby-container">
-        <Spectate/>
+       {/*<Spectate/>*/}
       </aside>  
     </div>
     

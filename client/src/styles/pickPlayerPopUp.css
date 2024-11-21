@@ -4,7 +4,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-image: url('../src/assets/Menu/BlueBoard.png');
-    background-size: cover; 
+    background-size: contain; 
     background-position: center; 
     background-repeat: no-repeat; 
     padding: 20px;
@@ -24,6 +24,14 @@
     display: flex; 
     align-items: center; 
   }
+  
+.bubble-button1.bubble-button-active,
+.bubble-button2.bubble-button-active {
+  background-color: #ff0000 !important;
+  transform: scale(1.2); 
+  transition: all 0.2s ease; 
+}
+
   
   .bubble-button1, .bubble-button2 {
     background-color: #ffffff; 

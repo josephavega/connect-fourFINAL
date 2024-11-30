@@ -100,7 +100,18 @@ const Lobby = () => {
         />
       )}
       <div>
-      <iframe src="url" title="description"></iframe>
+        <iframe 
+        src="/game" title="Spectate Game" style={{
+        width: '670px', 
+        height: '530px', 
+        border: 'none',
+        background: 'transparent',        transform: 'scale(1)', 
+        transformX: 'scale(100px)',
+        transformOrigin: 'right', 
+        
+
+
+    }}> </iframe>
       </div>
       <aside className="lobby-container">
        {/*<Spectate/>*/}

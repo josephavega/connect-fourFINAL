@@ -33,10 +33,9 @@ const Queue = () => {
     // Event listener function
     const handleQueueUpdate = (updatedQueue) => {
       console.log('Queue updated:', updatedQueue);
-      setQueue(updatedQueue); // Update the queue state with the new list
+      setQueue(updatedQueue); 
     };
   
-    // Attach the event listener
     queueSocket.on('queueUpdated', handleQueueUpdate);
     queueSocket.emit('heartbeat', sessionID);
  
@@ -53,7 +52,6 @@ const Queue = () => {
     let heartbeatInterval = startHeartbeat();
 
     queueSocket.emit('getQueue');
-   // Cleanup function to remove the event listener
    return () => {
     clearInterval(heartbeatInterval);
     queueSocket.off('queueUpdated', handleQueueUpdate);

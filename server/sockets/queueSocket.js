@@ -137,42 +137,44 @@ export default function queueSocketHandler(io) {
 
     const queue = users.getQueue(); // Assuming this gets the current queue as an array
     if (!queue || queue.length === 0) return; // Exit if the queue is empty
-
-    if (queue.length === 1) {
-      console.log("1 Player in Queue detected");
-      // Single player in queue: Start Player vs AI
-      const player = queue[0];
-      const playerSessionID = users.getUserFromName(player);
-      const playerSocket = sessionToSocketMap.get(playerSessionID);
-      console.log(`Connected to Player 1 (${player.username}) socket: ${playerSocket ? "found" : "not found"}`);
-      if (playerSocket) {
-        // Notify the player to join the game
-        playerSocket.emit('startGame', { mode: 'Player vs AI', difficulty: 'Medium' });
-        Manager.startPlayerVsAI(); // Start Player vs AI in the manager
-        users.removeFromQueue(player.sessionID); // Remove from queue
+  
+      if (queue.length === 1) {
+          const player = queue[0];
+          const playerSocket = sessionToSocketMap.get(player.sessionID);
+  
+          if (playerSocket) {
+              // Inform the player and start the Player vs AI game
+              playerSocket.emit('startGame', { mode: 'Player vs AI', difficulty: 'Medium' });
+              
+              // Start the game and pass the player's username to the Manager
+              Manager.startPlayerVsAI(player.username);
+  
+              // Remove the player from the queue
+              users.removeFromQueue(player.sessionID);
+          }
+      } else if (queue.length >= 2) {
+          // Handle Player vs Player game setup
+          const player1 = queue[0];
+          const player2 = queue[1];
+  
+          const socket1 = sessionToSocketMap.get(player1.sessionID);
+          const socket2 = sessionToSocketMap.get(player2.sessionID);
+  
+          if (socket1 && socket2) {
+              socket1.emit('startGame', { mode: 'Player vs Player', opponent: player2.username });
+              socket2.emit('startGame', { mode: 'Player vs Player', opponent: player1.username });
+  
+              // Start a Player vs Player game
+              Manager.startPlayerVsPlayer(player1, player2);
+  
+              // Remove both players from the queue
+              users.removeFromQueue(player1.sessionID);
+              users.removeFromQueue(player2.sessionID);
+          }
       }
-    } else if (queue.length >= 2) {
-      // Multiple players in the queue: Start Player vs Player
-      const player1 = queue[0];
-      const player2 = queue[1];
-      const player1Socket = queueNamespace.sockets.get(player1.sessionID);
-      const player2Socket = queueNamespace.sockets.get(player2.sessionID);
+  
+  
 
-      if (player1Socket && player2Socket) {
-        // Notify both players to join the game
-        player1Socket.emit('startGame', { mode: 'Player vs Player' });
-        player2Socket.emit('startGame', { mode: 'Player vs Player' });
-
-        // Set up the game in Manager
-        Manager.setPlayer(player1.sessionID, player1.username);
-        Manager.setPlayer(player2.sessionID, player2.username);
-        Manager.createBoard();
-
-        // Remove both players from the queue
-        users.removeFromQueue(player1.sessionID);
-        users.removeFromQueue(player2.sessionID);
-      }
-    }
 
     // Optionally, clean up finished games or stale players
     // Check Manager or Users for ongoing games that need cleanup

@@ -49,9 +49,10 @@ class GameLogic {
     startPlayerVsAI() {
         this.isPlayerVsAI = true;
         this.gameOver = false;
-        this.player[0] = this.ai[0]
-        this.player[1].color = 'Y'
+        this.player[0] = new Player(-1, 'Player', 'R', this); // Human Player
+        this.player[1] = this.ai[1]; // AI Opponent
     }
+    
 
     runAIGame(callback) {
         console.log('Setting up game...')

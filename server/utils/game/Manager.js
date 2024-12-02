@@ -65,6 +65,7 @@ class Manager{
     
 
     createBoard() {
+        this.GameLogic = new GameLogic
         if (!this.GameLogic) {
             console.error('Cannot create board. GameLogic is not instantiated.');
             return;

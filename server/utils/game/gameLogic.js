@@ -35,6 +35,16 @@ class GameLogic {
         player_one = this.player[0];
         player_two = this.player[1];
         console.log(`Player One: ${player_one}, Player Two: ${player_two}`);
+<<<<<<< Updated upstream
+=======
+    }
+
+    setPlayer(newPlayer){
+        player[this.playerCount] = newPlayer
+        player[this.playerCount].color = this.playerCount === 0 ? 'R':'Y'
+        this.playerCount++
+
+>>>>>>> Stashed changes
     }
 
     startAIVsAI(callback) {

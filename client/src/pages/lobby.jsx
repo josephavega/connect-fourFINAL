@@ -38,9 +38,27 @@ const Lobby = () => {
       setQueue(updatedQueue);
     };
 
+
+    const handlePromptPopup = (data) => {
+      const { sessionID } = data;
+      const localSessionID = localStorage.getItem('sessionID');
+      console.log("Trying prompt...");
+      if (localSessionID === sessionID) {
+        console.log("Showing prompt")
+        setIsPopupVisible(true);
+      } else { 
+        console.log("Not showing prompt for this user.")
+      }
+    }
+  
     // Set up socket event listeners for game and queue
     queueSocket.on('queueUpdated', handleQueueUpdate);
     gameSocket.on('startGame', handleStartGame);
+
+
+    queueSocket.on('promptStartGame', handlePromptPopup);
+
+    
 
     return () => {
       // Clean up socket event listeners when the component is unmounted
@@ -60,6 +78,9 @@ const Lobby = () => {
     ];
     setQueue(simulatedQueue);
   };
+
+
+
 
   const handleJoinClick = () => {
     fetchQueue(); 

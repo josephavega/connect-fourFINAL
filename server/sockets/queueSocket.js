@@ -6,6 +6,8 @@ export default function queueSocketHandler(io) {
   const queueNamespace = io.of('/queue');
   const HEARTBEAT_TIMEOUT = 10000; // 15 seconds timeout
   const heartbeatTrackers = new Map(); // Track heartbeat timeouts for each session
+  const sessionToSocketMap = new Map();
+
 
   queueNamespace.on('connection', (socket) => {
   
@@ -13,6 +15,14 @@ export default function queueSocketHandler(io) {
 
     socket.sessionID = sessionID;
     console.log(`A user connected to the queue: ${sessionID}`);
+
+    if (sessionID) {
+      sessionToSocketMap.set(sessionID, socket.id)
+      console.log(`[DEBUG] Connected: sessionID ${sessionID} mapped to socket.id ${socket.id}`);
+    } else {
+      console.error("[ERROR] No sessionID found for the connected socket");
+    }
+
 
     let username = null;
 
@@ -114,9 +124,58 @@ export default function queueSocketHandler(io) {
       if (!sessionID) {
         console.error('No sessionID found for disconnected socket');
         return;
-}
+        }
 
       
     });
   });
+
+
+  // Game Loop Implementation
+  setInterval(() => {
+    console.log("[DEBUG] Game Loop running on Queue namespace...");
+
+    const queue = users.getQueue(); // Assuming this gets the current queue as an array
+    if (!queue || queue.length === 0) return; // Exit if the queue is empty
+
+    if (queue.length === 1) {
+      console.log("1 Player in Queue detected");
+      // Single player in queue: Start Player vs AI
+      const player = queue[0];
+      const playerSessionID = users.getUserFromName(player);
+      const playerSocket = sessionToSocketMap.get(playerSessionID);
+      console.log(`Connected to Player 1 (${player.username}) socket: ${playerSocket ? "found" : "not found"}`);
+      if (playerSocket) {
+        // Notify the player to join the game
+        playerSocket.emit('startGame', { mode: 'Player vs AI', difficulty: 'Medium' });
+        Manager.startPlayerVsAI(); // Start Player vs AI in the manager
+        users.removeFromQueue(player.sessionID); // Remove from queue
+      }
+    } else if (queue.length >= 2) {
+      // Multiple players in the queue: Start Player vs Player
+      const player1 = queue[0];
+      const player2 = queue[1];
+      const player1Socket = queueNamespace.sockets.get(player1.sessionID);
+      const player2Socket = queueNamespace.sockets.get(player2.sessionID);
+
+      if (player1Socket && player2Socket) {
+        // Notify both players to join the game
+        player1Socket.emit('startGame', { mode: 'Player vs Player' });
+        player2Socket.emit('startGame', { mode: 'Player vs Player' });
+
+        // Set up the game in Manager
+        Manager.setPlayer(player1.sessionID, player1.username);
+        Manager.setPlayer(player2.sessionID, player2.username);
+        Manager.createBoard();
+
+        // Remove both players from the queue
+        users.removeFromQueue(player1.sessionID);
+        users.removeFromQueue(player2.sessionID);
+      }
+    }
+
+    // Optionally, clean up finished games or stale players
+    // Check Manager or Users for ongoing games that need cleanup
+  }, 5000); // Run every 5 seconds
+
 }

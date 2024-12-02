@@ -10,7 +10,7 @@ class GameLogic {
         this.playerCount = 0;
         this.ai = [new AI(1,'R'), new AI(1,'Y')]; // AI difficulty Medium
         this.isAIvsAI = true;
-        this.gameOver = false;
+        this.gameOver = true;
         this.isPlayerVsAI = false;
         this.moves = []
         this.winner = ''; 
@@ -39,6 +39,7 @@ class GameLogic {
 
     startAIVsAI(callback) {
         this.isAIvsAI = true;
+        this.gameOVer = false;
         this.player[0]=this.ai[0]
         this.player[1]=this.ai[1]
         this.runAIGame(callback);
@@ -47,7 +48,8 @@ class GameLogic {
 
     startPlayerVsAI() {
         this.isPlayerVsAI = true;
-        this.player[1] = this.ai[0]
+        this.gameOver = false;
+        this.player[0] = this.ai[0]
         this.player[1].color = 'Y'
     }
 

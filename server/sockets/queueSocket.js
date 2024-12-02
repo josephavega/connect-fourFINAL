@@ -1,27 +1,19 @@
 // server/sockets/queueSocket.js
 import users from '../utils/users.js';  // Assuming users is a utility file you created for managing user data
+import Manager from '../utils/game/Manager.js';
 
 // server/sockets/queueSocket.js
 export default function queueSocketHandler(io) {
   const queueNamespace = io.of('/queue');
   const HEARTBEAT_TIMEOUT = 10000; // 15 seconds timeout
   const heartbeatTrackers = new Map(); // Track heartbeat timeouts for each session
-  const sessionToSocketMap = new Map();
 
 
   queueNamespace.on('connection', (socket) => {
   
     const { sessionID } = socket.handshake.query;
-
-    socket.sessionID = sessionID;
     console.log(`A user connected to the queue: ${sessionID}`);
 
-    if (sessionID) {
-      sessionToSocketMap.set(sessionID, socket.id)
-      console.log(`[DEBUG] Connected: sessionID ${sessionID} mapped to socket.id ${socket.id}`);
-    } else {
-      console.error("[ERROR] No sessionID found for the connected socket");
-    }
 
 
     let username = null;
@@ -79,6 +71,18 @@ export default function queueSocketHandler(io) {
       socket.emit('inQueueResponse', inQueue);
     })
 
+    socket.on('StartClassicPlayerVSAi', data => {
+      const sessionID = data.sessionID;
+      const username = data.username; 
+
+      Manager.setPlayer(sessionID, username);
+      Manager.startPlayerVsAI();
+
+    })
+
+    socket.on('StartArcadePlayerVsAI', data => {
+    })
+
     // Function to handle heartbeat timeout
     const handleTimeout = () => {
       console.log(`${sessionID} did not respond. Removing from queue.`);
@@ -119,65 +123,70 @@ export default function queueSocketHandler(io) {
         clearTimeout(heartbeatTrackers.get(sessionID));
         heartbeatTrackers.delete(sessionID);
       }
-
       
       if (!sessionID) {
         console.error('No sessionID found for disconnected socket');
         return;
         }
 
-      
     });
   });
 
 
   // Game Loop Implementation
+
+  // mode: 0 === player vs. ai
+  // mode: 1 === player vs. player
   setInterval(() => {
     console.log("[DEBUG] Game Loop running on Queue namespace...");
 
     const queue = users.getQueue(); // Assuming this gets the current queue as an array
-    if (!queue || queue.length === 0) return; // Exit if the queue is empty
-  
-      if (queue.length === 1) {
-          const player = queue[0];
-          const playerSocket = sessionToSocketMap.get(player.sessionID);
-  
-          if (playerSocket) {
-              // Inform the player and start the Player vs AI game
-              playerSocket.emit('startGame', { mode: 'Player vs AI', difficulty: 'Medium' });
-              
-              // Start the game and pass the player's username to the Manager
-              Manager.startPlayerVsAI(player.username);
-  
-              // Remove the player from the queue
-              users.removeFromQueue(player.sessionID);
-          }
-      } else if (queue.length >= 2) {
-          // Handle Player vs Player game setup
-          const player1 = queue[0];
-          const player2 = queue[1];
-  
-          const socket1 = sessionToSocketMap.get(player1.sessionID);
-          const socket2 = sessionToSocketMap.get(player2.sessionID);
-  
-          if (socket1 && socket2) {
-              socket1.emit('startGame', { mode: 'Player vs Player', opponent: player2.username });
-              socket2.emit('startGame', { mode: 'Player vs Player', opponent: player1.username });
-  
-              // Start a Player vs Player game
-              Manager.startPlayerVsPlayer(player1, player2);
-  
-              // Remove both players from the queue
-              users.removeFromQueue(player1.sessionID);
-              users.removeFromQueue(player2.sessionID);
-          }
+    
+    if (Manager.getGameOver) {
+    if (queue.length === 1) {
+      console.log("1 Player in Queue detected");
+      // Single player in queue: Start Player vs AI
+      const player = queue[0].username;
+      console.log(player);
+      //const playerSessionID = users.getUserFromName(player);
+      const playerSessionID = users.getUserFromName(player)
+      //console.log(playerSessionID);
+      //console.log(`Connected to Player 1 (${player.username}) sessionID: ${playerSessionID ? "found" : "not found"}`);
+      if (playerSessionID) {
+        // Notify the player to join the game
+        const data = playerSessionID;
+        console.log(data);
+        queueNamespace.emit('promptStartGame', data);
+        // Manager.startPlayerVsAI(); // Start Player vs AI in the manager
+        // users.removeFromQueue(player.sessionID); // Remove from queue
       }
-  
-  
+    } else if (queue.length >= 2) {
+      // Multiple players in the queue: Start Player vs Player
+      const player1 = queue[0];
+      const player2 = queue[1];
 
+      const player1SessionID = player1.sessionID;
+      const player2SessionID = player2.sessionID;
 
+      if (player1Socket && player2Socket) {
+        // Notify both players to join the game
+        const data = { mode: 1, sessionID: player1SessionID}
+        queueNamespace.emit('promptStartGame', data);
+        queueNamespace.emit('promptJoiningGame', player2SessionID )
+
+        // Set up the game in Manager
+        Manager.setPlayer(player1.sessionID, player1.username);
+        Manager.setPlayer(player2.sessionID, player2.username);
+
+        // Remove both players from the queue
+        users.removeFromQueue(player1.sessionID);
+        users.removeFromQueue(player2.sessionID);
+      }
+    }
+  }
     // Optionally, clean up finished games or stale players
     // Check Manager or Users for ongoing games that need cleanup
   }, 5000); // Run every 5 seconds
+  
 
 }

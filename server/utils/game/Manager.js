@@ -95,6 +95,12 @@ class Manager{
     }
     
     
+    startPlayerVsAI() {
+        console.log("Starting Player vs. AI");
+        this.GameLogic.startAIVsAI((gameState) => { 
+            
+        })
+    }
   
     setPlayer(name) {
         // Declare the playerColor variable

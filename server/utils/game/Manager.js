@@ -65,6 +65,7 @@ class Manager{
     
 
     createBoard() {
+        this.GameLogic = new GameLogic
         if (!this.GameLogic) {
             console.error('Cannot create board. GameLogic is not instantiated.');
             return;
@@ -85,6 +86,14 @@ class Manager{
             
         });
     }
+
+    startPlayerVsAI(name) {
+        console.log("Starting Player vs. AI game...");
+        this.GameLogic.startPlayerVsAI(); // Call GameLogic's setup
+        const player = new Player(users.getUserFromName(name), name, 'R', this.GameLogic);
+        this.GameLogic.setPlayer(player, 0); // Add the human player
+    }
+    
     
     startPlayerVsAI() {
         console.log("Starting Player vs. AI");
@@ -111,13 +120,25 @@ class Manager{
         return this.GameLogic.player[this.GameLogic.currentPlayerIndex];
     }
 
-    placeChip(player, column){
+    placeChip(player, column) {
+        if (this.GameLogic.gameOver) {
+            console.log("Game is already over.");
+            return;
+        }
+    
         player.placeChip(column);
-        //console.log(this.GameLogic.getStatus);
+    
+        // Check if it's AI's turn in Player vs AI mode
+        if (this.GameLogic.isPlayerVsAI && !this.GameLogic.gameOver) {
+            this.GameLogic.aiMove((gameState) => {
+                console.log("AI move completed:", gameState);
+            });
+        }
     }
+    
 
-    useLightning(player, column, row){
-        player.powerups.Lighting(column,row);
+    useLightning(player, row, column){
+        player.powerups.Lighting(row,column);
     }
 
     useAnvil(player, column){

@@ -58,9 +58,15 @@ gameSocketHandler(io);
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+<<<<<<< HEAD
   //  Manager.startAIvsAI();
   //  Manager.setGameType(0);
   //  Manager.createBoard();
+=======
+  Manager.startAIvsAI();
+  Manager.setGameType(0);
+  Manager.createBoard();
+>>>>>>> cf43e719448d18286b2b23c5a2ec03fdd98212f7
   //  Manager.getStatus();
 
 });

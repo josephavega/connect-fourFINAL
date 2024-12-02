@@ -7,10 +7,10 @@ class Powerup_Lightning {
         this.done = [0, 0]; // Left/Right end
     }
 
-    Lightning(x, y, start) {
+    Lightning(y, x, start) {
         if (this.checked[x] === 1) return;
         if(start){
-            this.gl.moves.push(['Lightning',x,row,this.player.powerup.color])
+            this.gl.moves.push(['Lightning',y,x,this.player.powerup.color])
             for (let row = y-1; row > 0; row--) {
                 if(this.gl.board[row][col]=='B'){
                     this.gl.moves.push(['StoppedL', row, x, this.powerup.player.color])

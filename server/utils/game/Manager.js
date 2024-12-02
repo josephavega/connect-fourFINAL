@@ -91,7 +91,7 @@ class Manager{
         console.log("Starting Player vs. AI game...");
         this.GameLogic.startPlayerVsAI(); // Call GameLogic's setup
         const player = new Player(users.getUserFromName(name), name, 'R', this.GameLogic);
-        this.GameLogic.setPlayer(player.sessionID, player.username); // Add the human player
+        this.GameLogic.setPlayer(player, 0); // Add the human player
     }
     
     
@@ -131,8 +131,8 @@ class Manager{
     }
     
 
-    useLightning(player, column, row){
-        player.powerups.Lighting(column,row);
+    useLightning(player, row, column){
+        player.powerups.Lighting(row,column);
     }
 
     useAnvil(player, column){

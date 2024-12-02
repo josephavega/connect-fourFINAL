@@ -30,6 +30,13 @@ class GameLogic {
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % 2;
     }
 
+    setPlayer(player, playerNumber){
+        
+        this.player[playerNumber] = player
+        this.player[playerNumber].color = playerNumber === 0 ? 'R':'Y'
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % 2;
+    }
+
 
     getPlayers() {
         player_one = this.player[0];

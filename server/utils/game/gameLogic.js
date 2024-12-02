@@ -35,16 +35,12 @@ class GameLogic {
         player_one = this.player[0];
         player_two = this.player[1];
         console.log(`Player One: ${player_one}, Player Two: ${player_two}`);
-<<<<<<< Updated upstream
-=======
     }
 
     setPlayer(newPlayer){
-        player[this.playerCount] = newPlayer
-        player[this.playerCount].color = this.playerCount === 0 ? 'R':'Y'
+        this.player[this.playerCount%2] = newPlayer
+        this.player[this.playerCount%2].color = this.playerCount%2 === 0 ? 'R':'Y'
         this.playerCount++
-
->>>>>>> Stashed changes
     }
 
     startAIVsAI(callback) {
@@ -59,8 +55,7 @@ class GameLogic {
     startPlayerVsAI() {
         this.isPlayerVsAI = true;
         this.gameOver = false;
-        this.player[0] = this.ai[0]
-        this.player[1].color = 'Y'
+        this.player[1] = this.ai[1]
     }
 
     runAIGame(callback) {

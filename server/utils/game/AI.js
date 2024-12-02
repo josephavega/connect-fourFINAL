@@ -25,49 +25,83 @@ class AI {
         return Math.floor(Math.random() * (max - min)) + min;
     }
 
-    checkWin(board, player) {
-        // Define directions for horizontal, vertical, and diagonal checks
-        const directions = [
-            { dr: 0, dc: 1 },  // Horizontal
-            { dr: 1, dc: 0 },  // Vertical
-            { dr: 1, dc: 1 },  // Diagonal down-right
-            { dr: 1, dc: -1 }  // Diagonal down-left
-        ];
+    checkWin(board, color) {
+        return this.checkVerticalWin(board,color) || this.checkHorizontalWin() || this.checkDiagonalWin();
+    }
+
+    checkVerticalWin(board, color) {
+        const rows = this.board.length;
+        const columns = this.board[0].length;
     
-        // Start from the bottom-most row (row-6) to top (row-1)
-        for (let r = this.ROWS - 1; r >= 0; r--) {
-            for (let c = 0; c < this.COLS; c++) {
-                // If the current cell has the player's piece, check all directions
-                if (board[r][c] === player) {
-                    for (let { dr, dc } of directions) {
-                        if (this.checkDirection(board, r, c, dr, dc, player)) {
-                            return true;  // A winning condition was found
-                        }
+        for (let col = 0; col < columns; col++) {
+            let winningMoves = [];
+            for (let row = 0; row < rows; row++) {
+                if (board[row][col] === color) {
+                    winningMoves.push([row, col]);
+                    if (winningMoves.length === 4) {
+                        return true;
                     }
+                } else {
+                    winningMoves = [];
                 }
             }
         }
-        return false;  // No win found
+        return false;
     }
     
+    checkHorizontalWin(board, color) {
+        const rows = board.length;
+        const columns = board[0].length;
     
-    checkDirection(board, r, c, dr, dc, player) {
-        // Check if four consecutive cells in the specified direction have the same player's piece
-        for (let i = 0; i < 4; i++) {
-            const nr = r + dr * i;  // New row after moving in the direction
-            const nc = c + dc * i;  // New column after moving in the direction
-            
-            // Ensure we don't go out of bounds
-            if (nr < 0 || nr >= this.ROWS || nc < 0 || nc >= this.COLS) {
-                return false;
-            }
-            
-            // Check if the cell matches the player's piece
-            if (board[nr][nc] !== player) {
-                return false;  // A mismatch means no win in this direction
+        for (let row = 0; row < rows; row++) {
+            let winningMoves = [];
+            for (let col = 0; col < columns; col++) {
+                if (board[row][col] === color) {
+                    winningMoves.push([row, col]);
+                    if (winningMoves.length === 4) {
+                        return true;
+                    }
+                } else {
+                    winningMoves = [];
+                }
             }
         }
-        return true;  // Four consecutive pieces found
+        return false;
+    }
+    
+    checkDiagonalWin(board, color) {
+        const rows = board.length;
+        const columns = board[0].length;
+    
+        // Left to right diagonal
+        for (let row = 0; row < rows - 3; row++) {
+            for (let col = 0; col < columns - 3; col++) {
+                if (
+                    board[row][col] === color &&
+                    board[row + 1][col + 1] === color &&
+                    board[row + 2][col + 2] === color &&
+                    board[row + 3][col + 3] === color
+                ) {
+                    return true;
+                }
+            }
+        }
+    
+        // Right to left diagonal
+        for (let row = 0; row < rows - 3; row++) {
+            for (let col = 3; col < columns; col++) {
+                if (
+                    [row][col] === color &&
+                    [row + 1][col - 1] === color &&
+                    [row + 2][col - 2] === color &&
+                    [row + 3][col - 3] === color
+                ) {
+                
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
 

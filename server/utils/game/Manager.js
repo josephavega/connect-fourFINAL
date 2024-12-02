@@ -65,6 +65,7 @@ class Manager{
     
 
     createBoard() {
+        this.GameLogic = new GameLogic
         if (!this.GameLogic) {
             console.error('Cannot create board. GameLogic is not instantiated.');
             return;
@@ -84,6 +85,11 @@ class Manager{
         this.GameLogic.startAIVsAI((gameState) => {
             
         });
+    }
+
+    startPlayervsAI(){
+        console.log("Starting Player vs. AI game...");
+        
     }
     
   

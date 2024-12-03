@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import QueueComponent from "../components/Queue";
-import Leaderboard from "../components/Leaderboard";
 import QueueButton from "../components/QueueButton";
 import DebugButton from "../components/DebugButton";
 import GameButton from "../components/GameButton";
@@ -69,17 +68,7 @@ const Lobby = () => {
 
   const currentUser = usernameA;
 
-  const fetchQueue = () => {
-    const simulatedQueue = [
-      { username: "User1" },
-      { username: "User2" },
-      { username: "User3" },
-    ];
-    setQueue(simulatedQueue);
-  };
-
   const handleJoinClick = () => {
-    fetchQueue();
     setIsPopupVisible(true);
   };
 
@@ -95,46 +84,17 @@ const Lobby = () => {
 
   return (
     <div className="lobby-wrapper">
-      <aside className="lobby-container">
-        <div className="toggle-buttons">
-          <button
-            onClick={() => setView("queue")}
-            className={`toggle-button ${view === "queue" ? "active" : ""}`}
-          >
-            Queue
-          </button>
-          <button
-            onClick={() => setView("leaderboard")}
-            className={`toggle-button ${
-              view === "leaderboard" ? "active" : ""
-            }`}
-          >
-            Leaderboard
-          </button>
-        </div>
-
+      <div className="lobby-container">
         <div className="queue">
-          {view === "queue" ? <QueueComponent /> : <Leaderboard />}
+          <QueueComponent />
+          <div className="queue-button-container">
+            <QueueButton />
+          </div>
         </div>
-
-        <div className="queue-button-container">
-          <QueueButton />
-          <img
-            src="../src/assets/Menu/Buttons/Button_Join.png"
-            alt="Join Queue"
-            className="join-button-overlay"
-            onClick={handleJoinClick}
-          />
-        </div>
-
-        <div className="debugButton">
-          <DebugButton />
-        </div>
-
-        <div>
+        <div className="debug-game-button">
           <GameButton />
         </div>
-      </aside>
+      </div>
 
       <main className="right-container">
         <div className="gameboardBox">{/* <Gameboard /> */}</div>
@@ -148,9 +108,7 @@ const Lobby = () => {
           onClose={handlePopupClose}
         />
       )}
-      <div>
-        <iframe src="url" title="description"></iframe>
-      </div>
+      <div>{/* <iframe src="url" title="description"></iframe> */}</div>
       <aside className="lobby-container">{/*<Spectate/>*/}</aside>
     </div>
   );

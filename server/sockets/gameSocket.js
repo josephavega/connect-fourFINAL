@@ -18,10 +18,10 @@ export default function gameSocketHandler(io) {
         console.log("Received getBoard request");
         const board = game.getBoard();
         game.printBoard();
-        socket.emit("sentBoard", board);
+        gameNamespace.emit("sentBoard", board);
       } catch (error) {
         console.error("Error sending board:", error);
-        socket.emit("sentBoard", { error: "Failed to retrieve board" });
+        gameNamespace.emit("sentBoard", { error: "Failed to retrieve board" });
       }
     });
 
@@ -150,20 +150,6 @@ export default function gameSocketHandler(io) {
       gameNamespace.emit("gameReset", { message: "The game has been reset." });
     });
 
-    //   socket.on('getBoard', () => {
-    //     try {
-    //         console.log('Received getBoard request');
-    //         const board = game.getBoard();
-    //         //game.printBoard();
-
-    //         // Ensure the board is a plain structure without references
-    //         socket.emit('sentBoard', JSON.parse(JSON.stringify(board)));
-    //     } catch (error) {
-    //         console.error('Error sending board:', error);
-    //         socket.emit('sentBoard', { error: 'Failed to retrieve board' });
-    //     }
-    // });
-
     socket.on("playerMove", (data) => {
       const { colIndex, sessionID, username } = data;
       const user = users.getUser(sessionID);
@@ -176,10 +162,11 @@ export default function gameSocketHandler(io) {
       console.log(`Player ${username} made a move in column: ${colIndex}`);
 
       try {
+        console.log("Player Making Move!");
         // Process the move in the game logic
         const currentPlayer = game.GameLogic.getCurrentPlayer();
         const moves = game.placeChip(currentPlayer, colIndex);
-
+        gameNamespace.emit("sentBoard", game.getBoard());
         gameNamespace.emit("sendInstructions", moves);
         console.log("Gameboard Updated:", game.getBoard());
 
@@ -223,6 +210,10 @@ export default function gameSocketHandler(io) {
     socket.on("heartbeat", () => {
       console.log(`Heartbeat received from ${username}`);
     });
+
+    const updateBoard = () => {
+      gameNamespace.emit("sentBoard", game.getBoard());
+    };
   });
 }
 

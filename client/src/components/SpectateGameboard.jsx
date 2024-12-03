@@ -15,8 +15,8 @@ import RedSidebarBackground from "../assets/Board/Construction/Sidebar_Red.png";
 import YellowSidebarBackground from "../assets/Board/Construction/Sidebar_Yellow.png";
 
 const SpectateGameboard = ({ board, currentPlayer }) => {
-  const [username, setUsername] = useState("NPC");
-  const [usernameB, setUsernameB] = useState("NPC");
+  const [username, setUsername] = useState("AI1");
+  const [usernameB, setUsernameB] = useState("AI2");
 
   useEffect(() => {}, []);
 
@@ -60,8 +60,6 @@ const SpectateGameboard = ({ board, currentPlayer }) => {
 
     return grid;
   };
-
-  function getPlayers() {}
 
   return (
     <div className="gameboard-container">

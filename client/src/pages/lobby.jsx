@@ -15,10 +15,9 @@ const Lobby = () => {
   const [board, setBoard] = useState(
     Array(6)
       .fill(null)
-      .map(() => Array(7).fill("EmptyChip"))
+      .map(() => Array(7).fill(""))
   );
   const [currentPlayer, setCurrentPlayer] = useState("null");
-  const [view, setView] = useState("queue");
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [queue, setQueue] = useState([]);
   const [selectedOpponent, setSelectedOpponent] = useState("");
@@ -28,6 +27,11 @@ const Lobby = () => {
   useEffect(() => {
     // Get the username from local storage
     setUsernameA(localStorage.getItem("username") || "Guest");
+    gameSocket.connect();
+    gameSocket.on("connect", () => console.log("Game socket connected!"));
+    gameSocket.on("connect_error", (error) =>
+      console.error("Connection error:", error)
+    );
 
     // Event listener for game starting signal
     const handleStartGame = (data) => {
@@ -42,8 +46,6 @@ const Lobby = () => {
         });
       }
     };
-
-    gameSocket.emit("getBoard");
 
     // Event listener for joining the queue
     const handleQueueUpdate = (updatedQueue) => {
@@ -64,9 +66,13 @@ const Lobby = () => {
     };
 
     // Socket event for board update
-    const handleBoardUpdate = (updatedBoard) => {
-      console.log("sent Board");
-      setBoard(updatedBoard);
+    const handleBoardUpdate = (board) => {
+      const flippedBoard = [];
+      for (let i = board.length - 1; i >= 0; i--) {
+        flippedBoard.push(board[i]);
+      }
+      console.log(`Updated Board: ${flippedBoard}`);
+      setBoard(flippedBoard);
     };
 
     // Set up socket event listeners for game and queue
@@ -75,8 +81,12 @@ const Lobby = () => {
     gameSocket.on("startGame", handleStartGame);
     gameSocket.on("promptStartGame", handlePromptPopup);
 
-    // Request the current board state
-    gameSocket.emit("getBoard");
+    // // Request the current board state
+    // Periodically request board updates
+    const intervalId = setInterval(() => {
+      console.log("Requesting board update...");
+      gameSocket.emit("getBoard");
+    }, 2000);
 
     return () => {
       // Clean up socket event listeners when the component is unmounted
@@ -101,6 +111,10 @@ const Lobby = () => {
   const handlePopupClose = () => {
     setIsPopupVisible(false);
   };
+
+  gameSocket.on("sentBoard", (board) => {
+    console.log(board);
+  });
 
   return (
     <div className="lobby-wrapper">

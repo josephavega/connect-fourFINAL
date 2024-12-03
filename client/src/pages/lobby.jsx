@@ -4,12 +4,20 @@ import QueueButton from "../components/QueueButton";
 import DebugButton from "../components/DebugButton";
 import GameButton from "../components/GameButton";
 import PickPlayerPopUp from "../components/PickPlayerPopUp";
+
 import queueSocket from "../sockets/queueSocket";
 import gameSocket from "../sockets/gameSocket";
 import "../styles/lobby.css";
 import { useNavigate } from "react-router-dom";
+import SpectateGameboard from "../components/SpectateGameboard";
 
 const Lobby = () => {
+  const [board, setBoard] = useState(
+    Array(6)
+      .fill(null)
+      .map(() => Array(7).fill("EmptyChip"))
+  );
+  const [currentPlayer, setCurrentPlayer] = useState("null");
   const [view, setView] = useState("queue");
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [queue, setQueue] = useState([]);
@@ -35,6 +43,8 @@ const Lobby = () => {
       }
     };
 
+    gameSocket.emit("getBoard");
+
     // Event listener for joining the queue
     const handleQueueUpdate = (updatedQueue) => {
       console.log("Queue updated:", updatedQueue);
@@ -53,19 +63,29 @@ const Lobby = () => {
       }
     };
 
+    // Socket event for board update
+    const handleBoardUpdate = (updatedBoard) => {
+      console.log("sent Board");
+      setBoard(updatedBoard);
+    };
+
     // Set up socket event listeners for game and queue
     queueSocket.on("queueUpdated", handleQueueUpdate);
+    gameSocket.on("sentBoard", handleBoardUpdate);
     gameSocket.on("startGame", handleStartGame);
+    gameSocket.on("promptStartGame", handlePromptPopup);
 
-    queueSocket.on("promptStartGame", handlePromptPopup);
+    // Request the current board state
+    gameSocket.emit("getBoard");
 
     return () => {
       // Clean up socket event listeners when the component is unmounted
       queueSocket.off("queueUpdated", handleQueueUpdate);
+      gameSocket.off("sentBoard", handleBoardUpdate);
       gameSocket.off("startGame", handleStartGame);
+      gameSocket.off("promptStartGame", handlePromptPopup);
     };
   }, [navigate]);
-
   const currentUser = usernameA;
 
   const handleJoinClick = () => {
@@ -108,7 +128,9 @@ const Lobby = () => {
           onClose={handlePopupClose}
         />
       )}
-      <div>{/* <iframe src="url" title="description"></iframe> */}</div>
+      <div>
+        <SpectateGameboard board={board} currentPlayer={currentPlayer} />
+      </div>
       <aside className="lobby-container">{/*<Spectate/>*/}</aside>
     </div>
   );

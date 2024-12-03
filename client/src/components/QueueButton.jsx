@@ -18,10 +18,11 @@ const QueueButton = () => {
 
   const toggleQueueStatus = () => {
     const sessionID = localStorage.getItem("sessionID");
+    const username = localStorage.getItem("username");
 
     if (inQueue) {
       // Leave the queue using API request
-      fetch("http://localhost:3000/leaveQueue", {
+      fetch("http://localhost:3000/queue/leaveQueue", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,6 +38,7 @@ const QueueButton = () => {
         .then((data) => {
           console.log("Leave Queue Response:", data);
           setInQueue(false);
+          queueSocket.emit("getQueue");
         })
         .catch((error) => {
           console.error("Error leaving queue:", error);
@@ -44,12 +46,12 @@ const QueueButton = () => {
         });
     } else {
       // Join the queue using API request
-      fetch("http://localhost:3000/joinQueue", {
+      fetch("http://localhost:3000/queue/joinQueue", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sessionID }),
+        body: JSON.stringify({ sessionID, username }),
       })
         .then((response) => {
           if (!response.ok) {
@@ -60,6 +62,7 @@ const QueueButton = () => {
         .then((data) => {
           console.log("Join Queue Response:", data);
           setInQueue(true);
+          queueSocket.emit("getQueue");
         })
         .catch((error) => {
           console.error("Error joining queue:", error);

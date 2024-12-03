@@ -33,6 +33,8 @@ const Lobby = () => {
       console.error("Connection error:", error)
     );
 
+    gameSocket.emit("getBoard");
+
     // Event listener for game starting signal
     const handleStartGame = (data) => {
       console.log("Received startGame event:", data);
@@ -143,7 +145,9 @@ const Lobby = () => {
         />
       )}
       <div>
-        <SpectateGameboard board={board} currentPlayer={currentPlayer} />
+        <div>
+          <SpectateGameboard board={board} currentPlayer={currentPlayer} />
+        </div>
       </div>
       <aside className="lobby-container">{/*<Spectate/>*/}</aside>
     </div>

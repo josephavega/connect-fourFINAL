@@ -14,7 +14,28 @@ let socket = null;
 const QueueButton = () => {
   const [inQueue, setInQueue] = useState(true);
 
-  useEffect(() => {});
+  useEffect(() => {
+    fetch("http://localhost:3000/queue/isInQueue", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sessionID }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Is In Queue?:", data);
+        setInQueue(!data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, [sessionID]);
 
   const toggleQueueStatus = () => {
     const sessionID = localStorage.getItem("sessionID");

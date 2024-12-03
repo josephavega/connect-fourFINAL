@@ -15,9 +15,8 @@ export default function gameSocketHandler(io) {
 
     socket.on("getBoard", () => {
       try {
-        console.log("Received getBoard request");
         const board = game.getBoard();
-        game.printBoard();
+        //game.printBoard();
         gameNamespace.emit("sentBoard", board);
       } catch (error) {
         console.error("Error sending board:", error);
@@ -168,7 +167,7 @@ export default function gameSocketHandler(io) {
         const moves = game.placeChip(currentPlayer, colIndex);
         gameNamespace.emit("sentBoard", game.getBoard());
         gameNamespace.emit("sendInstructions", moves);
-        console.log("Gameboard Updated:", game.getBoard());
+        //console.log("Gameboard Updated:", game.getBoard());
 
         // Check if the game is over
         if (game.GameLogic.checkWin()) {

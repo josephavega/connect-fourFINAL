@@ -79,6 +79,9 @@ class GameLogic {
         clearInterval(interval);
         setTimeout(() => {
           this.board = this.createBoard();
+          setTimeout(() => {
+            this.startAIVsAI(callback);
+          }, 2000);
         }, 2000); // Delay in milliseconds (2000ms = 2 seconds)
       } else if (this.isBoardFull()) {
         this.gameOver = true; // Mark game as a draw

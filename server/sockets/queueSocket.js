@@ -12,32 +12,32 @@ export default function queueSocketHandler(io) {
     console.log(`A user connected to the queue: ${sessionID}`);
 
     // Function to handle heartbeat timeout
-    const handleTimeout = () => {
-      console.log(`${sessionID} did not respond. Removing from queue.`);
-      // Remove user from queue
-      users.removeFromQueue(sessionID);
+    // const handleTimeout = () => {
+    //   console.log(`${sessionID} did not respond. Removing from queue.`);
+    //   // Remove user from queue
+    //   users.removeFromQueue(sessionID);
 
-      // Emit updated queue information
-      queueNamespace.emit("queueUpdated", users.getQueue());
+    //   // Emit updated queue information
+    //   queueNamespace.emit("queueUpdated", users.getQueue());
 
-      // Disconnect the socket as it has timed out
-      socket.disconnect(true);
-    };
+    //   // Disconnect the socket as it has timed out
+    //   socket.disconnect(true);
+    // };
 
-    // Start a heartbeat tracker for this user
-    const startHeartbeatTracker = () => {
-      if (heartbeatTrackers.has(sessionID)) {
-        clearTimeout(heartbeatTrackers.get(sessionID));
-      }
-      const timeout = setTimeout(() => handleTimeout(), HEARTBEAT_TIMEOUT);
-      heartbeatTrackers.set(sessionID, timeout);
-    };
+    // // Start a heartbeat tracker for this user
+    // const startHeartbeatTracker = () => {
+    //   if (heartbeatTrackers.has(sessionID)) {
+    //     clearTimeout(heartbeatTrackers.get(sessionID));
+    //   }
+    //   const timeout = setTimeout(() => handleTimeout(), HEARTBEAT_TIMEOUT);
+    //   heartbeatTrackers.set(sessionID, timeout);
+    // };
 
-    startHeartbeatTracker();
+    // startHeartbeatTracker();
 
-    socket.on("heartbeat", () => {
-      startHeartbeatTracker();
-    });
+    // socket.on("heartbeat", () => {
+    //   startHeartbeatTracker();
+    // });
 
     let username = null;
 
@@ -103,21 +103,19 @@ export default function queueSocketHandler(io) {
 
     // Handle client disconnection
     socket.on("disconnect", () => {
-      console.log(`${socket.id} disconnected from the queue namespace`);
-      if (heartbeatTrackers.has(sessionID)) {
-        clearTimeout(heartbeatTrackers.get(sessionID)); // Clear timeout
-        heartbeatTrackers.delete(sessionID); // Remove tracker
-      }
-      if (!sessionID) {
-        console.error("No sessionID found for disconnected socket");
-        return;
-      }
-
-      // Ensure user is removed from queue
-      users.removeFromQueue(sessionID);
-
-      // Emit updated queue information
-      queueNamespace.emit("queueUpdated", users.getQueue());
+      // console.log(`${socket.id} disconnected from the queue namespace`);
+      // if (heartbeatTrackers.has(sessionID)) {
+      //   clearTimeout(heartbeatTrackers.get(sessionID)); // Clear timeout
+      //   heartbeatTrackers.delete(sessionID); // Remove tracker
+      // }
+      // if (!sessionID) {
+      //   console.error("No sessionID found for disconnected socket");
+      //   return;
+      // }
+      // // Ensure user is removed from queue
+      // users.removeFromQueue(sessionID);
+      // // Emit updated queue information
+      // queueNamespace.emit("queueUpdated", users.getQueue());
     });
   });
 

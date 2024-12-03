@@ -8,9 +8,9 @@ class GameLogic {
         this.player = [new Player(-1,'Red','R',this), new Player(-1,'Yellow','Y',this)]
         this.currentPlayerIndex = 0;
         this.playerCount = 0;
-        this.ai = [new AI(1,'R'), new AI(1,'Y')]; // AI difficulty Medium
+        this.ai = [new AI(10,'R'), new AI(4,'Y')]; // AI difficulty Medium
         this.isAIvsAI = true;
-        this.gameOver = false;
+        this.gameOver = true;
         this.isPlayerVsAI = false;
         this.moves = []
         this.winner = ''; 
@@ -37,8 +37,15 @@ class GameLogic {
         console.log(`Player One: ${player_one}, Player Two: ${player_two}`);
     }
 
+    setPlayer(newPlayer){
+        this.player[this.playerCount%2] = newPlayer
+        this.player[this.playerCount%2].color = this.playerCount%2 === 0 ? 'R':'Y'
+        this.playerCount++
+    }
+
     startAIVsAI(callback) {
         this.isAIvsAI = true;
+        this.gameOVer = false;
         this.player[0]=this.ai[0]
         this.player[1]=this.ai[1]
         this.runAIGame(callback);
@@ -47,9 +54,11 @@ class GameLogic {
 
     startPlayerVsAI() {
         this.isPlayerVsAI = true;
-        this.player[1] = this.ai[0]
-        this.player[1].color = 'Y'
+        this.gameOver = false;
+        this.player[0] = new Player(-1, 'Player', 'R', this); // Human Player
+        this.player[1] = this.ai[1]; // AI Opponent
     }
+    
 
     runAIGame(callback) {
         console.log('Setting up game...')
@@ -77,8 +86,8 @@ class GameLogic {
 
     aiMove(callback) {
         const ai = this.ai[this.currentPlayerIndex];
-        const move = ai.makeMove(this.board);
-        console.log(`AI (${this.getCurrentPlayer().color}) is making move: ${move}`);
+        const move = ai.bestMove(this.board,ai.difficulty)
+        console.log(`AI (${this.getCurrentPlayer().color}) is playing in column: ${move}`);
         if (move !== null) {
             this.placePiece(move);
             this.printBoard(); // Log the board after placing the piece
@@ -134,6 +143,7 @@ class GameLogic {
                 this.switchPlayer();
                 return;
             }
+            
         }
         console.log("No valid moves available in this column.");
     

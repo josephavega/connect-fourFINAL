@@ -56,7 +56,7 @@ class Manager {
     }
 
     gamemode = this.gameType;
-    currentPlayer = this.GameLogic.getCurrentPlayer();
+    currentPlayer = this.getCurrentPlayer();
 
     const data = { red_player, yellow_player, gamemode, currentPlayer };
     console.log(data);
@@ -81,10 +81,17 @@ class Manager {
     this.gameType = gameType;
   }
 
+  stopGames() {
+    this.GameLogic.resetGame();
+    this.GameLogic.isAIvsAI = false;
+    this.GameLogic.isPlayerVsAI = false;
+  }
+
   startAIvsAI() {
     console.log("Initializing AI vs. AI game...");
     this.GameLogic.startAIVsAI((callback) => {});
   }
+
   startPlayerVsAI(sessionID, username, gamemode, difficulty) {
     console.log("Starting Player vs. AI game...");
 
@@ -98,15 +105,19 @@ class Manager {
     this.setGameType(gamemode);
 
     // Create player and AI opponent
+    this.GameLogic.currentPlayerIndex = 0;
+
     const playerColor = "R";
     const player = new Player(sessionID, username, playerColor, this.GameLogic);
-    this.player[0] = player; // Assign the player to index 0 of this.player array
-    this.GameLogic.setPlayer(sessionID, username); // Reflect this player in GameLogic
+    this.GameLogic.player[0] = player; // Assign the player to index 0 of this.player array
+    // this.GameLogic.setPlayer(sessionID, username); // Reflect this player in GameLogic
 
     const aiColor = "Y";
-    const aiPlayer = new AI(aiColor, difficulty);
-    this.player[1] = aiPlayer; // Assign the AI player to index 1 of this.player array
-    this.GameLogic.setPlayer(aiPlayer); // Reflect this AI player in GameLogic
+    const aiPlayer = new AI(5, aiColor);
+    this.GameLogic.player[1] = aiPlayer; // Assign the AI player to index 1 of this.player array
+    // this.GameLogic.setPlayer(aiPlayer); // Reflect this AI player in GameLogic
+
+    this.GameLogic.startPlayerVsAI((callback) => {});
   }
   setPlayer(name) {
     const playerColor = this.player.length === 0 ? "R" : "Y";
@@ -117,7 +128,13 @@ class Manager {
   }
 
   getCurrentPlayer() {
-    return this.GameLogic.player[this.GameLogic.currentPlayerIndex];
+    // Create a player object with a color property based on the currentPlayerIndex
+
+    return this.GameLogic.getCurrentPlayer().color;
+  }
+
+  getCurrentPlayerIndex() {
+    return this.GameLogic.currentPlayerIndex;
   }
 
   getPlayers() {

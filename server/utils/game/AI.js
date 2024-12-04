@@ -181,7 +181,7 @@ class AI {
       const newBoard = this.makeMove(board, col, this.color);
       if (this.checkWin(newBoard, this.color)) {
         console.log("Win Found " + col)
-        if(Math.random < 1/this.difficulty*3){
+        if(Math.random < 1/((this.difficulty-0.3)*4)){
           continue
         }
         // If AI can win, return this column immediately
@@ -193,7 +193,7 @@ class AI {
       const newBoard = this.makeMove(board, col, this.oppositeColor);
       if (this.checkWin(newBoard, this.oppositeColor)) {
         console.log("Loss Found " + col)
-        if(Math.random < 1/this.difficulty*2){
+        if(Math.random < 1/((this.difficulty-0.1)*2)){
           continue
         }
         // If opponent can win, block

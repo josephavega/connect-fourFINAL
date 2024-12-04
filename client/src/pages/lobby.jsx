@@ -96,7 +96,7 @@ const Lobby = () => {
       if (firstInQueue) {
         setIsPopupVisible(true);
       }
-    }, 500);
+    }, 5000);
 
     return () => {
       // Clean up socket event listeners when the component is unmounted

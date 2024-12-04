@@ -91,16 +91,12 @@ const Lobby = () => {
     }, 2000);
 
     const checkQueue = setInterval(() => {
-      let firstInQueue = false;
-      console.log(`QUEUE REQUEST ${queue[0]}`);
-      if (queue[0] === localStorage.getItem("sessionID")) {
-        firstInQueue = true;
-      }
+      const firstInQueue = true;
 
       if (firstInQueue) {
         setIsPopupVisible(true);
       }
-    }, 10090);
+    }, 5000);
 
     return () => {
       // Clean up socket event listeners when the component is unmounted

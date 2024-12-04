@@ -1,39 +1,10 @@
 import React from 'react';
 import RedChip from '../assets/Board/Gamepieces/Chip_Red.png';
 import YellowChip from '../assets/Board/Gamepieces/Chip_Yellow.png';
-import AnvilChip from '../assets/Board/Gamepieces/Powerup_Anvil.png';
-import LightningChip from '../assets/Board/Gamepieces/Powerup_Lightning.png';
-import BrickChip from '../assets/Board/Gamepieces/Powerup_Brick.png';
 import '../styles/topgrid.css';
 
-const TopGrid = ({ 
-  selectedColumn, 
-  currentPlayer, 
-  redActiveButton, 
-  YellowActiveButton 
-}) => {
+const TopGrid = ({ selectedColumn, currentPlayer }) => {
   if (selectedColumn === null) return null; // Do not render if no column is selected
-
-  const getChipImage = () => {
-    if (currentPlayer === 'Red') {
-      if (redActiveButton === 'anvil') {
-        return AnvilChip;
-      }
-      else if (redActiveButton === 'lightning') {
-        return LightningChip;
-      }
-      else if (redActiveButton === 'brick') {
-        return BrickChip;
-      }
-      else {
-        return RedChip;
-      } 
-    } else if (currentPlayer === 'Yellow') {
-      return YellowChip; // Default to yellow chip
-    }
-  };
-
-  const chipImage = getChipImage();
 
   const gridStyle = {
     display: 'flex',
@@ -51,7 +22,7 @@ const TopGrid = ({
           }}
         >
           <img
-            src={chipImage}
+            src={currentPlayer === 'Red' ? RedChip : YellowChip}
             alt={`${currentPlayer} Chip`}
           />
         </div>

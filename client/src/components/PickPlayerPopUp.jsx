@@ -1,76 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import "../styles/pickPlayerPopUp.css";
-import DebugButton from "../components/DebugButton";
-import GameButton from "../components/GameButton";
-import { useNavigate } from "react-router-dom";
-import gameSocket from "../sockets/gameSocket";
+import DebugButton from '../components/DebugButton';
+import GameButton from '../components/GameButton';
 
 const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
-  const [selectedMode, setSelectedMode] = useState("classic"); // Track the selected button
-  const [selectedDifficulty, setSelectedDifficulty] = useState(1); // Default difficulty
-  const [sessionID, setSessionID] = useState("");
-  const [username, setUsername] = useState(currentUser || "Guest");
-  const navigate = useNavigate();
+  const [selectedMode, setSelectedMode] = useState(null); // Track the selected button
+  const [selectedDifficulty, setSelectedDifficulty] = useState("Easy"); // Default difficulty
+  const [isPopupVisible, setIsPopupVisible] = useState(false); 
+  const handleModeSelect = (mode) => {
+    setSelectedMode(mode);
+  };
 
-  useEffect(() => {
-    // Set session ID and username from local storage
-    const storedSessionID = localStorage.getItem("sessionID");
-    const storedUsername = localStorage.getItem("username");
+  const fetchQueue = () => {
+    const simulatedQueue = [
+      { username: 'User1' },
+      { username: 'User2' },
+      { username: 'User3' },
+    ];
+    setQueue(simulatedQueue);
+  };
 
-    if (storedSessionID) {
-      setSessionID(storedSessionID);
-    }
-
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-
-    // Connect to the game socket
-    if (!gameSocket.connected) {
-      gameSocket.connect();
-    }
-
-    return () => {
-      // Clean up socket connection if needed
-      if (gameSocket.connected) {
-        gameSocket.disconnect();
-      }
-    };
-  }, []); // Only run once when the component mounts
 
   const handleJoinClick = () => {
-    // Create the payload to send to the API
-    const payload = {
-      sessionID: sessionID,
-      username: username,
-      gamemode: selectedMode,
-      difficulty: selectedDifficulty,
-    };
-
-    // Send POST request to the API
-    fetch("http://localhost:3000/game/startgame", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Game started successfully:", data);
-        // Emit the join game event to the socket server
-        gameSocket.emit("/joinGame", { sessionID, username });
-        // Navigate to the game page
-        navigate("/game");
-      })
-      .catch((error) => {
-        console.error("Error starting game:", error);
-      });
+    fetchQueue(); 
+    setIsPopupVisible(false); // Hide popup
+    if (onClose) onClose(); // Notify parent to open the gameboard
   };
   
 
@@ -82,18 +36,13 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
     onOpponentSelect(event.target.value);
   };
 
-  const handleModeSelect = (mode) => {
-    setSelectedMode(mode);
-  };
 
-  const playersQueue = queue.queue || [];
-  //console.log("Players in Queue:", playersQueue); // Debugging: Log the players queue
-  //console.log("Current User:", currentUser); // Debugging: Log the current user
+  const playersQueue = queue.queue || []; 
+  console.log('Players in Queue:', playersQueue); // Debugging: Log the players queue
+  console.log('Current User:', currentUser); // Debugging: Log the current user
 
-  const otherPlayers = playersQueue.filter(
-    (player) => player.username !== currentUser
-  );
-  //console.log("Other Players:", otherPlayers); // Debugging: Log other players
+  const otherPlayers = playersQueue.filter((player) => player.username !== currentUser);
+  console.log('Other Players:', otherPlayers); // Debugging: Log other players
 
   return (
     <div className="popup">
@@ -103,7 +52,7 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
         <img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="Close" />
         </button>
         <p>
-          <b>{currentUser}</b> vs{" "}
+          <b>{currentUser}</b> vs{' '}
           {playersQueue.length > 1 ? (
             <select onChange={handleOpponentChange} defaultValue="">
               <option value="" disabled>
@@ -126,25 +75,25 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
             <div className="difficulty-buttons">
               <button
                 className={`difficulty-button ${
-                  selectedDifficulty === 1 ? "difficulty-selected" : ""
+                  selectedDifficulty === "Easy" ? "difficulty-selected" : ""
                 }`}
-                onClick={() => handleDifficultyChange(1)}
+                onClick={() => handleDifficultyChange("Easy")}
               >
                 Easy
               </button>
               <button
                 className={`difficulty-button ${
-                  selectedDifficulty === 2 ? "difficulty-selected" : ""
+                  selectedDifficulty === "Medium" ? "difficulty-selected" : ""
                 }`}
-                onClick={() => handleDifficultyChange(2)}
+                onClick={() => handleDifficultyChange("Medium")}
               >
                 Medium
               </button>
               <button
                 className={`difficulty-button ${
-                  selectedDifficulty === 3 ? "difficulty-selected" : ""
+                  selectedDifficulty === "Hard" ? "difficulty-selected" : ""
                 }`}
-                onClick={() => handleDifficultyChange(3)}
+                onClick={() => handleDifficultyChange("Hard")}
               >
                 Hard
               </button>
@@ -155,23 +104,23 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
         <div className="classicArcadeVS">
           <div className="pair">
             <p>
-              Classic{" "}
+              Classic{' '}
               <button
                 className={`bubble-button1 ${
-                  selectedMode === "classic" ? "bubble-button-active" : ""
+                  selectedMode === 'classic' ? 'bubble-button-active' : ''
                 }`}
-                onClick={() => handleModeSelect("classic")}
+                onClick={() => handleModeSelect('classic')}
               ></button>
             </p>
           </div>
           <div className="pair">
             <p>
-              Arcade{" "}
+              Arcade{' '}
               <button
                 className={`bubble-button2 ${
-                  selectedMode === "arcade" ? "bubble-button-active" : ""
+                  selectedMode === 'arcade' ? 'bubble-button-active' : ''
                 }`}
-                onClick={() => handleModeSelect("arcade")}
+                onClick={() => handleModeSelect('arcade')}
               ></button>
             </p>
           </div>
@@ -183,15 +132,6 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
         </button>
       </div>
 
-        <div className="popup-buttons-close">
-          <button>
-            <img
-              src="./src/assets/Menu/Buttons/Button_Join.png"
-              alt="Join Button"
-              onClick={handleJoinClick}
-            />
-          </button>
-        </div>
       </div>
     </div>
   );

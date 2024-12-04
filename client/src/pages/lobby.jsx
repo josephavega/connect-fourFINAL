@@ -73,7 +73,7 @@ const Lobby = () => {
       for (let i = board.length - 1; i >= 0; i--) {
         flippedBoard.push(board[i]);
       }
-      console.log(`Updated Board: ${flippedBoard}`);
+      //console.log(`Updated Board: ${flippedBoard}`);
       setBoard(flippedBoard);
     };
 
@@ -89,6 +89,14 @@ const Lobby = () => {
       console.log("Requesting board update...");
       gameSocket.emit("getBoard");
     }, 2000);
+
+    const checkQueue = setInterval(() => {
+      const firstInQueue = true;
+
+      if (firstInQueue) {
+        setIsPopupVisible(true);
+      }
+    }, 5000);
 
     return () => {
       // Clean up socket event listeners when the component is unmounted
@@ -115,7 +123,7 @@ const Lobby = () => {
   };
 
   gameSocket.on("sentBoard", (board) => {
-    console.log(board);
+    //console.log(board);
   });
 
   return (

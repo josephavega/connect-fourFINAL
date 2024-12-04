@@ -44,7 +44,7 @@ const Queue = () => {
       return setInterval(() => {
         if (queueSocket && queueSocket.connected) {
           queueSocket.emit("heartbeat", sessionID);
-          console.log("Heartbeat");
+          //console.log("Heartbeat");
         }
       }, 5000);
     };

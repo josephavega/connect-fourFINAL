@@ -76,7 +76,8 @@ const ConnectPopup = ({ onClose }) => {
       })
       .catch((error) => {
         console.error("Error joining queue:", error);
-        alert("An error occurred while attempting to join the queue.");
+        navigate('/lobby');   
+       // alert("An error occurred while attempting to join the queue.");
       });
   };
 

@@ -145,7 +145,9 @@ export default function gameSocketHandler(io) {
     // Handle restart or reset game request
     socket.on("resetGame", () => {
       console.log("Game reset requested");
-      this.GameLogic.board = this.GameLogic.createBoard(); // Resetting the board without instantiating a new Manager
+      game.GameLogic.resetGame();// Resetting the board without instantiating a new Manager
+      game.GameLogic.isPlayerVsAI = false;
+      game.startAIvsAI();
       gameNamespace.emit("gameReset", { message: "The game has been reset." });
     });
 

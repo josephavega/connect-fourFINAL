@@ -109,7 +109,7 @@ class Powerup_Anvil {
 class Powerup_Brick {
   constructor(powerup, gl) {
     this.powerup = powerup;
-    this.board = this.createBoard();
+    //this.board = this.createBoard();
     this.gl = gl;
     this.used = false;
   }

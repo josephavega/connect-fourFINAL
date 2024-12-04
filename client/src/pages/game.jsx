@@ -39,9 +39,9 @@ const Game = () => {
 
   const openVictoryPopup = () => setVictoryPopupOpen(true);
 
-  const togglePlayer = () => {
-    setCurrentPlayer((prevPlayer) => (prevPlayer === "Red" ? "Yellow" : "Red"));
-  };
+  // const togglePlayer = () => {
+  //   setCurrentPlayer((prevPlayer) => (prevPlayer === "Red" ? "Yellow" : "Red"));
+  // };
 
   // useEffect(() => {
   //   const socket = gameSocket;
@@ -222,7 +222,6 @@ const Game = () => {
     setSelectedMove(null);
     setSelectedColumn(null);
     console.log("Toggling player...");
-    togglePlayer();
   };
 
   return (
@@ -251,10 +250,7 @@ const Game = () => {
         <p>Current Player: {currentPlayer}</p>
       </div>
 
-      <button
-        className={`player-toggle-button ${currentPlayer.toLowerCase()}`}
-        onClick={togglePlayer}
-      >
+      <button className={`player-toggle-button ${currentPlayer.toLowerCase()}`}>
         Switch Player Debug
       </button>
       <button>

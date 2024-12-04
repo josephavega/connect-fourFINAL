@@ -89,6 +89,14 @@ const Lobby = () => {
       gameSocket.emit("getBoard");
     }, 2000);
 
+    const checkQueue = setInterval(() => {
+      const firstInQueue = true;
+
+      if (firstInQueue) {
+        setIsPopupVisible(true);
+      }
+    }, 500);
+
     return () => {
       // Clean up socket event listeners when the component is unmounted
       queueSocket.off("queueUpdated", handleQueueUpdate);

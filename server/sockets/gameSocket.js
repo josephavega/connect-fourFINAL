@@ -145,7 +145,7 @@ export default function gameSocketHandler(io) {
     // Handle restart or reset game request
     socket.on("resetGame", () => {
       console.log("Game reset requested");
-      this.GameLogic.board = createBoard(); // Resetting the board without instantiating a new Manager
+      this.GameLogic.board = this.GameLogic.createBoard(); // Resetting the board without instantiating a new Manager
       gameNamespace.emit("gameReset", { message: "The game has been reset." });
     });
 
@@ -163,7 +163,8 @@ export default function gameSocketHandler(io) {
       try {
         console.log("Player Making Move!");
         // Process the move in the game logic
-        const currentPlayer = game.GameLogic.getCurrentPlayer();
+
+        const currentPlayer = game.getCurrentPlayerIndex();
         const moves = game.placeChip(currentPlayer, colIndex);
         gameNamespace.emit("sentBoard", game.getBoard());
         gameNamespace.emit("sendInstructions", moves);

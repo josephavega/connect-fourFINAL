@@ -51,7 +51,7 @@ class Manager {
     }
 
     gamemode = this.gameType;
-    currentPlayer = this.GameLogic.getCurrentPlayer();
+    currentPlayer = this.getCurrentPlayer();
 
     const data = { red_player, yellow_player, gamemode, currentPlayer };
     console.log(data);
@@ -76,21 +76,43 @@ class Manager {
     this.gameType = gameType;
   }
 
+  stopGames() {
+    this.GameLogic.resetGame();
+    this.GameLogic.isAIvsAI = false;
+    this.GameLogic.isPlayerVsAI = false;
+  }
+
   startAIvsAI() {
     console.log("Starting AI vs. AI game...");
     this.GameLogic.startAIVsAI((gameState) => {});
   }
 
-  startPlayerVsAI(name) {
+  startPlayerVsAI(sessionID, username, gamemode, difficulty) {
     console.log("Starting Player vs. AI game...");
-    this.GameLogic.startPlayerVsAI(); // Call GameLogic's setup
-    const player = new Player(
-      users.getUserFromName(name),
-      name,
-      "R",
-      this.GameLogic
-    );
-    this.GameLogic.setPlayer(player.sessionID, player.username); // Add the human player
+
+    // Stop any ongoing AI vs AI games
+    if (this.GameLogic.isAIvsAI) {
+      console.log("Stopping AI vs. AI game before starting Player vs. AI");
+      this.GameLogic.resetGame(); // Reset any previous game state if applicable
+    }
+
+    this.createBoard(); // Create a new board for the game
+    this.setGameType(gamemode);
+
+    // Create player and AI opponent
+    this.GameLogic.currentPlayerIndex = 0;
+
+    const playerColor = "R";
+    const player = new Player(sessionID, username, playerColor, this.GameLogic);
+    this.GameLogic.player[0] = player; // Assign the player to index 0 of this.player array
+    // this.GameLogic.setPlayer(sessionID, username); // Reflect this player in GameLogic
+
+    const aiColor = "Y";
+    const aiPlayer = new AI(5, aiColor);
+    this.GameLogic.player[1] = aiPlayer; // Assign the AI player to index 1 of this.player array
+    // this.GameLogic.setPlayer(aiPlayer); // Reflect this AI player in GameLogic
+
+    this.GameLogic.startPlayerVsAI((callback) => {});
   }
 
   setPlayer(name) {
@@ -108,7 +130,13 @@ class Manager {
   }
 
   getCurrentPlayer() {
-    return this.GameLogic.player[this.GameLogic.currentPlayerIndex];
+    // Create a player object with a color property based on the currentPlayerIndex
+
+    return this.GameLogic.getCurrentPlayer().color;
+  }
+
+  getCurrentPlayerIndex() {
+    return this.GameLogic.currentPlayerIndex;
   }
 
   getPlayers() {

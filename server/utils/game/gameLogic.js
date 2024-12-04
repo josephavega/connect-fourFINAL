@@ -26,10 +26,24 @@ class GameLogic {
     //StoppedA for if Anvil hits a brick
   }
 
-  setPlayer(sessionID, username) {
-    this.player[this.currentPlayerIndex].sessionID = sessionID;
-    this.player[this.currentPlayerIndex].username = username;
-    this.currentPlayerIndex = (this.currentPlayerIndex + 1) % 2;
+  // Resets game state
+  resetGame() {
+    console.log("Resetting game...");
+    this.board = this.createBoard();
+    this.currentPlayerIndex = 0;
+    this.player = [
+      new Player(-1, "Red", "R", this),
+      new Player(-1, "Yellow", "Y", this),
+    ];
+    this.isAIvsAI = false;
+    this.isPlayerVsAI = false;
+    this.gameOver = true;
+    this.moves = [];
+    this.winner = "";
+    if (this.aiInterval) {
+      clearInterval(this.aiInterval);
+      this.aiInterval = null;
+    }
   }
 
   getPlayers() {
@@ -40,8 +54,7 @@ class GameLogic {
 
   setPlayer(newPlayer) {
     this.player[this.playerCount % 2] = newPlayer;
-    this.player[this.playerCount % 2].color =
-      this.playerCount % 2 === 0 ? "R" : "Y";
+    this.player[this.playerCount % 2] = this.playerCount % 2 === 0 ? "R" : "Y";
     this.playerCount++;
   }
 
@@ -55,11 +68,36 @@ class GameLogic {
     this.runAIGame(callback);
   }
 
-  startPlayerVsAI() {
+  startPlayerVsAI(callback) {
+    console.log("Starting Player vs AI game...");
+
+    this.board = this.createBoard();
     this.isPlayerVsAI = true;
     this.gameOver = false;
-    this.player[0] = new Player(-1, "Player", "R", this); // Human Player
-    this.player[1] = this.ai[1]; // AI Opponent
+    this.currentPlayerIndex = 1;
+    this.runPlayerVsAI(callback);
+  }
+
+  runPlayerVsAI(callback) {
+    console.log("Running Player vs AI game...");
+
+    if (typeof callback !== "function") {
+      console.error("Invalid callback provided. It should be a function.");
+      return;
+    }
+    const interval = setInterval(() => {
+      console.log("AI is waiting to make a move...");
+
+      console.log(this.getCurrentPlayer().color);
+      if (this.getCurrentPlayer().color === "Y") {
+        console.log("AI making move...");
+        const move = this.player[1].bestMove(this.board, 5);
+        this.placePiece(move);
+      }
+    }, 2000);
+
+    // Simulate a player's move (you can hook this into your frontend)
+    callback({ board: this.board, currentPlayer: "Player" });
   }
 
   runAIGame(callback) {
@@ -75,7 +113,10 @@ class GameLogic {
       if (this.checkWin()) {
         this.gameOver = true; // Mark game as over
         console.log(`Player ${this.getCurrentPlayer().color} wins!`);
-        callback({ board: this.board, winner: this.getCurrentPlayer().color });
+        callback({
+          board: this.board,
+          winner: this.getCurrentPlayer(),
+        });
         clearInterval(interval);
         setTimeout(() => {
           this.board = this.createBoard();
@@ -152,8 +193,8 @@ class GameLogic {
         ]);
         if (this.checkWin()) {
           this.gameOver = true;
-          this.winner = this.getCurrentPlayer();
-          console.log(`${this.winner.color} has won the game!`);
+          this.winner = this.getCurrentPlayer().color;
+          console.log(`${this.winner} has won the game!`);
           // this.board = this.createBoard();
           return;
         }
@@ -171,6 +212,7 @@ class GameLogic {
 
   switchPlayer() {
     console.log(`Current Player: ${this.getCurrentPlayer().color}`);
+    this.printBoard();
     this.currentPlayerIndex = (this.currentPlayerIndex + 1) % 2;
   }
 
@@ -246,7 +288,7 @@ class GameLogic {
     for (let row = 0; row < rows - 3; row++) {
       for (let col = 0; col < columns - 3; col++) {
         if (
-          this.board[row][col] === this.getCurrentPlayer().color &&
+          this.board[row][col] === this.getCurrentPlayer() &&
           this.board[row + 1][col + 1] === this.getCurrentPlayer().color &&
           this.board[row + 2][col + 2] === this.getCurrentPlayer().color &&
           this.board[row + 3][col + 3] === this.getCurrentPlayer().color
@@ -284,7 +326,7 @@ class GameLogic {
           this.board[row + 2][col - 2] === this.getCurrentPlayer().color &&
           this.board[row + 3][col - 3] === this.getCurrentPlayer().color
         ) {
-          this.moves.push(["Win", row, col, this.getCurrentPlayer().color]);
+          this.moves.push(["Win", row, col, this.getCurrentPlayer()]);
           this.moves.push([
             "Win",
             row + 1,
@@ -319,7 +361,7 @@ class GameLogic {
         }
       }
     }
-    this.moves.push(["Full", -1, -1, this.getCurrentPlayer]);
+    this.moves.push(["Full", -1, -1, this.getCurrentPlayer().color]);
     return true;
   }
 }

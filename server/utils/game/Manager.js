@@ -1,5 +1,4 @@
 import users from "../users.js";
-import AI from "./AI.js";
 import GameLogic from "./gameLogic.js";
 import Player from "./Player.js";
 
@@ -17,10 +16,6 @@ class Manager {
 
   printBoard() {
     this.GameLogic.printBoard();
-  }
-
-  setAIvsAIstatus(bool) {
-    this.GameLogic.isAIvsAI = bool;
   }
 
   getBoard() {
@@ -82,38 +77,34 @@ class Manager {
   }
 
   startAIvsAI() {
-    console.log("Initializing AI vs. AI game...");
-    this.GameLogic.startAIVsAI((callback) => {});
+    console.log("Starting AI vs. AI game...");
+    this.GameLogic.startAIVsAI((gameState) => {});
   }
-  startPlayerVsAI(sessionID, username, gamemode, difficulty) {
+
+  startPlayerVsAI(name) {
     console.log("Starting Player vs. AI game...");
-
-    // Stop any ongoing AI vs AI games
-    if (this.GameLogic.isAIvsAI) {
-      console.log("Stopping AI vs. AI game before starting Player vs. AI");
-      this.GameLogic.resetGame(); // Reset any previous game state if applicable
-    }
-
-    this.createBoard(); // Create a new board for the game
-    this.setGameType(gamemode);
-
-    // Create player and AI opponent
-    const playerColor = "R";
-    const player = new Player(sessionID, username, playerColor, this.GameLogic);
-    this.player[0] = player; // Assign the player to index 0 of this.player array
-    this.GameLogic.setPlayer(sessionID, username); // Reflect this player in GameLogic
-
-    const aiColor = "Y";
-    const aiPlayer = new AI(aiColor, difficulty);
-    this.player[1] = aiPlayer; // Assign the AI player to index 1 of this.player array
-    this.GameLogic.setPlayer(aiPlayer); // Reflect this AI player in GameLogic
+    this.GameLogic.startPlayerVsAI(); // Call GameLogic's setup
+    const player = new Player(
+      users.getUserFromName(name),
+      name,
+      "R",
+      this.GameLogic
+    );
+    this.GameLogic.setPlayer(player.sessionID, player.username); // Add the human player
   }
+
   setPlayer(name) {
-    const playerColor = this.player.length === 0 ? "R" : "Y";
+    // Declare the playerColor variable
+    const playerColor = this.playerCount === 0 ? "R" : "Y";
     const sessionID = users.getUserFromName(name);
+    // Create a new player instance
     const player = new Player(sessionID, name, playerColor, this.GameLogic);
-    this.player.push(player);
-    this.GameLogic.setPlayer(sessionID, name);
+
+    // Call the appropriate method to set the player
+    this.GameLogic.setPlayer(player);
+
+    // Increment the player count
+    this.playerCount++;
   }
 
   getCurrentPlayer() {
@@ -129,8 +120,7 @@ class Manager {
   }
 
   placeChip(player, column) {
-    this.GameLogic.placePiece(column);
-
+    player.placeChip(column);
     //console.log(this.GameLogic.getStatus);
   }
 

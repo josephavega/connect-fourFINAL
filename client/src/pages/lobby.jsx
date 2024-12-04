@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import QueueComponent from '../components/Queue';
+import Leaderboard from '../components/Leaderboard'; 
 import QueueButton from '../components/QueueButton';
 import DebugButton from '../components/DebugButton';
 import GameButton from '../components/GameButton';
@@ -12,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import SpectateGameboard from "../components/SpectateGameboard";
 
 const Lobby = () => {
+<<<<<<< HEAD
   const [board, setBoard] = useState(
     Array(6)
       .fill(null)
@@ -23,6 +25,13 @@ const Lobby = () => {
   const [selectedOpponent, setSelectedOpponent] = useState("");
   const [usernameA, setUsernameA] = useState("");
   const navigate = useNavigate();
+=======
+  const [view, setView] = useState('queue');
+  const [isPopupVisible, setIsPopupVisible] = useState(false); 
+  const [queue, setQueue] = useState([]); 
+  const [selectedOpponent, setSelectedOpponent] = useState('');
+  const [usernameA, setUsernameA] = useState('');
+>>>>>>> parent of ef7928a (lobby fixes and new buttons)
 
   useEffect(() => {
     // Get the username from local storage
@@ -101,8 +110,8 @@ const Lobby = () => {
   const currentUser = usernameA;
 
   const handleJoinClick = () => {
-    fetchQueue();
-    setIsPopupVisible(true);
+    fetchQueue(); 
+    setIsPopupVisible(true); 
   };
 
   const handleOpponentSelect = (opponent) => {
@@ -112,7 +121,7 @@ const Lobby = () => {
   };
 
   const handlePopupClose = () => {
-    setIsPopupVisible(false);
+    setIsPopupVisible(false); 
   };
 
   gameSocket.on("sentBoard", (board) => {
@@ -122,6 +131,7 @@ const Lobby = () => {
   return (
     <div className="lobby-wrapper">
       <aside className="lobby-container">
+<<<<<<< HEAD
         <button
           className="back-to-home"
           onClick={() => (window.location.href = '/')} 
@@ -131,20 +141,45 @@ const Lobby = () => {
 
         <div className="queue">
           <QueueComponent />
+=======
+        <div className="toggle-buttons">
+          <button 
+            onClick={() => setView('queue')} 
+            className={`toggle-button ${view === 'queue' ? 'active' : ''}`}
+          >
+            Queue
+          </button>
+          <button 
+            onClick={() => setView('leaderboard')} 
+            className={`toggle-button ${view === 'leaderboard' ? 'active' : ''}`}
+          >
+            Leaderboard
+          </button>
+>>>>>>> parent of ef7928a (lobby fixes and new buttons)
         </div>
 
+        <div className="queue">
+          {view === 'queue' ? <QueueComponent /> : <Leaderboard />}
+        </div>
+        
         <div className="queue-button-container">
           <QueueButton />
-          <img
-            src="../src/assets/Menu/Buttons/Button_Join.png"
-            alt="Join Queue"
-            className="join-button-overlay"
+          <img 
+            src="../src/assets/Menu/Buttons/Button_Join.png" 
+            alt="Join Queue" 
+            className="join-button-overlay" 
             onClick={handleJoinClick}
           />
         </div>
+<<<<<<< HEAD
 
         <div className="debug-game-button">
           <GameButton />
+=======
+        
+        <div className="debugButton">
+          <DebugButton />
+>>>>>>> parent of ef7928a (lobby fixes and new buttons)
         </div>
 
         <div>
@@ -168,7 +203,43 @@ const Lobby = () => {
           </div>
         </div>
       </aside>
+<<<<<<< HEAD
+=======
+
+      <main className="right-container">
+        <div className="gameboardBox">
+          {/* <Gameboard /> */}
+        </div>
+      </main>
+    
+      {isPopupVisible && (
+        <PickPlayerPopUp
+          queue={queue} 
+          currentUser={currentUser} 
+          onOpponentSelect={handleOpponentSelect} 
+          onClose={handlePopupClose} 
+        />
+      )}
+      <div>
+        <iframe 
+        src="/game" title="Spectate Game" style={{
+        width: '670px', 
+        height: '530px', 
+        border: 'none',
+        background: 'transparent',        transform: 'scale(1)', 
+        transformX: 'scale(100px)',
+        transformOrigin: 'right', 
+        
+
+
+    }}> </iframe>
+      </div>
+      <aside className="lobby-container">
+       {/*<Spectate/>*/}
+      </aside>  
+>>>>>>> parent of ef7928a (lobby fixes and new buttons)
     </div>
+    
   );
 };
 

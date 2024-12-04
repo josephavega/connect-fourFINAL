@@ -16,7 +16,6 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
     fetchQueue(); 
     setIsPopupVisible(true); 
   };
-  
 
   const handleDifficultyChange = (difficulty) => {
     setSelectedDifficulty(difficulty);
@@ -38,9 +37,6 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
     <div className="popup">
       <div className="popup-content">
         <h3>Match Setup</h3>
-        <button className="close-btn" onClick={onClose}>
-        <img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="Close" />
-        </button>
         <p>
           <b>{currentUser}</b> vs{' '}
           {playersQueue.length > 1 ? (
@@ -116,12 +112,15 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
           </div>
         </div>
 
+<<<<<<< HEAD
         <div className="popup-join-game">
         <button onClick={handleJoinClick}>
           <img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join Button" />
         </button>
       </div>
 
+=======
+>>>>>>> parent of ef7928a (lobby fixes and new buttons)
         <div className="popup-buttons-close">
         <button><img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join Button" onClick={handleJoinClick} /></button>
       

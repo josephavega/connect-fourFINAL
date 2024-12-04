@@ -95,7 +95,7 @@ const QueueButton = () => {
   return (
     <>
       <button className="queue-button" onClick={toggleQueueStatus}>
-        {inQueue ? "Leave Queue" : "Join Queue"}
+        {inQueue ? <img src="./src/assets/Menu/Buttons/Button_Leave.png" alt="Leave" /> : <img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join"></img>}
       </button>
       {/* Other UI components */}
     </>

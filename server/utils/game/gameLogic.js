@@ -10,7 +10,8 @@ class GameLogic {
     ];
     this.currentPlayerIndex = 0;
     this.playerCount = 0;
-    this.ai = [new AI(2, "R"), new AI(4, "Y")]; // AI difficulty Medium
+    // this.ai = [new AI(10, "R"), new AI(4, "Y")]; // AI difficulty Medium
+    this.ai = [];
     this.isAIvsAI = true;
     this.gameOver = true;
     this.isPlayerVsAI = false;
@@ -24,6 +25,23 @@ class GameLogic {
     //Flipped for chips hit with the lightning
     //StoppedL for if Lightning hits a brick
     //StoppedA for if Anvil hits a brick
+  }
+
+  // Resets game state
+  resetGame() {
+    console.log("Resetting game...");
+    this.board = this.createBoard();
+    this.currentPlayerIndex = 0;
+    this.player = [];
+    this.isAIvsAI = false;
+    this.isPlayerVsAI = false;
+    this.gameOver = true;
+    this.moves = [];
+    this.winner = "";
+    if (this.aiInterval) {
+      clearInterval(this.aiInterval);
+      this.aiInterval = null;
+    }
   }
 
   setPlayer(sessionID, username) {
@@ -46,41 +64,103 @@ class GameLogic {
   }
 
   startAIVsAI(callback) {
+    this.resetGame();
+
     this.isAIvsAI = true;
     this.gameOver = false;
-    this.board = this.createBoard();
+    this.ai[0] = new AI(5, "R");
+    this.ai[1] = new AI(5, "Y");
     this.player[0] = this.ai[0];
     this.player[1] = this.ai[1];
     this.currentPlayerIndex = 0;
+    this.board = this.createBoard();
     this.runAIGame(callback);
   }
 
-  startPlayerVsAI() {
+  startPlayerVsAI(callback) {
+    console.log("Starting Player vs AI game...");
+    this.resetGame();
+
     this.isPlayerVsAI = true;
     this.gameOver = false;
-    this.player[0] = new Player(-1, "Player", "R", this); // Human Player
-    this.player[1] = this.ai[1]; // AI Opponent
+    this.currentPlayerIndex = 0;
+    this.runPlayerVsAI(callback);
+  }
+
+  runPlayerVsAI(callback) {
+    console.log("Running Player vs AI game...");
+
+    if (typeof callback !== "function") {
+      console.error("Invalid callback provided. It should be a function.");
+      return;
+    }
+
+    if (this.isAIvsAI) {
+      this.resetGame();
+    } else if (this.isPlayerVsAI && !this.gameOver) {
+      console.log("Waiting for player move...");
+
+      // Simulate waiting for a player move
+      const playerMoveHandler = (columnIndex) => {
+        this.placePiece(columnIndex);
+        if (this.checkWin()) {
+          this.gameOver = true;
+          console.log("Player wins!");
+          callback({ board: this.board, winner: "Player" });
+          return;
+        }
+        if (this.isBoardFull()) {
+          this.gameOver = true;
+          console.log("The game is a draw!");
+          this.callback({ board: this.board, message: "The game is a draw!" });
+          return;
+        }
+        console.log("AI making move...");
+        this.switchPlayer();
+        const move = this.ai[1].bestMove(this.board, this.ai[1].difficulty);
+        if (move !== null) {
+          this.placePiece(move);
+          if (this.checkWin()) {
+            this.gameOver = true;
+            console.log("AI wins!");
+            callback({ board: this.board, winner: "AI" });
+          }
+        }
+      };
+
+      // Simulate a player's move (you can hook this into your frontend)
+      callback({ board: this.board, currentPlayer: "Player" });
+    }
   }
 
   runAIGame(callback) {
     console.log("Running AI vs. AI game...");
+
     const interval = setInterval(() => {
       if (this.gameOver) {
         clearInterval(interval); // Stop the game loop
         return;
       }
-
-      this.aiMove(callback); // Perform AI move
-
-      if (this.checkWin()) {
+      if (this.isAIvsAI) {
+        //this.aiMove(callback); // Perform AI mov
+        let move = this.ai[this.currentPlayerIndex].bestMove(this.board, 5);
+        this.placePiece(move);
+      } else if (!this.isAIvsAI) {
+        this.gameOver = true;
+      } else if (this.checkWin()) {
         this.gameOver = true; // Mark game as over
         console.log(`Player ${this.getCurrentPlayer().color} wins!`);
-        callback({ board: this.board, winner: this.getCurrentPlayer().color });
+        callback({
+          board: this.board,
+          winner: this.getCurrentPlayer().color,
+        });
         clearInterval(interval);
         setTimeout(() => {
           this.board = this.createBoard();
           setTimeout(() => {
-            this.startAIVsAI(callback);
+            if (this.isAIvsAI) {
+              this.startAIVsAI(callback);
+            }
           }, 2000);
         }, 2000); // Delay in milliseconds (2000ms = 2 seconds)
       } else if (this.isBoardFull()) {
@@ -93,23 +173,28 @@ class GameLogic {
   }
 
   aiMove(callback) {
-    console.log("AI making move");
-    const ai = this.ai[this.currentPlayerIndex];
-    const move = ai.bestMove(this.board, ai.difficulty);
-    console.log(
-      `AI (${this.getCurrentPlayer().color}) is playing in column: ${move}`
-    );
+    if (this.isAIvsAI) {
+      console.log("AI making move");
+      const ai = this.ai[this.currentPlayerIndex];
+      const move = ai.bestMove(this.board, ai.difficulty);
+      console.log(
+        `AI (${this.getCurrentPlayer().color}) is playing in column: ${move}`
+      );
 
-    if (move !== null) {
-      this.placePiece(move);
-      this.printBoard();
-      if (this.checkWin) {
-        this.createBoard();
+      if (move !== null) {
+        this.placePiece(move);
+        this.printBoard();
+        if (this.checkWin) {
+          this.createBoard();
+        }
+        callback({
+          board: this.board,
+          currentPlayer: this.getCurrentPlayer().color,
+        });
       }
-      callback({
-        board: this.board,
-        currentPlayer: this.getCurrentPlayer().color,
-      });
+    } else {
+      this.gameOver = true;
+      console.log("AI vs AI game interrupted.");
     }
   }
   createBoard() {
@@ -162,7 +247,7 @@ class GameLogic {
         return;
       }
     }
-    console.log("No valid moves available in this column.");
+    console.log(`No valid moves available in this column. (${columnIndex})`);
   }
 
   getCurrentPlayer() {

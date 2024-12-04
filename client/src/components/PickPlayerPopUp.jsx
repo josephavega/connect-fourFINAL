@@ -6,16 +6,27 @@ import GameButton from '../components/GameButton';
 const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
   const [selectedMode, setSelectedMode] = useState(null); // Track the selected button
   const [selectedDifficulty, setSelectedDifficulty] = useState("Easy"); // Default difficulty
-
+  const [isPopupVisible, setIsPopupVisible] = useState(false); 
   const handleModeSelect = (mode) => {
     setSelectedMode(mode);
+  };
+
+  const fetchQueue = () => {
+    const simulatedQueue = [
+      { username: 'User1' },
+      { username: 'User2' },
+      { username: 'User3' },
+    ];
+    setQueue(simulatedQueue);
   };
 
 
   const handleJoinClick = () => {
     fetchQueue(); 
-    setIsPopupVisible(true); 
+    setIsPopupVisible(false); // Hide popup
+    if (onClose) onClose(); // Notify parent to open the gameboard
   };
+  
 
   const handleDifficultyChange = (difficulty) => {
     setSelectedDifficulty(difficulty);
@@ -37,6 +48,9 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
     <div className="popup">
       <div className="popup-content">
         <h3>Match Setup</h3>
+        <button className="close-btn" onClick={onClose}>
+        <img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="Close" />
+        </button>
         <p>
           <b>{currentUser}</b> vs{' '}
           {playersQueue.length > 1 ? (
@@ -112,10 +126,12 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
           </div>
         </div>
 
-        <div className="popup-buttons-close">
-        <button><img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join Button" onClick={handleJoinClick} /></button>
-      
-        </div>
+        <div className="popup-join-game">
+        <button onClick={handleJoinClick}>
+          <img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join Button" />
+        </button>
+      </div>
+
       </div>
     </div>
   );

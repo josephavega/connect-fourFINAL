@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import QueueComponent from '../components/Queue';
-import Leaderboard from '../components/Leaderboard'; 
 import QueueButton from '../components/QueueButton';
 import DebugButton from '../components/DebugButton';
 import GameButton from '../components/GameButton';
@@ -8,9 +7,8 @@ import PickPlayerPopUp from '../components/PickPlayerPopUp';
 import '../styles/lobby.css';
 
 const Lobby = () => {
-  const [view, setView] = useState('queue');
-  const [isPopupVisible, setIsPopupVisible] = useState(false); 
-  const [queue, setQueue] = useState([]); 
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [queue, setQueue] = useState([]);
   const [selectedOpponent, setSelectedOpponent] = useState('');
   const [usernameA, setUsernameA] = useState('');
 
@@ -30,8 +28,8 @@ const Lobby = () => {
   };
 
   const handleJoinClick = () => {
-    fetchQueue(); 
-    setIsPopupVisible(true); 
+    fetchQueue();
+    setIsPopupVisible(true);
   };
 
   const handleOpponentSelect = (opponent) => {
@@ -41,41 +39,33 @@ const Lobby = () => {
   };
 
   const handlePopupClose = () => {
-    setIsPopupVisible(false); 
+    setIsPopupVisible(false);
   };
 
   return (
     <div className="lobby-wrapper">
       <aside className="lobby-container">
-        <div className="toggle-buttons">
-          <button 
-            onClick={() => setView('queue')} 
-            className={`toggle-button ${view === 'queue' ? 'active' : ''}`}
-          >
-            Queue
-          </button>
-          <button 
-            onClick={() => setView('leaderboard')} 
-            className={`toggle-button ${view === 'leaderboard' ? 'active' : ''}`}
-          >
-            Leaderboard
-          </button>
-        </div>
+      <button
+        className="back-to-home"
+        onClick={() => (window.location.href = '/')} 
+      >
+        <img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="Back to Home" />
+      </button>
 
         <div className="queue">
-          {view === 'queue' ? <QueueComponent /> : <Leaderboard />}
+          <QueueComponent />
         </div>
-        
+
         <div className="queue-button-container">
           <QueueButton />
-          <img 
-            src="../src/assets/Menu/Buttons/Button_Join.png" 
-            alt="Join Queue" 
-            className="join-button-overlay" 
+          <img
+            src="../src/assets/Menu/Buttons/Button_Join.png"
+            alt="Join Queue"
+            className="join-button-overlay"
             onClick={handleJoinClick}
           />
         </div>
-        
+
         <div className="debugButton">
           <DebugButton />
         </div>
@@ -90,34 +80,32 @@ const Lobby = () => {
           {/* <Gameboard /> */}
         </div>
       </main>
-    
+
       {isPopupVisible && (
         <PickPlayerPopUp
-          queue={queue} 
-          currentUser={currentUser} 
-          onOpponentSelect={handleOpponentSelect} 
-          onClose={handlePopupClose} 
+          queue={queue}
+          currentUser={currentUser}
+          onOpponentSelect={handleOpponentSelect}
+          onClose={handlePopupClose}
         />
       )}
+
       <div>
-        <iframe 
-        src="/game" title="Spectate Game" style={{
-        width: '670px', 
-        height: '530px', 
-        border: 'none',
-        background: 'transparent',        transform: 'scale(1)', 
-        transformX: 'scale(100px)',
-        transformOrigin: 'right', 
-        
-
-
-    }}> </iframe>
+        <iframe
+          src="/game"
+          title="Spectate Game"
+          style={{
+            width: '670px',
+            height: '530px',
+            border: 'none',
+            background: 'transparent',
+            transform: 'scale(1)',
+            transformX: 'scale(100px)',
+            transformOrigin: 'right',
+          }}
+        ></iframe>
       </div>
-      <aside className="lobby-container">
-       {/*<Spectate/>*/}
-      </aside>  
     </div>
-    
   );
 };
 

@@ -181,6 +181,46 @@ export default function gameSocketHandler(io) {
       }
     });
 
+    
+    socket.on("playerPowerMove", (data) => {
+      const { colIndex, powerupUsed, sessionID, username } = data;
+      const user = users.getUser(sessionID);
+
+      if (!username) {
+        console.error("Username not found for sessionID:", sessionID);
+        return;
+      }
+
+      console.log(`Player ${username} made a powerup move in column: ${colIndex}`);
+
+      try {
+        console.log("Player Making Powerup Move!");
+        // Process the move in the game logic
+        if (powerupUsed === "brick"){
+          const currentPlayer = game.getCurrentPlayerIndex();
+          game.useBrick(currentPlayer, colIndex);
+
+          // Emit moves for frontend animation and board updates
+          gameNamespace.emit("sentBoard", game.getBoard());
+
+        }
+        else {
+          console.log(`Failed to use Powerup!`);
+        }
+        {/* */}
+        //console.log("Gameboard Updated:", game.getBoard());
+
+        // Check if the game is over
+        if (game.GameLogic.checkWin()) {
+          socket.emit("gameOver", currentPlayer.username);
+          console.log(`Player ${currentPlayer.username} wins!`);
+        }
+      } catch (error) {
+        console.error("Error during move:", error);
+        socket.emit("moveError", { error: error.message });
+      }
+    });
+
     // Handle players joining or leaving a game session
     socket.on("joinGame", (data) => {
       const { sessionID, username } = data;

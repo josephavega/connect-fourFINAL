@@ -7,6 +7,7 @@ import TopGrid from '../components/TopGrid.jsx';
 import EmptyChip from '../assets/Board/BoardTileBack.png';
 import RedChip from '../assets/Board/Gamepieces/Chip_Red.png';
 import YellowChip from '../assets/Board/Gamepieces/Chip_Yellow.png';
+import BrickChip from '../assets/Board/Gamepieces/Powerup_Brick.png';
 
 import BoardTileFront from '../assets/Board/BoardTileFront.png';
 import HoverIndicator from '../assets/Board/BoardTileBack.png';
@@ -156,6 +157,7 @@ const Gameboard = ({
         let chipType;
         if (board[i][j] === 'R') { chipType = RedChip } 
         else if (board[i][j] === 'Y') { chipType = YellowChip } 
+        else if (board[i][j] === 'B') { chipType = BrickChip }
         else { chipType = EmptyChip }
 
         rowTiles.push(
@@ -218,7 +220,12 @@ const Gameboard = ({
       {/* MIDDLE */}
       <div>
         {/* TOP GRID */}
-        <div className="top-grid"> <TopGrid selectedColumn={selectedColumn} currentPlayer={currentPlayer} /> </div> 
+        <div className="top-grid"> <TopGrid 
+        selectedColumn={selectedColumn} 
+        currentPlayer={currentPlayer} 
+        redActiveButton = {redActiveButton} 
+        yellowActiveButton = {yellowActiveButton}
+        /> </div> 
         
         {/* GAMEBOARD */}
         <div className="gameboard-wrapper">

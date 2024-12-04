@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import QueueComponent from "../components/Queue";
-import QueueButton from "../components/QueueButton";
-import DebugButton from "../components/DebugButton";
-import GameButton from "../components/GameButton";
-import PickPlayerPopUp from "../components/PickPlayerPopUp";
+import React, { useState, useEffect } from 'react';
+import QueueComponent from '../components/Queue';
+import QueueButton from '../components/QueueButton';
+import DebugButton from '../components/DebugButton';
+import GameButton from '../components/GameButton';
+import PickPlayerPopUp from '../components/PickPlayerPopUp';
+import '../styles/lobby.css';
 
 import queueSocket from "../sockets/queueSocket";
 import gameSocket from "../sockets/gameSocket";
-import "../styles/lobby.css";
 import { useNavigate } from "react-router-dom";
 import SpectateGameboard from "../components/SpectateGameboard";
 
@@ -83,7 +83,6 @@ const Lobby = () => {
     gameSocket.on("startGame", handleStartGame);
     gameSocket.on("promptStartGame", handlePromptPopup);
 
-    // // Request the current board state
     // Periodically request board updates
     const intervalId = setInterval(() => {
       console.log("Requesting board update...");
@@ -106,9 +105,11 @@ const Lobby = () => {
       gameSocket.off("promptStartGame", handlePromptPopup);
     };
   }, [navigate]);
+
   const currentUser = usernameA;
 
   const handleJoinClick = () => {
+    fetchQueue();
     setIsPopupVisible(true);
   };
 
@@ -128,36 +129,53 @@ const Lobby = () => {
 
   return (
     <div className="lobby-wrapper">
-      <div className="lobby-container">
+      <aside className="lobby-container">
+        <button
+          className="back-to-home"
+          onClick={() => (window.location.href = '/')} 
+        >
+          <img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="Back to Home" />
+        </button>
+
         <div className="queue">
           <QueueComponent />
-          <div className="queue-button-container">
-            <QueueButton />
-          </div>
         </div>
+
+        <div className="queue-button-container">
+          <QueueButton />
+          <img
+            src="../src/assets/Menu/Buttons/Button_Join.png"
+            alt="Join Queue"
+            className="join-button-overlay"
+            onClick={handleJoinClick}
+          />
+        </div>
+
         <div className="debug-game-button">
           <GameButton />
         </div>
-      </div>
 
-      <main className="right-container">
-        <div className="gameboardBox">{/* <Gameboard /> */}</div>
-      </main>
-
-      {isPopupVisible && (
-        <PickPlayerPopUp
-          queue={queue}
-          currentUser={currentUser}
-          onOpponentSelect={handleOpponentSelect}
-          onClose={handlePopupClose}
-        />
-      )}
-      <div>
         <div>
-          <SpectateGameboard board={board} currentPlayer={currentPlayer} />
+          <main className="right-container">
+            <div className="gameboardBox">{/* <Gameboard /> */}</div>
+          </main>
+
+          {isPopupVisible && (
+            <PickPlayerPopUp
+              queue={queue}
+              currentUser={currentUser}
+              onOpponentSelect={handleOpponentSelect}
+              onClose={handlePopupClose}
+            />
+          )}
+
+          <div>
+            <div>
+              <SpectateGameboard board={board} currentPlayer={currentPlayer} />
+            </div>
+          </div>
         </div>
-      </div>
-      <aside className="lobby-container">{/*<Spectate/>*/}</aside>
+      </aside>
     </div>
   );
 };

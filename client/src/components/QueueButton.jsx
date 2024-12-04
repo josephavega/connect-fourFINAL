@@ -12,7 +12,7 @@ if (!sessionID) {
 let socket = null;
 
 const QueueButton = () => {
-  const [inQueue, setInQueue] = useState(false);
+  const [inQueue, setInQueue] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:3000/queue/isInQueue", {

@@ -109,21 +109,23 @@ class Powerup_Anvil {
 class Powerup_Brick {
   constructor(powerup, gl) {
     this.powerup = powerup;
+    //this.board = this.createBoard();
     this.gl = gl;
     this.used = false;
   }
 
   Brick(columnIndex) {
+    if (this.used) {return;}
     this.used = true;
     for (let row = 0; row < 6; row++) {
       // Like a normal chip
       if (this.gl.board[row][columnIndex] === 0) {
-        this.gl.moves.push(["Brick", row, columnIndex, 0]);
+        //this.gl.moves.push(["Brick", row, columnIndex, "B"]);
         this.gl.board[row][columnIndex] = "B";
-        this.switchPlayer();
-        return;
+        break;
       }
     }
+    this.gl.switchPlayer();
   }
 }
 
@@ -134,7 +136,7 @@ class Powerups {
     this.gl = gl;
     // this.lightning = new Powerup_Lightning(this);
     // this.anvil = new Powerup_Anvil(this);
-    // this.brick = new Powerup_Brick(this);
+    this.brick = new Powerup_Brick(this);
   }
 
   Lightning(column, row) {

@@ -49,7 +49,6 @@ const Gameboard = ({
 
   const [username, setUsername] = useState('');
   const [usernameB, setUsernameB] = useState('');
-  const [playerWin, setPlayerWin] = useState({ chip1: '', chip2: '', chip3: '', chip4: ''})
 
   const [usedRedPowerups, setUsedRedPowerups] = useState({ anvil: false, lightning: false, brick: false });
   const [usedYellowPowerups, setUsedYellowPowerups] = useState({ anvil: false, lightning: false, brick: false });

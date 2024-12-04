@@ -1,42 +1,42 @@
 .queue-container {
-    width: 100%;
-    max-width: 200px;
-    /* border: 1px solid #ccc; */
-    /* background-color: black; */
-    border-radius: 1px;
-    padding: 10px;
-  }
-  
-  .queue-container h2 {
-    text-align: center;
-    margin: 5px;
-    margin-bottom: 10px;
-    font-size: 1.5em;
-  }
-  
-  .queue-table {
-    overflow-y: auto;
-  }
-  
-  .queue-table table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .queue-table th,
-  .queue-table td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .queue-table th {
-    background-color: #f2f2f2;
-    position: sticky; /* Makes header stick when scrolling */
-    top: 0;
-  }
-  
-  .queue-table tr:hover {
-    background-color: #f1f1f1;
-  }
-  
+  width: 100%;
+  max-width: 250px;
+
+  /* border: 1px solid #ccc; */
+  /* background-color: black; */
+  border-radius: 1px;
+  padding: 10px;
+}
+
+.queue-container h2 {
+  text-align: center;
+  margin: 5px;
+  margin-bottom: 10px;
+  font-size: 1.5em;
+}
+
+.queue-table {
+  overflow-y: auto;
+}
+
+.queue-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.queue-table th,
+.queue-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.queue-table th {
+  background-color: #f2f2f2;
+  position: sticky; /* Makes header stick when scrolling */
+  top: 0;
+}
+
+.queue-table tr:hover {
+  background-color: #f1f1f1;
+}

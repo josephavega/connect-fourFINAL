@@ -72,7 +72,6 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
         console.error("Error starting game:", error);
       });
   };
-  
 
   const handleDifficultyChange = (difficulty) => {
     setSelectedDifficulty(difficulty);
@@ -99,9 +98,6 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
     <div className="popup">
       <div className="popup-content">
         <h3>Match Setup</h3>
-        <button className="close-btn" onClick={onClose}>
-        <img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="Close" />
-        </button>
         <p>
           <b>{currentUser}</b> vs{" "}
           {playersQueue.length > 1 ? (
@@ -176,12 +172,6 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
             </p>
           </div>
         </div>
-
-        <div className="popup-join-game">
-        <button onClick={handleJoinClick}>
-          <img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join Button" />
-        </button>
-      </div>
 
         <div className="popup-buttons-close">
           <button>

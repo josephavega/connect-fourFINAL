@@ -27,35 +27,16 @@
   font-style: normal;
 }
 
-.back-to-home {
-  position: absolute; /* Allow the element to be positioned relative to its closest positioned ancestor */
-  top: 10px; /* Distance from the top of the screen */
-  left: 10px; /* Distance from the left of the screen */
-  z-index: 1000; /* Ensure it is above other elements */
-  background: none; /* Remove any default button background */
-  border: none; /* Remove default button borders */
-  cursor: pointer; /* Indicate the element is clickable */
-}
-
-.back-to-home img {
-  width: 50px; /* Adjust size of the image */
-  height: auto; /* Maintain aspect ratio */
-}
-
-.back-to-home:hover {
-  transform: scale(1.05);
-}
-
 .queue {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  max-height: 650px;
-  font-family: 'ArcadeClassic'; 
-  text-align:left;
+  max-height: 600px;
+  font-family: "ArcadeClassic";
+  text-align: left;
   font-size: 30px;
-  width: 100%; 
+  width: 200px;
   padding: 10px;
   border-radius: 10px;
   background-color: #ffffff;

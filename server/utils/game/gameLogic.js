@@ -10,7 +10,7 @@ class GameLogic {
     ];
     this.currentPlayerIndex = 0;
     this.playerCount = 0;
-    this.ai = [new AI(10, "R"), new AI(4, "Y")]; // AI difficulty Medium
+    this.ai = [new AI(2, "R"), new AI(4, "Y")]; // AI difficulty Medium
     this.isAIvsAI = true;
     this.gameOver = true;
     this.isPlayerVsAI = false;

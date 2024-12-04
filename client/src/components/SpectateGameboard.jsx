@@ -83,7 +83,7 @@ const SpectateGameboard = ({ board, currentPlayer }) => {
       <div>
         {/* TOP GRID */}
         <div className="top-grid">
-          <p></p>
+          <TopGrid currentPlayer={currentPlayer} />
         </div>
 
         {/* GAMEBOARD */}

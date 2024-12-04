@@ -92,15 +92,18 @@ const Lobby = () => {
 
     const checkQueue = setInterval(() => {
       let firstInQueue = false;
-      console.log(`QUEUE REQUEST ${queue[0]}`);
-      if (queue[0] === localStorage.getItem("sessionID")) {
-        firstInQueue = true;
-      }
+      queueSocket.emit('inQueue', localStorage.getItem('sessionID'));
+      queueSocket.on('inQueueResponse', inQueue => {
+        console.log(inQueue);
+        firstInQueue = inQueue;
+        if (firstInQueue) {
+          setIsPopupVisible(true);
+        }
+      })
+    
 
-      if (firstInQueue) {
-        setIsPopupVisible(true);
-      }
-    }, 10090);
+      
+    }, 3000);
 
     return () => {
       // Clean up socket event listeners when the component is unmounted

@@ -170,6 +170,15 @@ const Game = () => {
     gameSocket.emit("getBoard");
   }
 
+  function handleRedPowerup(colIndex, powerupUsed) {
+    const sessionID = localStorage.getItem("sessionID");
+    const username = localStorage.getItem("username");
+    const data = { colIndex, powerupUsed, sessionID, username};
+
+    gameSocket.emit("playerPowerMove", data);
+    gameSocket.emit("getBoard");
+  }
+
   const handleConfirm = () => {
     console.log("Confirming move...");
     if (!selectedMove) {
@@ -189,33 +198,37 @@ const Game = () => {
     // setBoard(updatedBoard);
 
     // Emit the move to the server
-    handleMove(selectedColumn);
-
     // Mark the active power-up as used
-    if (currentPlayer === "Red" && redActiveButton) {
-      console.log(`Using Red Power-Up: ${redActiveButton}`);
-      setUsedRedPowerups((prev) => ({ ...prev, [redActiveButton]: true }));
-      //if anvil
 
-      //if lightning
-
-      //if brick
-
-      setRedActiveButton(null); // Clear active power-up
-    } else if (currentPlayer === "Yellow" && yellowActiveButton) {
+    if (currentPlayer === "Red") { 
+      
+      if(redActiveButton != null && redActiveButton === "brick") {
+        console.log(`Using Red Power-Up: ${redActiveButton}`);
+        gameSocket.emit("playerPowerMove", {
+          colIndex: selectedColumn,
+          powerupUsed: "brick",
+          sessionID: localStorage.getItem("sessionID"),
+          username: localStorage.getItem("username"),
+      });
+        // for now: handleRedPowerup(selectedColumn, redActiveButton);
+        gameSocket.emit("getBoard");
+        setUsedRedPowerups((prev) => ({ ...prev, [redActiveButton]: true }));
+        setRedActiveButton(null); // Clear active power-up
+      } 
+      else {
+      handleMove(selectedColumn);
+      } 
+    }
+    else if (currentPlayer === "Yellow") {
+      handleMove(selectedColumn);
+    }
+    {/* 
+    else if (currentPlayer === "Yellow" && yellowActiveButton) {
       console.log(`Using Yellow Power-Up: ${yellowActiveButton}`);
-      setUsedYellowPowerups((prev) => ({
-        ...prev,
-        [yellowActiveButton]: true,
-      }));
-      //if anvil
-
-      //if lightning
-
-      //if brick
-
+      setUsedYellowPowerups((prev) => ({...prev, [yellowActiveButton]: true }));
       setYellowActiveButton(null); // Clear active power-up
     }
+      */}
 
     // Reset the selected move and toggle player
     console.log("Resetting move...");

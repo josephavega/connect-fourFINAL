@@ -145,7 +145,9 @@ export default function gameSocketHandler(io) {
     // Handle restart or reset game request
     socket.on("resetGame", () => {
       console.log("Game reset requested");
-      this.GameLogic.board = this.GameLogic.createBoard(); // Resetting the board without instantiating a new Manager
+      game.GameLogic.resetGame();// Resetting the board without instantiating a new Manager
+      game.GameLogic.isPlayerVsAI = false;
+      game.startAIvsAI();
       gameNamespace.emit("gameReset", { message: "The game has been reset." });
     });
 
@@ -168,6 +170,46 @@ export default function gameSocketHandler(io) {
         const moves = game.placeChip(currentPlayer, colIndex);
         gameNamespace.emit("sentBoard", game.getBoard());
         gameNamespace.emit("sendInstructions", moves);
+        //console.log("Gameboard Updated:", game.getBoard());
+
+        // Check if the game is over
+        if (game.GameLogic.checkWin()) {
+          socket.emit("gameOver", currentPlayer.username);
+          console.log(`Player ${currentPlayer.username} wins!`);
+        }
+      } catch (error) {
+        console.error("Error during move:", error);
+        socket.emit("moveError", { error: error.message });
+      }
+    });
+
+    
+    socket.on("playerPowerMove", (data) => {
+      const { colIndex, powerupUsed, sessionID, username } = data;
+      const user = users.getUser(sessionID);
+
+      if (!username) {
+        console.error("Username not found for sessionID:", sessionID);
+        return;
+      }
+
+      console.log(`Player ${username} made a powerup move in column: ${colIndex}`);
+
+      try {
+        console.log("Player Making Powerup Move!");
+        // Process the move in the game logic
+        if (powerupUsed === "brick"){
+          const currentPlayer = game.getCurrentPlayerIndex();
+          game.useBrick(currentPlayer, colIndex);
+
+          // Emit moves for frontend animation and board updates
+          gameNamespace.emit("sentBoard", game.getBoard());
+
+        }
+        else {
+          console.log(`Failed to use Powerup!`);
+        }
+        {/* */}
         //console.log("Gameboard Updated:", game.getBoard());
 
         // Check if the game is over

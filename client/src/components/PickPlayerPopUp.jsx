@@ -74,7 +74,7 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
   };
 
   const handleDifficultyChange = (difficulty) => {
-    setSelectedDifficulty(difficulty);
+    setSelectedDifficulty(difficulty * 5);
   };
 
   const handleOpponentChange = (event) => {
@@ -175,7 +175,11 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
 
         <div className="popup-buttons-close">
           <button>
-            <img src="./src/assets/Menu/Buttons/Button_Join.png"alt="Join Button"onClick={handleJoinClick}/>
+            <img
+              src="Menu/Buttons/Button_Join.png"
+              alt="Join Button"
+              onClick={handleJoinClick}
+            />
           </button>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import users from "../users.js";
-import AI from "./AI.js";
 import GameLogic from "./gameLogic.js";
 import GamePowerups from "./gamePowerups.js";
 import Player from "./Player.js";
@@ -25,10 +24,6 @@ class Manager {
 
   printBoard() {
     this.GameLogic.printBoard();
-  }
-
-  setAIvsAIstatus(bool) {
-    this.GameLogic.isAIvsAI = bool;
   }
 
   getBoard() {
@@ -96,8 +91,8 @@ class Manager {
   }
 
   startAIvsAI() {
-    console.log("Initializing AI vs. AI game...");
-    this.GameLogic.startAIVsAI((callback) => {});
+    console.log("Starting AI vs. AI game...");
+    this.GameLogic.startAIVsAI((gameState) => {});
   }
 
   startPlayerVsAI(sessionID, username, gamemode, difficulty) {
@@ -127,12 +122,19 @@ class Manager {
 
     this.GameLogic.startPlayerVsAI((callback) => {});
   }
+
   setPlayer(name) {
-    const playerColor = this.player.length === 0 ? "R" : "Y";
+    // Declare the playerColor variable
+    const playerColor = this.playerCount === 0 ? "R" : "Y";
     const sessionID = users.getUserFromName(name);
+    // Create a new player instance
     const player = new Player(sessionID, name, playerColor, this.GameLogic);
-    this.player.push(player);
-    this.GameLogic.setPlayer(sessionID, name);
+
+    // Call the appropriate method to set the player
+    this.GameLogic.setPlayer(player);
+
+    // Increment the player count
+    this.playerCount++;
   }
 
   getCurrentPlayer() {
@@ -154,8 +156,7 @@ class Manager {
   }
 
   placeChip(player, column) {
-    this.GameLogic.placePiece(column);
-
+    player.placeChip(column);
     //console.log(this.GameLogic.getStatus);
   }
 

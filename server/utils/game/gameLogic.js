@@ -10,8 +10,7 @@ class GameLogic {
     ];
     this.currentPlayerIndex = 0;
     this.playerCount = 0;
-    // this.ai = [new AI(10, "R"), new AI(4, "Y")]; // AI difficulty Medium
-    this.ai = [];
+    this.ai = [new AI(10, "R"), new AI(4, "Y")]; // AI difficulty Medium
     this.isAIvsAI = true;
     this.gameOver = true;
     this.isPlayerVsAI = false;
@@ -60,16 +59,12 @@ class GameLogic {
   }
 
   startAIVsAI(callback) {
-    this.resetGame();
-
     this.isAIvsAI = true;
     this.gameOver = false;
-    this.ai[0] = new AI(5, "R");
-    this.ai[1] = new AI(5, "Y");
+    this.board = this.createBoard();
     this.player[0] = this.ai[0];
     this.player[1] = this.ai[1];
     this.currentPlayerIndex = 0;
-    this.board = this.createBoard();
     this.runAIGame(callback);
   }
 
@@ -110,19 +105,15 @@ class GameLogic {
 
   runAIGame(callback) {
     console.log("Running AI vs. AI game...");
-
     const interval = setInterval(() => {
       if (this.gameOver) {
         clearInterval(interval); // Stop the game loop
         return;
       }
-      if (this.isAIvsAI) {
-        //this.aiMove(callback); // Perform AI mov
-        let move = this.ai[this.currentPlayerIndex].bestMove(this.board, 5);
-        this.placePiece(move);
-      } else if (!this.isAIvsAI) {
-        this.gameOver = true;
-      } else if (this.checkWin()) {
+
+      this.aiMove(callback); // Perform AI move
+
+      if (this.checkWin()) {
         this.gameOver = true; // Mark game as over
         console.log(`Player ${this.getCurrentPlayer().color} wins!`);
         callback({
@@ -133,9 +124,7 @@ class GameLogic {
         setTimeout(() => {
           this.board = this.createBoard();
           setTimeout(() => {
-            if (this.isAIvsAI) {
-              this.startAIVsAI(callback);
-            }
+            this.startAIVsAI(callback);
           }, 2000);
         }, 2000); // Delay in milliseconds (2000ms = 2 seconds)
       } else if (this.isBoardFull()) {
@@ -148,28 +137,23 @@ class GameLogic {
   }
 
   aiMove(callback) {
-    if (this.isAIvsAI) {
-      console.log("AI making move");
-      const ai = this.ai[this.currentPlayerIndex];
-      const move = ai.bestMove(this.board, ai.difficulty);
-      console.log(
-        `AI (${this.getCurrentPlayer().color}) is playing in column: ${move}`
-      );
+    console.log("AI making move");
+    const ai = this.ai[this.currentPlayerIndex];
+    const move = ai.bestMove(this.board, ai.difficulty);
+    console.log(
+      `AI (${this.getCurrentPlayer().color}) is playing in column: ${move}`
+    );
 
-      if (move !== null) {
-        this.placePiece(move);
-        this.printBoard();
-        if (this.checkWin) {
-          this.createBoard();
-        }
-        callback({
-          board: this.board,
-          currentPlayer: this.getCurrentPlayer().color,
-        });
+    if (move !== null) {
+      this.placePiece(move);
+      this.printBoard();
+      if (this.checkWin) {
+        this.createBoard();
       }
-    } else {
-      this.gameOver = true;
-      console.log("AI vs AI game interrupted.");
+      callback({
+        board: this.board,
+        currentPlayer: this.getCurrentPlayer().color,
+      });
     }
   }
   createBoard() {
@@ -222,7 +206,7 @@ class GameLogic {
         return;
       }
     }
-    console.log(`No valid moves available in this column. (${columnIndex})`);
+    console.log("No valid moves available in this column.");
   }
 
   getCurrentPlayer() {

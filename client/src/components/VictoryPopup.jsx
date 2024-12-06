@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Victory from '../assets/victory.jpg';
-import '../styles/helpPopup.css';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Victory from "../../../public/victory.jpg";
+import "../styles/helpPopup.css";
 
 const VictoryPopup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate('/'); // Redirects to the homepage
+      navigate("/"); // Redirects to the homepage
     }, 8000); // 8-second delay
 
     return () => clearTimeout(timer); // Cleanup the timer on component unmount
@@ -35,4 +35,3 @@ const VictoryPopup = () => {
 };
 
 export default VictoryPopup;
-

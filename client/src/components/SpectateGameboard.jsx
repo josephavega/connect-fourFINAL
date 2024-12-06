@@ -3,16 +3,16 @@ import { Grid2 } from "@mui/material";
 import "../styles/gameboard.css";
 import TopGrid from "../components/TopGrid.jsx";
 
-import EmptyChip from "../assets/Board/BoardTileBack.png";
-import RedChip from "../assets/Board/Gamepieces/Chip_Red.png";
-import YellowChip from "../assets/Board/Gamepieces/Chip_Yellow.png";
+import EmptyChip from "../../../public/Board/BoardTileBack.png";
+import RedChip from "../../../public/Board/Gamepieces/Chip_Red.png";
+import YellowChip from "../../../public/Board/Gamepieces/Chip_Yellow.png";
 
-import BoardTileFront from "../assets/Board/BoardTileFront.png";
+import BoardTileFront from "../../../public/Board/BoardTileFront.png";
 import gameSocket from "../sockets/gameSocket.js";
-import BoardBorder from "../assets/Board/Board_Boarder.png";
+import BoardBorder from "../../../public/Board/Board_Boarder.png";
 
-import RedSidebarBackground from "../assets/Board/Construction/Sidebar_Red.png";
-import YellowSidebarBackground from "../assets/Board/Construction/Sidebar_Yellow.png";
+import RedSidebarBackground from "../../../public/Board/Construction/Sidebar_Red.png";
+import YellowSidebarBackground from "../../../public/Board/Construction/Sidebar_Yellow.png";
 
 const SpectateGameboard = ({ board, currentPlayer }) => {
   const [username, setUsername] = useState("AI1");

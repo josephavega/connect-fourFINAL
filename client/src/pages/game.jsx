@@ -257,21 +257,21 @@ const Game = () => {
       >
         Confirm Move
       </button>
-      <div className="click-info">
+      {/* <div className="click-info">
         <p>Tile Selected: {lastChanged}</p>
         <p>Column Selected: {selectedColumn + 1}</p>
         <p>Current Player: {currentPlayer}</p>
-      </div>
+      </div> */}
 
-      <button className={`player-toggle-button ${currentPlayer.toLowerCase()}`}>
+      {/* <button className={`player-toggle-button ${currentPlayer.toLowerCase()}`}>
         Switch Player Debug
-      </button>
-      <button>
+      </button> */}
+      {/* <button>
         <DebugGameButtons />
-      </button>
-      <button className="victory-debug-button" onClick={openVictoryPopup}>
+      </button> */}
+      {/* <button className="victory-debug-button" onClick={openVictoryPopup}>
         Victory Debug
-      </button>
+      </button> */}
       {/* Victory Popup */}
       {isVictoryPopupOpen && <VictoryPopup />}
     </div>

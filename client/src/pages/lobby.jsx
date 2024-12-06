@@ -142,9 +142,9 @@ const Lobby = () => {
             <QueueButton />
           </div>
         </div>
-        <div className="debug-game-button">
+        {/* <div className="debug-game-button">
           <GameButton />
-        </div>
+        </div> */}
       </div>
 
       <main className="right-container">

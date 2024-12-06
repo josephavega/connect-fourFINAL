@@ -39,7 +39,10 @@
   width: 200px;
   padding: 10px;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-size: contain; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-image: url('../src/assets/Menu/Buttons/Container_Queue.png');
 
   position: absolute; /* Use absolute positioning */
   left: 50px; /* Set to the left edge of the screen */

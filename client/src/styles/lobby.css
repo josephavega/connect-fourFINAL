@@ -41,9 +41,7 @@
   border-radius: 10px;
   background-size: contain; 
   background-position: center; 
-  background-repeat: no-repeat; 
-  background-image: url('../src/assets/Menu/Buttons/Container_Queue.png');
-
+  background-repeat: no-repeat;
   position: absolute; /* Use absolute positioning */
   left: 50px; /* Set to the left edge of the screen */
   top: 50px; /* Align to the top of the screen */

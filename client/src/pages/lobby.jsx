@@ -5,6 +5,8 @@ import DebugButton from "../components/DebugButton";
 import GameButton from "../components/GameButton";
 import PickPlayerPopUp from "../components/PickPlayerPopUp";
 
+import Background from "../../../public/Forest16_9.png";
+
 import queueSocket from "../sockets/queueSocket";
 import gameSocket from "../sockets/gameSocket";
 import "../styles/lobby.css";
@@ -134,17 +136,26 @@ const Lobby = () => {
   });
 
   return (
-    <div className="lobby-wrapper">
-      <div className="lobby-container">
+
+    <div  style={{
+      backgroundImage: `url(${Background})`,
+      backgroundSize: "cover", // Ensures the image covers the entire background
+      height: "100vh",
+      width: "100vw"
+    }}>
+
+ 
+    <div className="lobby-wrapper" >
+      <div className="lobby-container"      >
         <div className="queue">
           <QueueComponent />
           <div className="queue-button-container">
             <QueueButton />
           </div>
         </div>
-        {/* <div className="debug-game-button">
+        <div className="debug-game-button">
           <GameButton />
-        </div> */}
+        </div>
       </div>
 
       <main className="right-container">
@@ -166,6 +177,7 @@ const Lobby = () => {
       </div>
       <aside className="lobby-container">{/*<Spectate/>*/}</aside>
     </div>
+    </div> 
   );
 };
 

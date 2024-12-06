@@ -175,11 +175,7 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
 
         <div className="popup-buttons-close">
           <button>
-            <img
-              src="./src/assets/Menu/Buttons/Button_Join.png"
-              alt="Join Button"
-              onClick={handleJoinClick}
-            />
+            <img src="./src/assets/Menu/Buttons/Button_Join.png"alt="Join Button"onClick={handleJoinClick}/>
           </button>
         </div>
       </div>

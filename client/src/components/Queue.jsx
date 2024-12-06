@@ -68,7 +68,7 @@ const Queue = () => {
 
   return (
     <div className="queue-container">
-      <h2>Queue</h2>
+      {/* <h2>Queue</h2> */}
       <div className="queue-table">
         <ul>{queueList}</ul>
       </div>

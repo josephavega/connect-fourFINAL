@@ -91,6 +91,9 @@ class GameLogic {
       return;
     }
     const interval = setInterval(() => {
+      if (!this.isPlayerVsAI) {
+        clearInterval(interval);
+      }
       console.log("AI is waiting to make a move...");
 
       console.log(this.getCurrentPlayer().color);

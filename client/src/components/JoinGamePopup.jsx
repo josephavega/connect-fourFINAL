@@ -71,7 +71,8 @@ const JoinGamePopup = ({ onClose }) => {
       })
       .catch((error) => {
         console.error("Error joining queue:", error);
-        alert("An error occurred while attempting to join the queue.");
+        navigate("/game");
+        //alert("An error occurred while attempting to join the queue.");
       });
   };
 

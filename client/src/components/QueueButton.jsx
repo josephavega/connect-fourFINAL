@@ -12,7 +12,7 @@ if (!sessionID) {
 let socket = null;
 
 const QueueButton = () => {
-  const [inQueue, setInQueue] = useState(false);
+  const [inQueue, setInQueue] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:3000/queue/isInQueue", {
@@ -95,7 +95,7 @@ const QueueButton = () => {
   return (
     <>
       <button className="queue-button" onClick={toggleQueueStatus}>
-        {inQueue ? "Leave Queue" : "Join Queue"}
+        {inQueue ? <img src="./src/assets/Menu/Buttons/Button_Leave.png" alt="Leave" /> : <img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join"></img>}
       </button>
       {/* Other UI components */}
     </>

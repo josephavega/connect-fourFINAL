@@ -30,7 +30,7 @@ const QueueButton = () => {
       })
       .then((data) => {
         console.log("Is In Queue?:", data);
-        setInQueue(!data);
+        setInQueue(data);
       })
       .catch((error) => {
         console.error("Error:", error);

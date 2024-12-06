@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/connectPopup.css";
-import { v4 as uuidv4 } from "uuid"; // Use a library like uuid to generate unique IDs
-import queueSocket from "../sockets/queueSocket";
+import { v4 as uuidv4 } from "uuid"; // Importing the uuid library
+import queueSocket from "../sockets/queueSocket"; // Ensure the path to your socket module is correct
+import "../styles/connectPopup.css"; // Import the CSS for the popup
+import CloseButtonImg from "../../../public/Menu/Buttons/Help_Settings_Exit.png"; // Correct path to your image
 
 const ConnectPopup = ({ onClose }) => {
   const [username, setUsername] = useState("");
@@ -12,7 +13,7 @@ const ConnectPopup = ({ onClose }) => {
     // Retrieve sessionID or create a new one if it doesn't exist
     let sessionID = localStorage.getItem("sessionID");
     if (!sessionID) {
-      sessionID = uuidv4;
+      sessionID = uuidv4(); // Corrected to call the uuid function
       localStorage.setItem("sessionID", sessionID);
     }
 
@@ -42,13 +43,10 @@ const ConnectPopup = ({ onClose }) => {
     const sessionID = localStorage.getItem("sessionID");
 
     if (!/^[a-zA-Z0-9]{3}$/.test(username)) {
-      //Makes sure Username is three alphanumeric Characters
+      // Makes sure Username is three alphanumeric characters
       alert("Username must be exactly 3 characters long.");
       return;
     }
-
-    // const data = { username, sessionID };
-    // queueSocket.emit("joinQueue", data);
 
     // Send API request to join the queue using fetch
     fetch("http://localhost:3000/queue/joinQueue", {
@@ -86,10 +84,7 @@ const ConnectPopup = ({ onClose }) => {
         <div className="popup-header">
           <h2>Start Game</h2>
           <button className="close-btn" onClick={onClose}>
-            <img
-              src="../src/assets/Menu/Buttons/Help_Settings_Exit.png"
-              alt=""
-            />
+            <img src={CloseButtonImg} alt="Close" />
           </button>
         </div>
         <div className="popup-content">

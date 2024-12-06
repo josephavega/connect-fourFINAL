@@ -1,18 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import RedChip from '../assets/Board/Gamepieces/Chip_Red.png';
-import YellowChip from '../assets/Board/Gamepieces/Chip_Yellow.png';
-import '../styles/chipAnimation';
+import React, { useEffect, useState } from "react";
+import RedChip from "../../../public/Board/Gamepieces/Chip_Red.png";
+import YellowChip from "../../../public/Board/Gamepieces/Chip_Yellow.png";
+import "../styles/chipAnimation";
 
-const ChipAnimation = ({ startX, startY, endX, endY, chipType, onAnimationEnd }) => {
+const ChipAnimation = ({
+  startX,
+  startY,
+  endX,
+  endY,
+  chipType,
+  onAnimationEnd,
+}) => {
   const [style, setStyle] = useState({});
 
   useEffect(() => {
     // Trigger the animation on mount
     const animationStyle = {
-      position: 'absolute',
+      position: "absolute",
       left: `${startX}px`,
       top: `${startY}px`,
-      transition: 'all 0.5s ease-in-out',
+      transition: "all 0.5s ease-in-out",
       transform: `translate(${endX - startX}px, ${endY - startY}px)`,
     };
     setStyle(animationStyle);
@@ -27,7 +34,7 @@ const ChipAnimation = ({ startX, startY, endX, endY, chipType, onAnimationEnd })
 
   return (
     <img
-      src={chipType === 'Red' ? RedChip : YellowChip}
+      src={chipType === "Red" ? RedChip : YellowChip}
       alt={`${chipType} Chip`}
       style={style}
       className="chip-animation"

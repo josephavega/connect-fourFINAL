@@ -1,52 +1,22 @@
 .popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-image: url('../src/assets/Menu/BlueBoard.png');
-  background-size: contain; 
-  background-position: center;
-  background-repeat: no-repeat;
-  width: 500px;
-  height: 400px; 
-  padding: 10px; 
-  box-sizing: border-box; 
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; 
-  align-items: center;
-}
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url('../src/assets/Menu/BlueBoard.png');
+    background-size: contain; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    width: 450px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    z-index: 1000;
+  }
   .classicArcadeVS {
     display: flex; 
     justify-content: center; 
     align-items: center; 
     gap: 20px; 
-  }
-
-  .close-btn {
-    position: absolute; 
-    top: 20px; 
-    right: 30px; 
-    background-color: transparent;
-    border: none; 
-    font-size: 20px; 
-    color: aliceblue; 
-    cursor: pointer;
-    z-index: 1100; 
-    transition: transform 0.2s ease;
-  }
-  
-  .close-btn:hover {
-    transform: scale(1.2); 
-    color: #ff0000; 
-  }
-  .popup-header {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 0 20px; 
-    margin-bottom: 20px; 
   }
   
   .pair {
@@ -57,9 +27,11 @@
 .bubble-button1.bubble-button-active,
 .bubble-button2.bubble-button-active {
   background-color: #ff0000 !important;
+
   transform: scale(1.2); 
   transition: all 0.2s ease; 
 }
+
   
   .bubble-button1, .bubble-button2 {
     background-color: #ffffff; 
@@ -139,23 +111,22 @@
     font-weight: bold;
   }
 
-  .popup-join-game button {
-    padding: 0;
-    border: none;
-    background: none; 
+  .popup-buttons-close button {
+    padding: 0; /* Removes default button padding */
+    border: none; /* Removes default button border */
+    background: none; /* Removes default button background */
   }
   
-  .popup-join-game button img {
+  .popup-buttons-close button img {
     filter: hue-rotate(230deg);
-    display: block; 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
+    display: block; /* Removes extra space around the image */
+    width: 100%; /* Makes image fill the button's width */
+    height: 100%; /* Makes image fill the button's height */
+    object-fit: cover; /* Ensures the image fills the container without distortion */
   }
 
-  .popup-join-game button img:hover {
+  .popup-buttons-close button img:hover {
     filter: hue-rotate(180deg);
-    transform: scale(1.1); 
   }
   
   

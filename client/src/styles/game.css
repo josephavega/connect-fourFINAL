@@ -43,7 +43,7 @@
 
   @font-face {
     font-family: 'ArcadeClassic'; 
-    src: url('../src/assets/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
+    src: url('../../../public/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
     font-weight: normal; 
     font-style: normal; 
 }

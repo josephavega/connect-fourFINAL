@@ -46,7 +46,7 @@
 
 @font-face {
   font-family: "Pixel";
-  src: url("../assets/Fonts/ARCADECLASSIC.TTF") format("truetype"); /* Adjust the path */
+  src: url("/Fonts/ARCADECLASSIC.TTF") format("truetype"); /* Adjust the path */
   font-weight: normal;
   font-style: normal;
 }

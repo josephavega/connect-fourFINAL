@@ -14,7 +14,7 @@
 
 .help-popup {
     padding: 20px;
-    background-image: url('../../../public/Menu/BlueBoard.png');
+    background-image: url('/Menu/BlueBoard.png');
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
@@ -42,7 +42,7 @@
 
 @font-face {
     font-family: 'ArcadeClassic'; 
-    src: url('../../../public/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
+    src: url('/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
     font-weight: normal; 
     font-style: normal; 
 }

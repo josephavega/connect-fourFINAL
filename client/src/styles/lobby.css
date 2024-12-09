@@ -39,11 +39,15 @@
   width: 200px;
   padding: 10px;
   border-radius: 10px;
+<<<<<<< HEAD
   background-size: contain; 
   background-position: center; 
   background-repeat: no-repeat;
   background-repeat: no-repeat; 
   background-image: url('../../../public/Menu/Buttons/Container_Queue.png');
+=======
+  background-color: #ffffff;
+>>>>>>> parent of b93ec94 (css updated)
 
   position: absolute; /* Use absolute positioning */
   left: 50px; /* Set to the left edge of the screen */

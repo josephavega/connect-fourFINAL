@@ -1,7 +1,9 @@
 .queue-container {
   width: 100%;
-  margin-top: 3.5em;
   max-width: 250px;
+
+  /* border: 1px solid #ccc; */
+  /* background-color: black; */
   border-radius: 1px;
   padding: 10px;
 }
@@ -9,21 +11,19 @@
 .queue-container h2 {
   text-align: center;
   margin: 5px;
-  margin: 20px;
+  margin-bottom: 10px;
   font-size: 1.5em;
 }
 
 .queue-button {
-  padding: 0; 
-  margin: 10px;
-  border: none;
-  background: none; 
-  filter: hue-rotate(180deg);
+  padding: 0; /* Removes default button padding */
+  border: none; /* Removes default button border */
+  background: none; /* Removes default button background */
 }
 
-.queue-button:hover {
-  filter: hue-rotate(220deg);
-  transform: scale(1.05);
+queue-button:hover {
+  filter: hue-rotate(180deg);
+  scale: 1.2;
 }
 
 .queue-table {
@@ -43,7 +43,11 @@
 }
 
 .queue-table th {
+  background-color: #f2f2f2;
   position: sticky; /* Makes header stick when scrolling */
   top: 0;
 }
 
+.queue-table tr:hover {
+  background-color: #f1f1f1;
+}

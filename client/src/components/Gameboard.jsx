@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Grid2 } from "@mui/material";
 import "../styles/gameboard.css";
 import TopGrid from "../components/TopGrid.jsx";
+import "../styles/Global.css";
 //import ChipAnimation from '../components/ChipAnimation.jsx';
 
 import EmptyChip from "../../../public/Board/BoardTileBack.png";

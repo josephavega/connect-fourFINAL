@@ -74,7 +74,7 @@ class GameLogic {
     this.board = this.createBoard();
     this.isPlayerVsAI = true;
     this.gameOver = false;
-    this.currentPlayerIndex = 1;
+    this.currentPlayerIndex = 0;
     this.runPlayerVsAI(callback);
   }
 

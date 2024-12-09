@@ -14,6 +14,7 @@ import BoardBorder from "../../../public/Board/Board_Boarder.png";
 import RedSidebarBackground from "../../../public/Board/Construction/Sidebar_Red.png";
 import YellowSidebarBackground from "../../../public/Board/Construction/Sidebar_Yellow.png";
 
+import "../styles/Global.css";
 const SpectateGameboard = ({ board, currentPlayer }) => {
   const [username, setUsername] = useState("AI1");
   const [usernameB, setUsernameB] = useState("AI2");

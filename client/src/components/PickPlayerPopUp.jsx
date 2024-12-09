@@ -3,6 +3,7 @@ import "../styles/pickPlayerPopUp.css";
 import { useNavigate } from "react-router-dom";
 import gameSocket from "../sockets/gameSocket";
 import JoinButton from "../../../public/Menu/Buttons/Button_Start.png";
+import BlueBoard from "../../../public/Menu/BlueBoard.png";
 
 const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
   const [selectedMode, setSelectedMode] = useState("classic");
@@ -79,7 +80,17 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
 
   return (
     <div className="popup">
-      <div className="popup-content">
+      <div
+        className="popup-content"
+        style={{
+          backgroundImage: `url(${BlueBoard})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          borderRadius: "15px",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+        }}
+      >
         <h3>Match Setup</h3>
         <p>
           <b>{currentUser}</b> vs{" "}

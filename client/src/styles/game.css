@@ -40,3 +40,35 @@
   .victory-debug-button {
     margin-top: 20px;
   }
+
+  @font-face {
+    font-family: 'ArcadeClassic'; 
+    src: url('../../../public/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
+    font-weight: normal; 
+    font-style: normal; 
+}
+
+
+  .confirm-button {
+    font-family: 'ArcadeClassic'; 
+    padding: 10px 20px;
+    font-size: 30px;
+    width: 250px;
+    height: 70px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .confirm-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .confirm-button:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+  

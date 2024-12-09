@@ -1,10 +1,12 @@
 import users from "../users.js";
 import GameLogic from "./gameLogic.js";
+import GamePowerups from "./gamePowerups.js";
 import Player from "./Player.js";
 
 class Manager {
   constructor() {
     this.GameLogic = new GameLogic();
+    this.GamePowerups = new GamePowerups();
 
     // Debug GameLogic creation
     if (!this.GameLogic) {
@@ -12,7 +14,13 @@ class Manager {
     } else {
       console.log("GameLogic instance created successfully");
     }
+    if (!this.GamePowerups) {
+      console.error("GamePowerups instance could not be created");
+    } else {
+      console.log("GamePowerups instance created successfully");
+    }
   }
+  
 
   printBoard() {
     this.GameLogic.printBoard();
@@ -153,7 +161,7 @@ class Manager {
   }
 
   useLightning(player, column, row) {
-    player.powerups.Lighting(column, row);
+    player.powerups.Lightning(column, row);
   }
 
   useAnvil(player, column) {
@@ -161,7 +169,17 @@ class Manager {
   }
 
   useBrick(player, column) {
-    player.powerups.Brick(column);
+    //new
+    //player.powerups.Brick(column); // Place the Brick
+    //return this.GameLogic.board;
+    
+    //working line
+    this.GamePowerups.Brick(column);
+    return this.GameLogic.board;
+
+    //original
+    //player.powerups.Brick(column);
+    
   }
 
   swapPage(currentPage, newPage) {}

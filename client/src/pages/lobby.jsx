@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import QueueComponent from '../components/Queue';
-import QueueButton from '../components/QueueButton';
-import DebugButton from '../components/DebugButton';
-import GameButton from '../components/GameButton';
-import PickPlayerPopUp from '../components/PickPlayerPopUp';
-import '../styles/lobby.css';
+import React, { useState, useEffect } from "react";
+import QueueComponent from "../components/Queue";
+import QueueButton from "../components/QueueButton";
+import DebugButton from "../components/DebugButton";
+import GameButton from "../components/GameButton";
+import PickPlayerPopUp from "../components/PickPlayerPopUp";
+
+import Background from "../../../public/Forest16_9.png";
 
 import queueSocket from "../sockets/queueSocket";
 import gameSocket from "../sockets/gameSocket";
+import "../styles/lobby.css";
 import { useNavigate } from "react-router-dom";
 import SpectateGameboard from "../components/SpectateGameboard";
 
@@ -73,7 +75,7 @@ const Lobby = () => {
       for (let i = board.length - 1; i >= 0; i--) {
         flippedBoard.push(board[i]);
       }
-      console.log(`Updated Board: ${flippedBoard}`);
+      //console.log(`Updated Board: ${flippedBoard}`);
       setBoard(flippedBoard);
     };
 
@@ -83,6 +85,7 @@ const Lobby = () => {
     gameSocket.on("startGame", handleStartGame);
     gameSocket.on("promptStartGame", handlePromptPopup);
 
+    // // Request the current board state
     // Periodically request board updates
     const intervalId = setInterval(() => {
       console.log("Requesting board update...");
@@ -90,12 +93,19 @@ const Lobby = () => {
     }, 2000);
 
     const checkQueue = setInterval(() => {
-      const firstInQueue = true;
+      let firstInQueue = false;
+      queueSocket.emit('inQueue', localStorage.getItem('sessionID'));
+      queueSocket.on('inQueueResponse', inQueue => {
+        console.log(inQueue);
+        firstInQueue = inQueue;
+        if (firstInQueue) {
+          setIsPopupVisible(true);
+        }
+      })
+    
 
-      if (firstInQueue) {
-        setIsPopupVisible(true);
-      }
-    }, 500);
+      
+    }, 3000);
 
     return () => {
       // Clean up socket event listeners when the component is unmounted
@@ -105,11 +115,9 @@ const Lobby = () => {
       gameSocket.off("promptStartGame", handlePromptPopup);
     };
   }, [navigate]);
-
   const currentUser = usernameA;
 
   const handleJoinClick = () => {
-    fetchQueue();
     setIsPopupVisible(true);
   };
 
@@ -124,59 +132,52 @@ const Lobby = () => {
   };
 
   gameSocket.on("sentBoard", (board) => {
-    console.log(board);
+    //console.log(board);
   });
 
   return (
-    <div className="lobby-wrapper">
-      <aside className="lobby-container">
-        <button
-          className="back-to-home"
-          onClick={() => (window.location.href = '/')} 
-        >
-          <img src="../src/assets/Menu/Buttons/Help_Settings_Exit.png" alt="Back to Home" />
-        </button>
 
+    <div  style={{
+      backgroundImage: `url(${Background})`,
+      backgroundSize: "cover", // Ensures the image covers the entire background
+      height: "100vh",
+      width: "100vw"
+    }}>
+
+ 
+    <div className="lobby-wrapper" >
+      <div className="lobby-container"      >
         <div className="queue">
           <QueueComponent />
+          <div className="queue-button-container">
+            <QueueButton />
+          </div>
         </div>
-
-        <div className="queue-button-container">
-          <QueueButton />
-          <img
-            src="../src/assets/Menu/Buttons/Button_Join.png"
-            alt="Join Queue"
-            className="join-button-overlay"
-            onClick={handleJoinClick}
-          />
-        </div>
-
         <div className="debug-game-button">
           <GameButton />
         </div>
+      </div>
 
+      <main className="right-container">
+        <div className="gameboardBox">{/* <Gameboard /> */}</div>
+      </main>
+
+      {isPopupVisible && (
+        <PickPlayerPopUp
+          queue={queue}
+          currentUser={currentUser}
+          onOpponentSelect={handleOpponentSelect}
+          onClose={handlePopupClose}
+        />
+      )}
+      <div>
         <div>
-          <main className="right-container">
-            <div className="gameboardBox">{/* <Gameboard /> */}</div>
-          </main>
-
-          {isPopupVisible && (
-            <PickPlayerPopUp
-              queue={queue}
-              currentUser={currentUser}
-              onOpponentSelect={handleOpponentSelect}
-              onClose={handlePopupClose}
-            />
-          )}
-
-          <div>
-            <div>
-              <SpectateGameboard board={board} currentPlayer={currentPlayer} />
-            </div>
-          </div>
+          <SpectateGameboard board={board} currentPlayer={currentPlayer} />
         </div>
-      </aside>
+      </div>
+      <aside className="lobby-container">{/*<Spectate/>*/}</aside>
     </div>
+    </div> 
   );
 };
 

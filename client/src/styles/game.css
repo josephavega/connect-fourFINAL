@@ -42,8 +42,8 @@
   }
 
   @font-face {
-    font-family: 'ArcadeClassic'; 
-    src: url('../../../public/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
+    font-family: 'ArcadeClassic';  
+    src: url('/Fonts/ARCADECLASSIC.TTF') format('truetype'); 
     font-weight: normal; 
     font-style: normal; 
 }

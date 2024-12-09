@@ -25,7 +25,7 @@
 
 @font-face {
   font-family: "ArcadeClassic";
-  src: url("../../../public/Fonts/ARCADECLASSIC.TTF") format("truetype");
+  src: url("/Fonts/ARCADECLASSIC.TTF") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -60,7 +60,7 @@
 
 @font-face {
   font-family: "ArcadeClassic";
-  src: url("../../../public/Fonts/ARCADECLASSIC.TTF") format("truetype");
+  src: url("/Fonts/ARCADECLASSIC.TTF") format("truetype");
   font-weight: normal;
   font-style: normal;
 }

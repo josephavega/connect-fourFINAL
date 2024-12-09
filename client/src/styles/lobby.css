@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: "ArcadeClassic";
-  src: url("../../../public/Fonts/ARCADECLASSIC.TTF") format("truetype");
+  src: url("/Fonts/ARCADECLASSIC.TTF") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -43,7 +43,7 @@
   background-position: center; 
   background-repeat: no-repeat;
   background-repeat: no-repeat; 
-  background-image: url('../../../public/Menu/Buttons/Container_Queue.png');
+  background-image: url('/Menu/Buttons/Container_Queue.png');
 
   position: absolute; /* Use absolute positioning */
   left: 50px; /* Set to the left edge of the screen */

@@ -39,11 +39,11 @@
   width: 200px;
   padding: 10px;
   border-radius: 10px;
-  background-size: contain; 
-  background-position: center; 
+  background-size: contain;
+  background-position: center;
   background-repeat: no-repeat;
-  background-repeat: no-repeat; 
-  background-image: url('../../../public/Menu/Buttons/Container_Queue.png');
+  background-repeat: no-repeat;
+  background-image: url("../../../public/Menu/Buttons/Container_Queue.png");
 
   position: absolute; /* Use absolute positioning */
   left: 50px; /* Set to the left edge of the screen */
@@ -145,4 +145,11 @@
   color: #155724;
   border-color: #c3e6cb;
   font-weight: bold;
+}
+
+.gameboard-container {
+  position: absolute;
+  top: 40%; /* Start from 50% of the viewport height */
+  left: 50%; /* Start from 50% of the viewport width */
+  transform: translate(-50%, -50%); /* Adjust to truly center */
 }

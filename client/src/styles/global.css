@@ -1,9 +1,16 @@
 /* Global.css */
 body {
-  background-image: url("/public/Forest16_9.png");
+  background-image: url("/Forest16_9.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
   height: 100vh;
   margin: 0;
+}
+
+@font-face {
+  font-family: "ArcadeClassic";
+  src: url("../assets/fonts/ARCADECLASSIC.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }

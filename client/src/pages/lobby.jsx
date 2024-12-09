@@ -94,17 +94,14 @@ const Lobby = () => {
 
     const checkQueue = setInterval(() => {
       let firstInQueue = false;
-      queueSocket.emit('inQueue', localStorage.getItem('sessionID'));
-      queueSocket.on('inQueueResponse', inQueue => {
+      queueSocket.emit("inQueue", localStorage.getItem("sessionID"));
+      queueSocket.on("inQueueResponse", (inQueue) => {
         console.log(inQueue);
         firstInQueue = inQueue;
         if (firstInQueue) {
           setIsPopupVisible(true);
         }
-      })
-    
-
-      
+      });
     }, 3000);
 
     return () => {
@@ -136,48 +133,40 @@ const Lobby = () => {
   });
 
   return (
-
-    <div  style={{
-      backgroundImage: `url(${Background})`,
-      backgroundSize: "cover", // Ensures the image covers the entire background
-      height: "100vh",
-      width: "100vw"
-    }}>
-
- 
-    <div className="lobby-wrapper" >
-      <div className="lobby-container"      >
-        <div className="queue">
-          <QueueComponent />
-          <div className="queue-button-container">
-            <QueueButton />
+    <div
+      style={{
+        backgroundImage: `url(${Background})`,
+        backgroundSize: "cover", // Ensures the image covers the entire background
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
+      <div className="lobby-wrapper">
+        <div className="lobby-container">
+          <div className="queue">
+            <QueueComponent />
+            <div className="queue-button-container">
+              <QueueButton />
+            </div>
+          </div>
+          <div className="debug-game-button">
+            <GameButton />
           </div>
         </div>
-        <div className="debug-game-button">
-          <GameButton />
-        </div>
-      </div>
 
-      <main className="right-container">
-        <div className="gameboardBox">{/* <Gameboard /> */}</div>
-      </main>
-
-      {isPopupVisible && (
-        <PickPlayerPopUp
-          queue={queue}
-          currentUser={currentUser}
-          onOpponentSelect={handleOpponentSelect}
-          onClose={handlePopupClose}
-        />
-      )}
-      <div>
-        <div>
+        {isPopupVisible && (
+          <PickPlayerPopUp
+            queue={queue}
+            currentUser={currentUser}
+            onOpponentSelect={handleOpponentSelect}
+            onClose={handlePopupClose}
+          />
+        )}
+        <div className="gameboard-containter">
           <SpectateGameboard board={board} currentPlayer={currentPlayer} />
         </div>
       </div>
-      <aside className="lobby-container">{/*<Spectate/>*/}</aside>
     </div>
-    </div> 
   );
 };
 

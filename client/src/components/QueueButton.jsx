@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import queueSocket from "../sockets/queueSocket";
 import { v4 as uuidv4 } from "uuid";
 import "../styles/lobby.css";
+import JoinQueue from "../../../public/Menu/Buttons/Button_Leave.png";
+import LeaveQueue from "../../../public/Menu/Buttons/Button_Join.png";
 
 let sessionID = localStorage.getItem("sessionID");
 if (!sessionID) {
@@ -30,7 +32,7 @@ const QueueButton = () => {
       })
       .then((data) => {
         console.log("Is In Queue?:", data);
-        setInQueue(data);
+        setInQueue(!data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -95,7 +97,11 @@ const QueueButton = () => {
   return (
     <>
       <button className="queue-button" onClick={toggleQueueStatus}>
-        {inQueue ? <img src="./src/assets/Menu/Buttons/Button_Leave.png" alt="Leave" /> : <img src="./src/assets/Menu/Buttons/Button_Join.png" alt="Join"></img>}
+        {inQueue ? (
+          <img src={LeaveQueue} alt="Leave" />
+        ) : (
+          <img src={JoinQueue} alt="Join" />
+        )}
       </button>
       {/* Other UI components */}
     </>

@@ -14,10 +14,10 @@
 }
 
 .queue-button {
-  padding: 0; 
+  padding: 0;
   margin: 10px;
   border: none;
-  background: none; 
+  background: none;
   filter: hue-rotate(180deg);
 }
 
@@ -46,4 +46,3 @@
   position: sticky; /* Makes header stick when scrolling */
   top: 0;
 }
-

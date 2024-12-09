@@ -2,6 +2,7 @@ import users from "../users.js";
 import GameLogic from "./gameLogic.js";
 import GamePowerups from "./gamePowerups.js";
 import Player from "./Player.js";
+import AI from "./AI.js";
 
 class Manager {
   constructor() {
@@ -20,7 +21,6 @@ class Manager {
       console.log("GamePowerups instance created successfully");
     }
   }
-  
 
   printBoard() {
     this.GameLogic.printBoard();
@@ -116,7 +116,7 @@ class Manager {
     // this.GameLogic.setPlayer(sessionID, username); // Reflect this player in GameLogic
 
     const aiColor = "Y";
-    const aiPlayer = new AI(5, aiColor);
+    const aiPlayer = new AI(difficulty, aiColor);
     this.GameLogic.player[1] = aiPlayer; // Assign the AI player to index 1 of this.player array
     // this.GameLogic.setPlayer(aiPlayer); // Reflect this AI player in GameLogic
 
@@ -156,7 +156,7 @@ class Manager {
   }
 
   placeChip(player, column) {
-    player.placeChip(column);
+    this.GameLogic.placePiece(column);
     //console.log(this.GameLogic.getStatus);
   }
 
@@ -172,14 +172,13 @@ class Manager {
     //new
     //player.powerups.Brick(column); // Place the Brick
     //return this.GameLogic.board;
-    
+
     //working line
     this.GamePowerups.Brick(column);
     return this.GameLogic.board;
 
     //original
     //player.powerups.Brick(column);
-    
   }
 
   swapPage(currentPage, newPage) {}

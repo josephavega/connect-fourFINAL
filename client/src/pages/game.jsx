@@ -4,6 +4,7 @@ import "../styles/game.css";
 import gameSocket from "../sockets/gameSocket";
 import VictoryPopup from "../components/VictoryPopup";
 import DebugGameButtons from "../components/DebugGameButtons";
+import Background from "../../../public/Forest16_9.png";
 
 const Game = () => {
   const [board, setBoard] = useState(
@@ -38,53 +39,6 @@ const Game = () => {
   const [activePowerup, setActivePowerup] = useState(null); // Track active power-up
 
   const openVictoryPopup = () => setVictoryPopupOpen(true);
-
-  // const togglePlayer = () => {
-  //   setCurrentPlayer((prevPlayer) => (prevPlayer === "Red" ? "Yellow" : "Red"));
-  // };
-
-  // useEffect(() => {
-  //   const socket = gameSocket;
-
-  //   const handleInstructions = (moves) => {
-  //     setBoard((prevBoard) => {
-  //       const updatedBoard = prevBoard.map((row) => [...row]);
-  //     moves.forEach((instruction) => {
-  //       const [rule, col, row, type] = instruction;
-  //       switch (rule) {
-  //           case 'Place':
-  //             updatedBoard[col][row] = type
-  //             break;
-  //           case 'Anvil':
-  //             //Play Anvil animation
-  //             break;
-  //           case 'Broken':
-  //             updatedBoard[col][row] = type
-  //             break;
-  //           case 'Lightning':
-  //             //Play Lightning Animation
-  //             break;
-  //           case 'Flipped':
-  //             updatedBoard[col][row] = type
-  //             break;
-  //           case 'Win':
-  //           openVictoryPopup()
-  //           break;
-
-  //         }
-  //       });
-  //       return updatedBoard;
-  //     });
-
-  //     togglePlayer(); // Switch the player after processing instructions
-  //   };
-
-  //   gameSocket.on('sendInstructions', handleInstructions);
-
-  //   return () => {
-  //     gameSocket.off('sendInstructions', handleInstructions); // Cleanup listener
-  //   };
-  // }, []);
 
   useEffect(() => {
     // Listen for board data from the server
@@ -150,12 +104,6 @@ const Game = () => {
       }
     }
 
-    // If there is no empty row, the column is full
-    // if (lowestEmptyRow === -1) {
-    //   console.log(`Column ${colIndex} is full.`);
-    //   return; // Exit function if column is full
-    // }
-
     console.log(`Move selected at row ${lowestEmptyRow}, column ${colIndex}`);
     setSelectedMove({ row: lowestEmptyRow, col: colIndex }); // Store the move
     setSelectedColumn(colIndex); // Highlight the selected column
@@ -173,7 +121,7 @@ const Game = () => {
   function handleRedPowerup(colIndex, powerupUsed) {
     const sessionID = localStorage.getItem("sessionID");
     const username = localStorage.getItem("username");
-    const data = { colIndex, powerupUsed, sessionID, username};
+    const data = { colIndex, powerupUsed, sessionID, username };
 
     gameSocket.emit("playerPowerMove", data);
     gameSocket.emit("getBoard");
@@ -188,47 +136,34 @@ const Game = () => {
 
     console.log("Selected move:", selectedMove);
 
-    // const { row, col } = selectedMove;
-    // const chipColor = currentPlayer === 'Red' ? 'R' : 'Y';
-
-    // // Update the board with the selected move
-    // const updatedBoard = board.map((r, rIdx) =>
-    //   r.map((cell, cIdx) => (rIdx === row && cIdx === col ? chipColor : cell))
-    // );
-    // setBoard(updatedBoard);
-
-    // Emit the move to the server
-    // Mark the active power-up as used
-
-    if (currentPlayer === "Red") { 
-      
-      if(redActiveButton != null && redActiveButton === "brick") {
+    if (currentPlayer === "Red") {
+      if (redActiveButton != null && redActiveButton === "brick") {
         console.log(`Using Red Power-Up: ${redActiveButton}`);
         gameSocket.emit("playerPowerMove", {
           colIndex: selectedColumn,
           powerupUsed: "brick",
           sessionID: localStorage.getItem("sessionID"),
           username: localStorage.getItem("username"),
-      });
+        });
         // for now: handleRedPowerup(selectedColumn, redActiveButton);
         gameSocket.emit("getBoard");
         setUsedRedPowerups((prev) => ({ ...prev, [redActiveButton]: true }));
         setRedActiveButton(null); // Clear active power-up
-      } 
-      else {
-      handleMove(selectedColumn);
-      } 
-    }
-    else if (currentPlayer === "Yellow") {
+      } else {
+        handleMove(selectedColumn);
+      }
+    } else if (currentPlayer === "Yellow") {
       handleMove(selectedColumn);
     }
-    {/* 
+    {
+      /* 
     else if (currentPlayer === "Yellow" && yellowActiveButton) {
       console.log(`Using Yellow Power-Up: ${yellowActiveButton}`);
       setUsedYellowPowerups((prev) => ({...prev, [yellowActiveButton]: true }));
       setYellowActiveButton(null); // Clear active power-up
     }
-      */}
+      */
+    }
 
     // Reset the selected move and toggle player
     console.log("Resetting move...");
@@ -238,7 +173,16 @@ const Game = () => {
   };
 
   return (
-    <div className="game-wrapper">
+    <div
+      className="game-wrapper"
+      style={{
+        backgroundImage: `url(${Background})`,
+        backgroundSize: "cover", // Ensures the image covers the entire background
+        backgroundPosition: "center", // Centers the image
+        height: "100vh", // Ensures the div takes the full height of the viewport
+        width: "100vw", // Ensures the div takes the full width of the viewport
+      }}
+    >
       <GameBoard
         board={board}
         onClick={handleClick}
@@ -249,30 +193,18 @@ const Game = () => {
         setRedActiveButton={setRedActiveButton}
         setYellowActiveButton={setYellowActiveButton}
       />
-      <p></p>
       <button
         className={`confirm-button ${currentPlayer.toLowerCase()}`}
         onClick={handleConfirm}
         disabled={!selectedMove}
+        style={{
+          position: "absolute",
+          top: "80%",
+        }}
       >
         Confirm Move
       </button>
-      {/* <div className="click-info">
-        <p>Tile Selected: {lastChanged}</p>
-        <p>Column Selected: {selectedColumn + 1}</p>
-        <p>Current Player: {currentPlayer}</p>
-      </div> */}
 
-      {/* <button className={`player-toggle-button ${currentPlayer.toLowerCase()}`}>
-        Switch Player Debug
-      </button> */}
-      {/* <button>
-        <DebugGameButtons />
-      </button> */}
-      {/* <button className="victory-debug-button" onClick={openVictoryPopup}>
-        Victory Debug
-      </button> */}
-      {/* Victory Popup */}
       {isVictoryPopupOpen && <VictoryPopup />}
     </div>
   );

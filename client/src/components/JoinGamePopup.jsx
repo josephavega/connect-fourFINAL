@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/connectPopup.css";
 import { v4 as uuidv4 } from "uuid"; // Use a library like uuid to generate unique IDs
+import JoinButton from "../../../public/Menu/Buttons/Button_Start.png";
 
 const JoinGamePopup = ({ onClose }) => {
   const [username, setUsername] = useState("");

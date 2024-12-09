@@ -1,53 +1,42 @@
 import React, { useEffect, useState } from "react";
 import "../styles/pickPlayerPopUp.css";
-import DebugButton from "../components/DebugButton";
-import GameButton from "../components/GameButton";
 import { useNavigate } from "react-router-dom";
 import gameSocket from "../sockets/gameSocket";
+import JoinButton from "../../../public/Menu/Buttons/Button_Start.png";
 
 const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
-  const [selectedMode, setSelectedMode] = useState("classic"); // Track the selected button
-  const [selectedDifficulty, setSelectedDifficulty] = useState(1); // Default difficulty
+  const [selectedMode, setSelectedMode] = useState("classic");
+  const [selectedDifficulty, setSelectedDifficulty] = useState(1); // Default to Easy
   const [sessionID, setSessionID] = useState("");
   const [username, setUsername] = useState(currentUser || "Guest");
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Set session ID and username from local storage
     const storedSessionID = localStorage.getItem("sessionID");
     const storedUsername = localStorage.getItem("username");
 
-    if (storedSessionID) {
-      setSessionID(storedSessionID);
-    }
+    if (storedSessionID) setSessionID(storedSessionID);
+    if (storedUsername) setUsername(storedUsername);
 
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-
-    // Connect to the game socket
     if (!gameSocket.connected) {
       gameSocket.connect();
     }
 
     return () => {
-      // Clean up socket connection if needed
       if (gameSocket.connected) {
         gameSocket.disconnect();
       }
     };
-  }, []); // Only run once when the component mounts
+  }, []);
 
   const handleJoinClick = () => {
-    // Create the payload to send to the API
     const payload = {
-      sessionID: sessionID,
-      username: username,
+      sessionID,
+      username,
       gamemode: selectedMode,
       difficulty: selectedDifficulty,
     };
 
-    // Send POST request to the API
     fetch("http://localhost:3000/game/startgame", {
       method: "POST",
       headers: {
@@ -63,9 +52,7 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
       })
       .then((data) => {
         console.log("Game started successfully:", data);
-        // Emit the join game event to the socket server
         gameSocket.emit("/joinGame", { sessionID, username });
-        // Navigate to the game page
         navigate("/game");
       })
       .catch((error) => {
@@ -74,7 +61,7 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
   };
 
   const handleDifficultyChange = (difficulty) => {
-    setSelectedDifficulty(difficulty * 5);
+    setSelectedDifficulty(difficulty);
   };
 
   const handleOpponentChange = (event) => {
@@ -86,13 +73,9 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
   };
 
   const playersQueue = queue.queue || [];
-  //console.log("Players in Queue:", playersQueue); // Debugging: Log the players queue
-  //console.log("Current User:", currentUser); // Debugging: Log the current user
-
   const otherPlayers = playersQueue.filter(
     (player) => player.username !== currentUser
   );
-  //console.log("Other Players:", otherPlayers); // Debugging: Log other players
 
   return (
     <div className="popup">
@@ -148,39 +131,20 @@ const PickPlayerPopUp = ({ queue, currentUser, onOpponentSelect, onClose }) => {
           </div>
         )}
 
-        <div className="classicArcadeVS">
-          <div className="pair">
-            <p>
-              Classic{" "}
-              <button
-                className={`bubble-button1 ${
-                  selectedMode === "classic" ? "bubble-button-active" : ""
-                }`}
-                onClick={() => handleModeSelect("classic")}
-              ></button>
-            </p>
-          </div>
-          <div className="pair">
-            <p>
-              Arcade{" "}
-              <button
-                className={`bubble-button2 ${
-                  selectedMode === "arcade" ? "bubble-button-active" : ""
-                }`}
-                onClick={() => handleModeSelect("arcade")}
-              ></button>
-            </p>
-          </div>
-        </div>
-
         <div className="popup-buttons-close">
-          <button>
-            <img
-              src="Menu/Buttons/Button_Join.png"
-              alt="Join Button"
-              onClick={handleJoinClick}
-            />
-          </button>
+          <button
+            onClick={handleJoinClick}
+            style={{
+              backgroundImage: `url(${JoinButton})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              width: "250px",
+              height: "50px",
+              border: "none",
+              cursor: "pointer",
+            }}
+          ></button>
         </div>
       </div>
     </div>

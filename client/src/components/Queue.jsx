@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import queueSocket from "../sockets/queueSocket";
+import QueueBoard from "../../../public/Menu/Buttons/Container_Queue.png";
 import "../styles/queue.css";
+import "../styles/global.css";
 
 const Queue = () => {
   const [queue, setQueue] = useState([]); // Initialize as an empty array to avoid undefined
